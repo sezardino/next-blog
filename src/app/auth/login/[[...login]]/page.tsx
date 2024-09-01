@@ -62,9 +62,9 @@ const LoginPage = () => {
   return (
     <Card className="md:w-96">
       <CardHeader>
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <Typography level="h1" styling="h3">
           Sign in to your account
-        </h1>
+        </Typography>
       </CardHeader>
       <CardContent>
         <LoginForm id={LOGIN_FORM_ID} onFormSubmit={login} errors={errors} />

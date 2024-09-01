@@ -4,5 +4,6 @@ export const ProjectUrls = {
   // auth
   login: "/auth/login",
   registration: "/auth/registration",
+  registrationVerification: "/auth/registration-verification",
   forgotPassword: "/auth/forgot-password",
 };

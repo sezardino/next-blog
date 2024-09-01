@@ -4,10 +4,6 @@ import {
   RegistrationForm,
   RegistrationFormValues,
 } from "@/components/form/registration";
-import {
-  RegistrationVerificationForm,
-  VerifyRegistrationFormValues,
-} from "@/components/form/registration-verification";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,10 +20,9 @@ import { useState } from "react";
 
 const REGISTRATION_FORM_ID = "registration-form-id";
 
-export default function Page() {
+const RegistrationPage = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [registrationError, setRegistrationError] = useState("");
-  const [verifying, setVerifying] = useState(false);
   const router = useRouter();
 
   // Handle submission of the sign-up form
@@ -50,7 +45,7 @@ export default function Page() {
 
       // Set 'verifying' true to display second form
       // and capture the OTP code
-      setVerifying(true);
+      router.push(ProjectUrls.registrationVerification);
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
@@ -59,50 +54,13 @@ export default function Page() {
     }
   };
 
-  // Handle the submission of the verification form
-  const verifyRegistrationCode = async (
-    values: VerifyRegistrationFormValues
-  ) => {
-    if (!isLoaded) return;
-
-    const { code } = values;
-
-    try {
-      // Use the code the user provided to attempt verification
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-
-      // If verification was completed, set the session to active
-      // and redirect the user
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.push("/");
-      } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        console.error(JSON.stringify(completeSignUp, null, 2));
-      }
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error("Error:", JSON.stringify(err, null, 2));
-    }
-  };
-
-  if (verifying) {
-    return (
-      <RegistrationVerificationForm onFormSubmit={verifyRegistrationCode} />
-    );
-  }
-
   // Display the initial sign-up form to capture the email and password
   return (
     <Card className="md:w-96">
       <CardHeader>
-        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+        <Typography level="h1" styling="h3">
           Sign in to your account
-        </h1>
+        </Typography>
       </CardHeader>
       <CardContent>
         <RegistrationForm
@@ -126,4 +84,6 @@ export default function Page() {
       </CardFooter>
     </Card>
   );
-}
+};
+
+export default RegistrationPage;
