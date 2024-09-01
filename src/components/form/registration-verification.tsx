@@ -1,6 +1,12 @@
 "use client";
 
 import { FormEvent } from "react";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "../ui/input-otp";
 
 export type VerifyRegistrationFormValues = {
   code: string;
@@ -34,11 +40,19 @@ export const RegistrationVerificationForm = (
             Verification Code
           </h1>
           <form onSubmit={submitHandler}>
-            <input
-              className="block w-full pb-4 pl-4 mb-3 text-sm font-light bg-transparent border-0 border-b-2 h-37 border-blue-900 text-white caret-slate-700 focus:border-white"
-              id="code"
-              name="code"
-            />
+            <InputOTP name="code" maxLength={6}>
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+              </InputOTPGroup>
+              <InputOTPSeparator />
+              <InputOTPGroup>
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
 
             <button
               className="w-full h-12 mb-6 text-sm font-light text-white hover:text-blue-900 hover:bg-white bg-slate-700 rounded-md"
