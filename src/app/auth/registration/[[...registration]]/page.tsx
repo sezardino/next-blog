@@ -8,9 +8,21 @@ import {
   RegistrationVerificationForm,
   VerifyRegistrationFormValues,
 } from "@/components/form/registration-verification";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import { ProjectUrls } from "@/const";
 import { useSignUp } from "@clerk/nextjs";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const REGISTRATION_FORM_ID = "registration-form-id";
 
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -86,6 +98,32 @@ export default function Page() {
 
   // Display the initial sign-up form to capture the email and password
   return (
-    <RegistrationForm onFormSubmit={handleSubmit} error={registrationError} />
+    <Card className="md:w-96">
+      <CardHeader>
+        <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          Sign in to your account
+        </h1>
+      </CardHeader>
+      <CardContent>
+        <RegistrationForm
+          id={REGISTRATION_FORM_ID}
+          onFormSubmit={handleSubmit}
+          error={registrationError}
+        />
+      </CardContent>
+
+      <CardFooter className="grid grid-cols-1 gap-3 items-start">
+        <Button form={REGISTRATION_FORM_ID} type="submit" className="w-full">
+          Sign in
+        </Button>
+
+        <Typography level="p" styling="small">
+          Already have an acccount?{" "}
+          <Button asChild variant={"link"}>
+            <Link href={ProjectUrls.login}>Login</Link>
+          </Button>
+        </Typography>
+      </CardFooter>
+    </Card>
   );
 }
