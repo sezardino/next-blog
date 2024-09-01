@@ -86,8 +86,9 @@ export async function POST(req: Request) {
           { status: 201 }
         );
       } catch (error) {
+        console.log(error);
         return NextResponse.json(
-          { message: "There was error when try to create user", error },
+          { message: "There was error when try to create user" },
           { status: 500 }
         );
       }
@@ -101,7 +102,7 @@ export async function POST(req: Request) {
         );
       } catch (error) {
         return NextResponse.json(
-          { message: "There was error when try to delete user", error },
+          { message: "There was error when try to delete user" },
           { status: 500 }
         );
       }
