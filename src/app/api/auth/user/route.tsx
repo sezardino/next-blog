@@ -2,6 +2,32 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
+import {
+  ClerkUserCreateWebhookEvent,
+  ClerkUserDeleteWebhookEvent,
+  ClerkUserWebhookEvent,
+} from "./types";
+
+const createUser = (userData: ClerkUserCreateWebhookEvent["data"]) => {
+  if (!userData || !prisma) return;
+  if (!userData.email_addresses[0].email_address) return;
+
+  return prisma?.user.create({
+    data: {
+      clerkId: userData.id,
+      email: userData.email_addresses[0].email_address,
+    },
+  });
+};
+
+const deleteUser = (userData: ClerkUserDeleteWebhookEvent["data"]) => {
+  if (!userData || !prisma) return;
+  if (!userData.id) return;
+
+  return prisma?.user.delete({
+    where: { clerkId: userData.id },
+  });
+};
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
@@ -27,7 +53,7 @@ export async function POST(req: Request) {
   }
 
   // Get the body
-  const payload = await req.json();
+  const payload = (await req.json()) as ClerkUserWebhookEvent;
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your secret.
@@ -49,30 +75,37 @@ export async function POST(req: Request) {
     });
   }
 
-  // Do something with the payload
-  // For this guide, you simply log the payload to the console
-  const { id } = evt.data;
   const eventType = evt.type;
 
   switch (eventType) {
     case "user.created":
-      console.log(`User created`);
+      try {
+        createUser(payload.data as ClerkUserCreateWebhookEvent["data"]);
+        return NextResponse.json(
+          { message: "User created successfully" },
+          { status: 201 }
+        );
+      } catch (error) {
+        return NextResponse.json(
+          { message: "There was error when try to create user", error },
+          { status: 500 }
+        );
+      }
 
-      break;
     case "user.deleted":
-      console.log(`User deleted`);
-      break;
-    case "user.updated":
-      console.log(`User updated`);
-      break;
-
-    default:
-      break;
+      try {
+        deleteUser(payload.data as ClerkUserDeleteWebhookEvent["data"]);
+        return NextResponse.json(
+          { message: "User deleted successfully" },
+          { status: 204 }
+        );
+      } catch (error) {
+        return NextResponse.json(
+          { message: "There was error when try to delete user", error },
+          { status: 500 }
+        );
+      }
   }
 
-  console.log({ body, payload });
-  return NextResponse.json(
-    { message: "Invalid request", body, payload },
-    { status: 200 }
-  );
+  return NextResponse.json({ message: "Invalid request" }, { status: 304 });
 }
