@@ -9,11 +9,11 @@ import {
   ClerkUserWebhookEvent,
 } from "./types";
 
-const createUser = (userData: ClerkUserCreateWebhookEvent["data"]) => {
+const createUser = async (userData: ClerkUserCreateWebhookEvent["data"]) => {
   if (!userData || !prisma) return;
   if (!userData.email_addresses[0].email_address) return;
 
-  return prisma?.user.create({
+  return await prisma?.user.create({
     data: {
       clerkId: userData.id,
       email: userData.email_addresses[0].email_address,
@@ -30,7 +30,7 @@ const deleteUser = (userData: ClerkUserDeleteWebhookEvent["data"]) => {
   });
 };
 
-export async function POST(req: Request) {
+export const POST = async (req: Request) => {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the endpoint
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
 
@@ -81,7 +81,7 @@ export async function POST(req: Request) {
   switch (eventType) {
     case "user.created":
       try {
-        createUser(payload.data as ClerkUserCreateWebhookEvent["data"]);
+        await createUser(payload.data as ClerkUserCreateWebhookEvent["data"]);
         return NextResponse.json(
           { message: "User created successfully" },
           { status: 201 }
@@ -93,10 +93,9 @@ export async function POST(req: Request) {
           { status: 500 }
         );
       }
-
     case "user.deleted":
       try {
-        deleteUser(payload.data as ClerkUserDeleteWebhookEvent["data"]);
+        await deleteUser(payload.data as ClerkUserDeleteWebhookEvent["data"]);
         return NextResponse.json(
           { message: "User deleted successfully" },
           { status: 204 }
@@ -110,4 +109,4 @@ export async function POST(req: Request) {
   }
 
   return NextResponse.json({ message: "Invalid request" }, { status: 304 });
-}
+};
