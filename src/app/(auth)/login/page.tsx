@@ -1,5 +1,3 @@
-import { login, signup } from "./action";
-
 function LoginPage() {
   return (
     <form>
@@ -7,8 +5,8 @@ function LoginPage() {
       <input id="email" name="email" type="email" required />
       <label htmlFor="password">Password:</label>
       <input id="password" name="password" type="password" required />
-      <button formAction={login}>Log in</button>
-      <button formAction={signup}>Sign up</button>
+      <button>Log in</button>
+      <button>Sign up</button>
     </form>
   );
 }
