@@ -1,5 +1,6 @@
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
 export async function POST(req: Request) {
@@ -52,26 +53,26 @@ export async function POST(req: Request) {
   // For this guide, you simply log the payload to the console
   const { id } = evt.data;
   const eventType = evt.type;
-  console.log(`Webhook with and ID of ${id} and type of ${eventType}`);
-  console.log("Webhook body:", body);
 
   switch (eventType) {
     case "user.created":
       console.log(`User created`);
-      console.table(body);
+
       break;
     case "user.deleted":
-      console.log(`User created`);
-      console.table(body);
+      console.log(`User deleted`);
       break;
     case "user.updated":
-      console.log(`User created`);
-      console.table(body);
+      console.log(`User updated`);
       break;
 
     default:
       break;
   }
 
-  return new Response("", { status: 200 });
+  console.log({ body, payload });
+  return NextResponse.json(
+    { message: "Invalid request", body, payload },
+    { status: 200 }
+  );
 }
