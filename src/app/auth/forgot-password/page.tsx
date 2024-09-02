@@ -1,15 +1,32 @@
 "use client";
+
+import {
+  PasswordResetForm,
+  PasswordResetFormValues,
+} from "@/components/form/password-reset";
+import {
+  PasswordResetRequestForm,
+  PasswordResetRequestFormValues,
+} from "@/components/form/password-reset-request";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Typography } from "@/components/ui/typography";
+import { ProjectUrls } from "@/const";
 import { useAuth, useSignIn } from "@clerk/nextjs";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
+import { toast } from "sonner";
+
+const FORGOT_PASSWORD_FORM_ID = "forgot-password-form-id";
 
 const ForgotPasswordPage: NextPage = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
   const [successfulCreation, setSuccessfulCreation] = useState(false);
-  const [secondFactor, setSecondFactor] = useState(false);
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -27,8 +44,9 @@ const ForgotPasswordPage: NextPage = () => {
   }
 
   // Send the password reset code to the user's email
-  async function create(e: React.FormEvent) {
-    e.preventDefault();
+  async function resetPasswordRequest(values: PasswordResetRequestFormValues) {
+    const { email } = values;
+
     await signIn
       ?.create({
         strategy: "reset_password_email_code",
@@ -47,8 +65,10 @@ const ForgotPasswordPage: NextPage = () => {
   // Reset the user's password.
   // Upon successful reset, the user will be
   // signed in and redirected to the home page
-  async function reset(e: React.FormEvent) {
-    e.preventDefault();
+  async function resetPassword(values: PasswordResetFormValues) {
+    const { code, password } = values;
+    console.log(111);
+
     await signIn
       ?.attemptFirstFactor({
         strategy: "reset_password_email_code",
@@ -58,12 +78,13 @@ const ForgotPasswordPage: NextPage = () => {
       .then((result) => {
         // Check if 2FA is required
         if (result.status === "needs_second_factor") {
-          setSecondFactor(true);
-          setError("");
+          setError("2FA is required");
         } else if (result.status === "complete") {
           // Set the active session to
           // the newly created session (user is now signed in)
           setActive({ session: result.createdSessionId });
+          toast("Password successfully reset");
+          router.push(ProjectUrls.home);
           setError("");
         } else {
           console.log(result);
@@ -76,64 +97,35 @@ const ForgotPasswordPage: NextPage = () => {
   }
 
   return (
-    <div
-      style={{
-        margin: "auto",
-        maxWidth: "500px",
-      }}
-    >
-      <h1>Forgot Password?</h1>
-      <form
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1em",
-        }}
-        onSubmit={!successfulCreation ? create : reset}
-      >
+    <Card className="md:w-96">
+      <CardHeader>
+        <Typography level="h1" styling="h3">
+          Forgot Password?
+        </Typography>
+      </CardHeader>
+      <CardContent>
         {!successfulCreation && (
-          <>
-            <label htmlFor="email">Please provide your email address</label>
-            <input
-              type="email"
-              placeholder="e.g john@doe.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-
-            <button>Send password reset code</button>
-            {error && <p>{error}</p>}
-          </>
+          <PasswordResetRequestForm
+            id={FORGOT_PASSWORD_FORM_ID}
+            onFormSubmit={resetPasswordRequest}
+            error={error}
+          />
         )}
-
         {successfulCreation && (
-          <>
-            <label htmlFor="password">Enter your new password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-
-            <label htmlFor="password">
-              Enter the password reset code that was sent to your email
-            </label>
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
-
-            <button>Reset</button>
-            {error && <p>{error}</p>}
-          </>
+          <PasswordResetForm
+            id={FORGOT_PASSWORD_FORM_ID}
+            onFormSubmit={resetPassword}
+            error={error}
+          />
         )}
+      </CardContent>
 
-        {secondFactor && (
-          <p>2FA is required, but this UI does not handle that</p>
-        )}
-      </form>
-    </div>
+      <CardFooter className="grid grid-cols-1 gap-3 items-start">
+        <Button form={FORGOT_PASSWORD_FORM_ID} type="submit" className="w-full">
+          {!successfulCreation ? "Send password reset code" : "Reset"}
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 

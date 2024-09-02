@@ -9,17 +9,15 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 
-export type VerifyRegistrationFormValues = {
+export type VerificationFormValues = {
   code: string;
 };
 
-type VerifyRegistrationFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: VerifyRegistrationFormValues) => void;
+type VerificationFormProps = ComponentPropsWithoutRef<"form"> & {
+  onFormSubmit: (values: VerificationFormValues) => void;
 };
 
-export const RegistrationVerificationForm = (
-  props: VerifyRegistrationFormProps
-) => {
+export const VerificationForm = (props: VerificationFormProps) => {
   const { onFormSubmit, className, ...rest } = props;
 
   const submitHandler = (e: FormEvent<HTMLFormElement>) => {
