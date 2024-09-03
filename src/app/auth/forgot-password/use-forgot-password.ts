@@ -2,7 +2,7 @@ import { PasswordResetFormValues } from "@/components/form/password-reset";
 import { PasswordResetRequestFormValues } from "@/components/form/password-reset-request";
 import { ProjectUrls } from "@/const";
 import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 

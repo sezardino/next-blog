@@ -1,7 +1,7 @@
 import { VerificationFormValues } from "@/components/form/verification";
 import { ProjectUrls } from "@/const";
 import { useSignUp } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { toast } from "sonner";
 

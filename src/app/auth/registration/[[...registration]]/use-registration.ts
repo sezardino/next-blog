@@ -1,7 +1,7 @@
 import { RegistrationFormValues } from "@/components/form/registration";
 import { ProjectUrls } from "@/const";
 import { useSignUp } from "@clerk/nextjs";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
