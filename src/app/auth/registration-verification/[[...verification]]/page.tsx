@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  RegistrationVerificationForm,
-  VerifyRegistrationFormValues,
-} from "@/components/form/registration-verification";
+import { VerificationForm } from "@/components/form/verification";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,48 +9,13 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
-import { ProjectUrls } from "@/const";
-import { useSignUp } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRegistrationVerification } from "./use-registration-verification";
 
 const VERIFICATION_FORM_ID = "vERIFICATION-form-id";
 
 const RegistrationVerificationPage = () => {
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const router = useRouter();
+  const { verify } = useRegistrationVerification();
 
-  // Handle the submission of the verification form
-  const verifyRegistrationCode = async (
-    values: VerifyRegistrationFormValues
-  ) => {
-    if (!isLoaded) return;
-
-    const { code } = values;
-
-    try {
-      // Use the code the user provided to attempt verification
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code,
-      });
-
-      // If verification was completed, set the session to active
-      // and redirect the user
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-        router.push(ProjectUrls.home);
-      } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        console.error(JSON.stringify(completeSignUp, null, 2));
-      }
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error("Error:", JSON.stringify(err, null, 2));
-    }
-  };
-
-  // Display the initial sign-up form to capture the email and password
   return (
     <Card className="md:w-96">
       <CardHeader>
@@ -62,10 +24,7 @@ const RegistrationVerificationPage = () => {
         </Typography>
       </CardHeader>
       <CardContent>
-        <RegistrationVerificationForm
-          id={VERIFICATION_FORM_ID}
-          onFormSubmit={verifyRegistrationCode}
-        />
+        <VerificationForm id={VERIFICATION_FORM_ID} onFormSubmit={verify} />
       </CardContent>
 
       <CardFooter className="grid grid-cols-1 gap-3 items-start">

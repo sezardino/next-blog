@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  RegistrationForm,
-  RegistrationFormValues,
-} from "@/components/form/registration";
+import { RegistrationForm } from "@/components/form/registration";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,48 +10,15 @@ import {
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
-import { useSignUp } from "@clerk/nextjs";
+
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRegistration } from "./use-registration";
 
 const REGISTRATION_FORM_ID = "registration-form-id";
 
 const RegistrationPage = () => {
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const [registrationError, setRegistrationError] = useState("");
-  const router = useRouter();
+  const { error, registration } = useRegistration();
 
-  // Handle submission of the sign-up form
-  const handleSubmit = async (values: RegistrationFormValues) => {
-    if (!isLoaded) return;
-
-    const { email, password } = values;
-
-    // Start the sign-up process using the email and password provided
-    try {
-      await signUp.create({
-        emailAddress: email,
-        password,
-      });
-
-      // Send the user an email with the verification code
-      await signUp.prepareEmailAddressVerification({
-        strategy: "email_code",
-      });
-
-      // Set 'verifying' true to display second form
-      // and capture the OTP code
-      router.push(ProjectUrls.registrationVerification);
-    } catch (err: any) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
-      setRegistrationError(err.errors[0].message);
-    }
-  };
-
-  // Display the initial sign-up form to capture the email and password
   return (
     <Card className="md:w-96">
       <CardHeader>
@@ -65,8 +29,8 @@ const RegistrationPage = () => {
       <CardContent>
         <RegistrationForm
           id={REGISTRATION_FORM_ID}
-          onFormSubmit={handleSubmit}
-          error={registrationError}
+          onFormSubmit={registration}
+          error={error}
         />
       </CardContent>
 

@@ -1,7 +1,8 @@
 "use client";
+
 import { ProjectUrls } from "@/const";
+import { useApplicationLogout } from "@/hooks/use-logout";
 import { cn } from "@/utils/styles";
-import { useClerk } from "@clerk/nextjs";
 import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { LogOut, LucideProps, Plus, Settings, User } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +38,7 @@ type Section = {
 
 export const UserDropdown = (props: UserDropdownProps) => {
   const { user, className, ...rest } = props;
-  const { signOut } = useClerk();
+  const { logout } = useApplicationLogout();
 
   const menuSections: Section[][] = [
     [{ icon: Plus, label: "Write post", href: ProjectUrls.newPost }],
@@ -49,7 +50,7 @@ export const UserDropdown = (props: UserDropdownProps) => {
       {
         icon: LogOut,
         label: "Log out",
-        onClick: () => signOut({ redirectUrl: ProjectUrls.home }),
+        onClick: logout,
       },
     ],
   ];
