@@ -67,7 +67,6 @@ const ForgotPasswordPage: NextPage = () => {
   // signed in and redirected to the home page
   async function resetPassword(values: PasswordResetFormValues) {
     const { code, password } = values;
-    console.log(111);
 
     await signIn
       ?.attemptFirstFactor({

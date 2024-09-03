@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/index.css";
-import { ClerkProvider, SignOutButton } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
@@ -27,7 +27,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <SignOutButton />
             {children}
             <Toaster />
           </ThemeProvider>
