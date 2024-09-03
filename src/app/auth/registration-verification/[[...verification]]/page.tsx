@@ -22,6 +22,9 @@ const RegistrationVerificationPage = () => {
         <Typography level="h1" styling="h3">
           Verification Code
         </Typography>
+        <Typography level="p" styling="small">
+          Check your email, for verification code
+        </Typography>
       </CardHeader>
       <CardContent>
         <VerificationForm id={VERIFICATION_FORM_ID} onFormSubmit={verify} />

@@ -31,15 +31,15 @@ const LoginPage = () => {
 
       <CardFooter className="grid grid-cols-1 gap-3 items-start">
         <Button form={LOGIN_FORM_ID} type="submit" className="w-full">
-          Sign in
+          Login
         </Button>
         <Button asChild variant={"link"}>
           <Link href={ProjectUrls.forgotPassword}>Forgot password?</Link>
         </Button>
         <Typography level="p" styling="small">
-          Sign up Don’t have an account yet?{" "}
+          Don’t have an account yet?{" "}
           <Button asChild variant={"link"}>
-            <Link href={ProjectUrls.registration}>Sign up</Link>
+            <Link href={ProjectUrls.registration}>Register</Link>
           </Button>
         </Typography>
       </CardFooter>

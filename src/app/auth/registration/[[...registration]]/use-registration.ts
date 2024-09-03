@@ -3,7 +3,6 @@ import { ProjectUrls } from "@/const";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export const useRegistration = () => {
   const { isLoaded, signUp } = useSignUp();
@@ -30,7 +29,6 @@ export const useRegistration = () => {
 
       // Set 'verifying' true to display second form
       // and capture the OTP code
-      toast.success("Check email for verification code");
       router.push(ProjectUrls.registrationVerification);
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling

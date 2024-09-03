@@ -40,6 +40,11 @@ const ForgotPasswordPage: NextPage = () => {
         <Typography level="h1" styling="h3">
           Forgot Password?
         </Typography>
+        {isResettingStep && (
+          <Typography styling="small">
+            Check your email, for verification code
+          </Typography>
+        )}
       </CardHeader>
       <CardContent>
         {!isResettingStep && (

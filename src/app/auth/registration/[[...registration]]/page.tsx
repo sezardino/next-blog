@@ -36,7 +36,7 @@ const RegistrationPage = () => {
 
       <CardFooter className="grid grid-cols-1 gap-3 items-start">
         <Button form={REGISTRATION_FORM_ID} type="submit" className="w-full">
-          Sign in
+          Register
         </Button>
 
         <Typography level="p" styling="small">
