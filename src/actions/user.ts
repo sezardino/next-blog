@@ -20,7 +20,7 @@ export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
 
     return user;
   } catch (error) {
-    console.log("error");
+    console.log("error", error);
     throw new Error("Error when try to fetch user");
   }
 };

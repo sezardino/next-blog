@@ -1,5 +1,4 @@
 import { VerificationFormValues } from "@/components/form/verification";
-import { ProjectUrls } from "@/const";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
@@ -20,13 +19,12 @@ export const useRegistrationVerification = () => {
         const completeSignUp = await signUp.attemptEmailAddressVerification({
           code,
         });
-
         // If verification was completed, set the session to active
         // and redirect the user
         if (completeSignUp.status === "complete") {
           await setActive({ session: completeSignUp.createdSessionId });
           toast.success("You are successfully registered in app");
-          router.push(ProjectUrls.home);
+          router.push("/api/auth/new-user");
         } else {
           // If the status is not complete, check why. User may need to
           // complete further steps.
