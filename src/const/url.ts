@@ -7,10 +7,14 @@ export const ProjectUrls = {
   registrationVerification: "/auth/registration-verification",
   forgotPassword: "/auth/forgot-password",
 
+  // board
+  dashboard: "/dashboard",
+
   // profile
   profile: "/profile",
 
   // posts
+  posts: "/post",
   newPost: "/post/new",
 
   // settings

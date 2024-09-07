@@ -37,8 +37,7 @@ const buttonVariants = cva(
       {
         variant: "default",
         color: "secondary",
-        className:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        className: "bg-secondary text-white-foreground hover:bg-secondary/80",
       },
       {
         variant: "default",
@@ -71,7 +70,7 @@ const buttonVariants = cva(
       {
         variant: "outline",
         color: "secondary",
-        className: "border-secondary text-secondary hover:bg-secondary",
+        className: "border-secondary text-white hover:bg-secondary",
       },
       {
         variant: "outline",
@@ -103,7 +102,7 @@ const buttonVariants = cva(
       {
         variant: "ghost",
         color: "secondary",
-        className: "text-secondary hover:bg-secondary/20",
+        className: "text-white hover:bg-secondary",
       },
       {
         variant: "ghost",
@@ -179,6 +178,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         className={cn(buttonVariants({ variant, size, color, className }))}
         ref={ref}
+        type="button"
         {...props}
       />
     );

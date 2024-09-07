@@ -2,11 +2,12 @@
 
 import { ProjectUrls } from "@/const";
 import { cn } from "@/utils/styles";
-import { Menu, Rss, X } from "lucide-react";
+import { Rss } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentPropsWithoutRef, useState } from "react";
 import { Button } from "../ui/button";
+import { HamburgerButton } from "./hamburger-button";
 import { UserDropdown } from "./user-dropdown";
 
 const MOBILE_MENU_ID = "mobile-menu";
@@ -58,7 +59,8 @@ export const LandingHeader = (props: LandingHeaderProps) => {
 
             {user && <UserDropdown user={user} />}
 
-            <Button
+            <HamburgerButton
+              isActive={isMenuOpened}
               size={"sm"}
               variant={"ghost"}
               data-collapse-toggle={MOBILE_MENU_ID}
@@ -71,9 +73,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
               <span className="sr-only">
                 {isMenuOpened ? "Close" : "Open"} main menu
               </span>
-              <Menu className="w-6 h-6" />
-              <X className="hidden w-6 h-6" />
-            </Button>
+            </HamburgerButton>
           </div>
           <div
             className={cn(
