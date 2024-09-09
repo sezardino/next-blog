@@ -15,6 +15,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 
 import { ProjectUrls } from "@/const";
+import { useApplicationLogout } from "@/hooks/use-logout";
 import { cn } from "@/utils/styles";
 import {
   ClipboardCheck,
@@ -61,19 +62,25 @@ const mainLinks: SidebarMenu = [
   {
     label: "Posts",
     links: [
-      { label: "My posts", href: ProjectUrls.posts, icon: ClipboardCheck },
-      { label: "Add new post", href: ProjectUrls.posts, icon: ClipboardPlus },
+      { label: "My posts", href: ProjectUrls.myPosts, icon: ClipboardCheck },
+      { label: "Add new post", href: ProjectUrls.newPost, icon: ClipboardPlus },
     ],
   },
 ];
 
 const footerLinks = [
   { label: "Settings", href: ProjectUrls.dashboard, icon: Settings },
-  { label: "Log Out", href: ProjectUrls.posts, icon: LogOut },
+  { label: "Log Out", href: ProjectUrls.myPosts, icon: LogOut },
 ];
 
 export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
   const { className, ...rest } = props;
+  const { logout } = useApplicationLogout();
+
+  const footerLinks = [
+    { label: "Settings", href: ProjectUrls.dashboard, icon: Settings },
+    { label: "Log Out", onClick: logout, icon: LogOut },
+  ];
 
   return (
     <Card {...rest} className={cn("h-screen px-0.5 flex flex-col", className)}>
@@ -131,14 +138,20 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      asChild
+                      asChild={!!link.href}
                       variant={"ghost"}
                       color={"secondary"}
                       size={"icon"}
+                      onClick={link.onClick}
+                      aria-label={link.label}
                     >
-                      <Link href={link.href}>
+                      {link.href ? (
+                        <Link href={link.href}>
+                          <link.icon className="h-5 w-5" />
+                        </Link>
+                      ) : (
                         <link.icon className="h-5 w-5" />
-                      </Link>
+                      )}
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>

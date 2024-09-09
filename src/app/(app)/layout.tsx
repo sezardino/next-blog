@@ -23,8 +23,8 @@ const ApplicationLayout = ({ children }: PropsWithChildren) => {
     <div className="grid lg:grid-cols-[250px_1fr]">
       <div
         className={cn(
-          "max-lg:absolute max-lg:top-0 max-lg:bottom-0 max-lg:left-0 max-lg:w-[250px] z-10 transition-transform",
-          !isSidebarOpen && "-translate-x-full"
+          "max-lg:absolute max-lg:top-0 max-lg:bottom-0 max-lg:left-0 max-lg:w-[250px] max-lg:z-10 transition-transform",
+          !isSidebarOpen && "max-lg:-translate-x-full"
         )}
       >
         <ApplicationSidebar id={SIDEBAR_ID} />
@@ -43,7 +43,7 @@ const ApplicationLayout = ({ children }: PropsWithChildren) => {
       <div
         className={cn(
           "min-h-screen container pt-5",
-          isSidebarOpen && "blur-sm"
+          isSidebarOpen && "max-lg:blur-sm"
         )}
         onClick={() => setIsSidebarOpen(false)}
       >

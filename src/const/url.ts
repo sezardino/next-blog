@@ -14,7 +14,7 @@ export const ProjectUrls = {
   profile: "/profile",
 
   // posts
-  posts: "/post",
+  myPosts: "/post",
   newPost: "/post/new",
 
   // settings

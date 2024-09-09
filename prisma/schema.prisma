@@ -23,5 +23,29 @@ model User {
   lastName  String? @map("last_name")
   bio       String?
 
+  posts Post[]
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
   @@map("users")
+}
+
+model Post {
+  id String @id @default(uuid())
+
+  title        String
+  description  String
+  thumbnailUrl String @map("thumbnail_url")
+  body         String
+
+  publicationDate DateTime @map("publication_date")
+
+  author   User   @relation(fields: [authorId], references: [id])
+  authorId String @map("author_id")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("posts")
 }
