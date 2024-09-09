@@ -1,5 +1,5 @@
 import { ProjectUrls } from "@/const";
-import { prisma } from "@/lib/prisma";
+import prismaClient from "@/lib/prisma";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
@@ -14,13 +14,13 @@ export async function GET() {
   const clerkUser = await currentUser();
   if (!clerkUser) return redirect(ProjectUrls.registration);
 
-  const user = await prisma.user.findUnique({
+  const user = await prismaClient.user.findUnique({
     where: { clerkId: clerkUser.id },
   });
 
   if (!user) {
     try {
-      await prisma.user.create({
+      await prismaClient.user.create({
         data: {
           clerkId: clerkUser.id,
           email: clerkUser.emailAddresses[0].emailAddress,

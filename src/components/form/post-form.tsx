@@ -3,10 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ComponentPropsWithoutRef } from "react";
-import { z } from "zod";
 
+import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { PostEditor } from "../base/post-editor";
 import { Button } from "../ui/button";
 import {
@@ -22,22 +21,6 @@ import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
 import { Textarea } from "../ui/textarea";
 
-const PostFormSchema = z.object({
-  title: z
-    .string({ required_error: "Title is required" })
-    .min(8, "Title is too short")
-    .max(64, "Title is too long"),
-  description: z
-    .string({ required_error: "Description is required" })
-    .min(8, "Title is too short")
-    .max(100, "Description should be maximum 100 characters"),
-  // thumbnail: z.any(),
-  tags: z.array(z.string()).min(1, "Tags is required field"),
-  body: z.string({ required_error: "Body is required" }),
-});
-
-type PostFormValues = z.infer<typeof PostFormSchema>;
-
 type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   initialValues?: Partial<PostFormValues>;
   onFormSubmit: (values: PostFormValues) => void;
@@ -48,18 +31,23 @@ export const PostForm = (props: PostFormProps) => {
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(PostFormSchema),
-    defaultValues: { tags: [] },
+    defaultValues: {
+      body: initialValues?.body || "",
+      description: initialValues?.description || "",
+      tags: initialValues?.tags || [],
+      title: initialValues?.title || "",
+    },
   });
 
-  function onSubmit(data: PostFormValues) {
-    toast.success(JSON.stringify(data));
-  }
+  const onSubmit = (data: PostFormValues) => {
+    onFormSubmit(data);
+  };
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-1 gap-4"
+        className="grid grid-cols-1 gap-8"
       >
         <FormField
           control={form.control}
@@ -68,7 +56,7 @@ export const PostForm = (props: PostFormProps) => {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="How to ..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,7 +69,10 @@ export const PostForm = (props: PostFormProps) => {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="shadcn" {...field} />
+                <Textarea
+                  placeholder="In this article we will tal about ..."
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
                 Needed for seo and description in post card.
@@ -100,7 +91,7 @@ export const PostForm = (props: PostFormProps) => {
               <FormControl>
                 <InputTag
                   {...field}
-                  placeholder="Enter a tags"
+                  placeholder="programming, people"
                   value={field.value}
                   onChange={(value) => form.setValue("tags", value)}
                 />
@@ -113,7 +104,7 @@ export const PostForm = (props: PostFormProps) => {
 
         <FormField
           control={form.control}
-          name="title"
+          name="body"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Body</FormLabel>

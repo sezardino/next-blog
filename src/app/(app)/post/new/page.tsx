@@ -1,9 +1,10 @@
+import { createPostAction } from "@/actions/post";
 import { PostForm } from "@/components/form/post-form";
 
 const NewPostPage = () => {
   return (
     <main>
-      <PostForm />
+      <PostForm onFormSubmit={createPostAction} />
     </main>
   );
 };

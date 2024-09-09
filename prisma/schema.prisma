@@ -35,11 +35,12 @@ model Post {
   id String @id @default(uuid())
 
   title        String
-  description  String
-  thumbnailUrl String @map("thumbnail_url")
-  body         String
+  description  String   @default("")
+  tags         String[] @default([])
+  thumbnailUrl String?  @map("thumbnail_url")
+  body         String   @default("")
 
-  publicationDate DateTime @map("publication_date")
+  publicationDate DateTime? @map("publication_date")
 
   author   User   @relation(fields: [authorId], references: [id])
   authorId String @map("author_id")

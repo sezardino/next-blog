@@ -1,8 +1,7 @@
 "use server";
 
 import { ProjectUrls } from "@/const";
-import { prisma } from "@/lib/prisma";
-
+import prismaClient from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -21,10 +20,12 @@ export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
   if (!userId) return null;
 
   try {
-    const user = await prisma.user.findUnique({
+    console.log(userId);
+    const user = await prismaClient.user.findUnique({
       where: { clerkId: userId },
       select: { email: true, avatarUrl: true },
     });
+    console.log(user);
 
     return user;
   } catch (error) {
@@ -42,7 +43,7 @@ export const getCurrentUserProfile = async (): Promise<Pick<
   if (!userId) return null;
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await prismaClient.user.findUnique({
       where: { clerkId: userId },
       select: { bio: true, firstName: true, lastName: true, avatarUrl: true },
     });
@@ -84,7 +85,7 @@ export const updateProfileData = async (
   const { firstName, lastName, bio } = validatedFields.data;
 
   try {
-    await prisma.user.update({
+    await prismaClient.user.update({
       where: { clerkId: userId },
       data: { firstName, lastName, bio },
     });
