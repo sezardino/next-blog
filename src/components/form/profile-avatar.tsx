@@ -49,7 +49,7 @@ export const ProfileAvatarForm = (props: ProfileAvatarFormProps) => {
               <input type="file" className="sr-only" />
             </label>
           </Button>
-          <Button size={"lg"} variant={"destructive"}>
+          <Button size={"lg"} color="destructive">
             Delete image
           </Button>
         </div>
