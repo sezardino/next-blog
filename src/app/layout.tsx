@@ -1,6 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/index.css";
 import { ClerkProvider } from "@clerk/nextjs";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
@@ -27,7 +28,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <TooltipProvider delayDuration={0}>{children}</TooltipProvider>
             <Toaster />
           </ThemeProvider>
         </body>

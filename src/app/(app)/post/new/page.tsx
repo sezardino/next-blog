@@ -1,5 +1,5 @@
-import { createPostAction } from "@/actions/post";
 import { PostForm } from "@/components/form/post-form";
+import { createPostAction } from "./actions/create-new-post";
 
 const NewPostPage = () => {
   return (

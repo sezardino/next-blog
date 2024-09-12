@@ -34,12 +34,7 @@ import {
 } from "react";
 import { BrandLogo } from "../base/brand-logo";
 import { Button } from "../ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "../ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type ApplicationSidebarProps = ComponentPropsWithRef<"div"> & {};
 
@@ -66,11 +61,6 @@ const mainLinks: SidebarMenu = [
       { label: "Add new post", href: ProjectUrls.newPost, icon: ClipboardPlus },
     ],
   },
-];
-
-const footerLinks = [
-  { label: "Settings", href: ProjectUrls.dashboard, icon: Settings },
-  { label: "Log Out", href: ProjectUrls.myPosts, icon: LogOut },
 ];
 
 export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
@@ -131,39 +121,37 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
         </Accordion>
       </CardContent>
       <CardFooter className="p-2 mt-auto justify-center">
-        <TooltipProvider delayDuration={0}>
-          <ul className="flex items-center gap-2">
-            {footerLinks.map((link) => (
-              <li key={link.href}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      asChild={!!link.href}
-                      variant={"ghost"}
-                      color={"secondary"}
-                      size={"icon"}
-                      onClick={link.onClick}
-                      aria-label={link.label}
-                    >
-                      {link.href ? (
-                        <Link href={link.href}>
-                          <link.icon className="h-5 w-5" />
-                        </Link>
-                      ) : (
+        <ul className="flex items-center gap-2">
+          {footerLinks.map((link, index) => (
+            <li key={`${index}-${link.href}`}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    asChild={!!link.href}
+                    variant={"ghost"}
+                    color={"secondary"}
+                    size={"icon"}
+                    onClick={link.onClick}
+                    aria-label={link.label}
+                  >
+                    {link.href ? (
+                      <Link href={link.href}>
                         <link.icon className="h-5 w-5" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <Typography level="span" styling="small">
-                      {link.label}
-                    </Typography>
-                  </TooltipContent>
-                </Tooltip>
-              </li>
-            ))}
-          </ul>
-        </TooltipProvider>
+                      </Link>
+                    ) : (
+                      <link.icon className="h-5 w-5" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <Typography level="span" styling="small">
+                    {link.label}
+                  </Typography>
+                </TooltipContent>
+              </Tooltip>
+            </li>
+          ))}
+        </ul>
       </CardFooter>
     </Card>
   );
