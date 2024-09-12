@@ -23,11 +23,11 @@ const ApplicationLayout = ({ children }: PropsWithChildren) => {
     <div className="grid lg:grid-cols-[250px_1fr]">
       <div
         className={cn(
-          "max-lg:absolute max-lg:top-0 max-lg:bottom-0 max-lg:left-0 max-lg:w-[250px] max-lg:z-10 transition-transform",
+          "max-lg:fixed max-lg:top-0 max-lg:bottom-0 max-lg:left-0 max-lg:w-[250px] max-lg:z-10 transition-transform",
           !isSidebarOpen && "max-lg:-translate-x-full"
         )}
       >
-        <ApplicationSidebar id={SIDEBAR_ID} />
+        <ApplicationSidebar id={SIDEBAR_ID} className="lg:sticky lg:top-0" />
         <HamburgerButton
           isActive={isSidebarOpen}
           className="absolute bottom-5 -right-5 translate-x-full lg:hidden"

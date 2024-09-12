@@ -15,6 +15,7 @@ export const ProjectUrls = {
 
   // posts
   myPosts: "/post",
+  myPost: (id: string) => `/post/${id}`,
   newPost: "/post/new",
 
   // settings

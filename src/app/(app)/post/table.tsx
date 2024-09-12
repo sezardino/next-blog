@@ -1,16 +1,19 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { DataTable, DataTableProps } from "@/components/ui/data-table";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ProjectUrls } from "@/const";
 import { DEFAULT_DATE_FORMAT } from "@/const/date";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import {
   Check,
+  Eye,
   Ghost,
   ThumbsDown,
   ThumbsUp,
@@ -18,6 +21,7 @@ import {
   Users,
   X,
 } from "lucide-react";
+import Link from "next/link";
 import { getMyPostsAction } from "./actions/get-posts";
 
 type MyPostsTableType = Exclude<
@@ -120,6 +124,26 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
       header: "Comments count",
       cell: (cell) => (
         <span className="block text-center">{cell.row.original.comments}</span>
+      ),
+    },
+    {
+      accessorKey: "id",
+      header: "",
+      cell: (cell) => (
+        <ul className="flex items-center gap-2">
+          <li>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" asChild>
+                  <Link href={ProjectUrls.myPost(cell.row.original.id)}>
+                    <Eye className="w-5 h-5" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>See post</TooltipContent>
+            </Tooltip>
+          </li>
+        </ul>
       ),
     },
   ];
