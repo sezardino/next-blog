@@ -2,12 +2,12 @@ import { PaginationWidget } from "@/components/ui/pagination-widget";
 import { Typography } from "@/components/ui/typography";
 import { DEFAULT_PAGE_LIMIT } from "@/utils/get-pagination";
 import { getMyPostsAction } from "./actions/get-posts";
-import { MyPostsTable } from "./table";
+import { MyPostsTable } from "@/components/base/my-posts-table";
 
 const TABLE_PAGE_PATH_NAME = "page";
 const TABLE_LIMIT_PATH_NAME = "limit";
 
-const MyPostPage = async ({
+const MyPostsPage = async ({
   searchParams,
 }: {
   searchParams?: {
@@ -48,4 +48,4 @@ const MyPostPage = async ({
   );
 };
 
-export default MyPostPage;
+export default MyPostsPage;

@@ -15,6 +15,7 @@ import {
   Check,
   Eye,
   Ghost,
+  Pencil,
   ThumbsDown,
   ThumbsUp,
   UserCheck,
@@ -22,7 +23,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { getMyPostsAction } from "./actions/get-posts";
+import { getMyPostsAction } from "../../app/(app)/post/actions/get-posts";
 
 type MyPostsTableType = Exclude<
   Awaited<ReturnType<typeof getMyPostsAction>>["data"],
@@ -141,6 +142,18 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>See post</TooltipContent>
+            </Tooltip>
+          </li>
+          <li>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" color={"info"} asChild>
+                  <Link href={ProjectUrls.editMyPost(cell.row.original.id)}>
+                    <Pencil className="w-5 h-5" />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Edit post</TooltipContent>
             </Tooltip>
           </li>
         </ul>

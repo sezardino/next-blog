@@ -19,7 +19,6 @@ export const createPostAction = async (data: PostFormValues) => {
         author: { connect: { clerkId: userId } },
         body,
         tags: convertArrayToTags(tags),
-        // tags: convertArrayToTags(tags),
         description,
         title,
       },

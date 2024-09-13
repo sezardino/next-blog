@@ -32,7 +32,7 @@ import {
   Fragment,
   RefAttributes,
 } from "react";
-import { BrandLogo } from "../base/brand-logo";
+import { BrandLogo } from "../ui/brand-logo";
 import { Button } from "../ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
@@ -75,7 +75,7 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
   return (
     <Card {...rest} className={cn("h-screen px-0.5 flex flex-col", className)}>
       <CardHeader className="p-2 border-b">
-        <BrandLogo href="dashboard" />
+        <BrandLogo href={ProjectUrls.dashboard} />
       </CardHeader>
       <CardContent className="p-2">
         <Accordion asChild type="single" collapsible>

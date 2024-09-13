@@ -6,7 +6,6 @@ import { ComponentPropsWithoutRef } from "react";
 
 import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
 import { useForm } from "react-hook-form";
-import { PostEditor } from "../base/post-editor";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -19,6 +18,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
+import { PostEditor } from "../ui/post-editor";
 import { Textarea } from "../ui/textarea";
 
 type PostFormProps = ComponentPropsWithoutRef<"form"> & {

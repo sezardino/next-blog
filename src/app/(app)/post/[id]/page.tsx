@@ -4,7 +4,7 @@ import { getMyPost } from "./actions/get-post";
 
 type Props = { params: { id: string } };
 
-export const MyPostPage = async (props: Props) => {
+const MyPostPage = async (props: Props) => {
   const { params } = props;
   const post = await getMyPost(params.id);
 
