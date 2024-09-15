@@ -1,6 +1,6 @@
 "use client";
 
-import { ProjectUrls } from "@/const";
+import { landingNavigationLinks, ProjectUrls } from "@/const";
 import { cn } from "@/utils/styles";
 import { Rss } from "lucide-react";
 import Link from "next/link";
@@ -9,11 +9,6 @@ import { ComponentPropsWithoutRef, useState } from "react";
 import { HamburgerButton } from "./hamburger-button";
 
 const MOBILE_MENU_ID = "mobile-menu";
-
-const menuLinks = [
-  { label: "Home", href: ProjectUrls.home },
-  { label: "Road Map", href: ProjectUrls.roadMap },
-];
 
 type LandingHeaderProps = ComponentPropsWithoutRef<"header"> & {
   user?: {
@@ -86,7 +81,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
             id={MOBILE_MENU_ID}
           >
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
-              {menuLinks.map((link) => (
+              {landingNavigationLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

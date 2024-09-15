@@ -1,14 +1,16 @@
-import { getCurrentUserData } from "@/actions";
+import { LandingFooter } from "@/components/layout/landing-footer";
 import { LandingHeader } from "@/components/layout/landing-header";
 import { PropsWithChildren } from "react";
 
 const LandingLayout = async ({ children }: PropsWithChildren) => {
-  const user = await getCurrentUserData();
+  // TODO: hide in first mvp
+  // const user = await getCurrentUserData();
 
   return (
     <>
-      <LandingHeader user={user || undefined} />
+      <LandingHeader />
       {children}
+      <LandingFooter />
     </>
   );
 };
