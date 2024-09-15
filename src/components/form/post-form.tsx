@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, useState } from "react";
 
 import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
 import { useForm } from "react-hook-form";
@@ -18,16 +18,28 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
+import { Label } from "../ui/label";
 import { PostEditor } from "../ui/post-editor";
+import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
 type PostFormProps = ComponentPropsWithoutRef<"form"> & {
+  withPublicationDate?: boolean;
   initialValues?: Partial<PostFormValues>;
   onFormSubmit: (values: PostFormValues) => void;
 };
 
 export const PostForm = (props: PostFormProps) => {
-  const { initialValues, onFormSubmit, className, ...rest } = props;
+  const {
+    withPublicationDate = false,
+    initialValues,
+    onFormSubmit,
+    className,
+    ...rest
+  } = props;
+
+  const [isSelectPublicationVisible, setIsSelectPublicationVisible] =
+    useState(false);
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(PostFormSchema),
@@ -43,9 +55,17 @@ export const PostForm = (props: PostFormProps) => {
     onFormSubmit(data);
   };
 
+  const changePublicationVisibility = (value: boolean) => {
+    if (value) form.setValue("publishedAt", new Date());
+    else form.setValue("publishedAt", new Date());
+
+    setIsSelectPublicationVisible(value);
+  };
+
   return (
     <Form {...form}>
       <form
+        {...rest}
         onSubmit={form.handleSubmit(onSubmit)}
         className="grid grid-cols-1 gap-8"
       >
@@ -116,6 +136,59 @@ export const PostForm = (props: PostFormProps) => {
             </FormItem>
           )}
         />
+
+        <Label className="flex items-center gap-2 cursor-pointer">
+          Publish?
+          <Switch
+            checked={isSelectPublicationVisible}
+            onCheckedChange={changePublicationVisibility}
+          />
+        </Label>
+
+        {/* {isSelectPublicationVisible && <FormField
+          control={form.control}
+          name="dob"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date of birth</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] pl-3 text-left font-normal",
+                        !field.value && "text-muted-foreground"
+                      )}
+                    >
+                      {field.value ? (
+                        dayjs(field.value)
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                      date > new Date() || date < new Date("1900-01-01")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>
+                Your date of birth is used to calculate your age.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />} */}
 
         <Button type="submit" className="justify-self-end">
           Save

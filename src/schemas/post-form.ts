@@ -21,6 +21,12 @@ export const PostFormSchema = z.object({
       `Description should be minimum ${DESCRIPTION_MIN_LENGTH} characters`
     ),
   // thumbnail: z.any(),
+  publishedAt: z
+    .date()
+    .optional()
+    .refine((date) => !date || date > new Date(), {
+      message: "Publication date must be in the future",
+    }),
   tags: z
     .array(z.string())
     .refine(
