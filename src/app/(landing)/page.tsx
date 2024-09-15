@@ -55,24 +55,24 @@ const HomePage = () => {
                 <Image
                   src="/images/hero/one.jpg"
                   alt="decorative image about our blog"
-                  width={350}
-                  height={260}
+                  width={650}
+                  height={938}
                 />
               </div>
               <div className="absolute right-[12%] top-[20%] flex aspect-square w-1/5 justify-center rounded-lg border border-border bg-accent overflow-hidden">
                 <Image
                   src="/images/hero/three.jpg"
                   alt="decorative image about our blog"
-                  width={220}
-                  height={220}
+                  width={640}
+                  height={426}
                 />
               </div>
               <div className="absolute bottom-[24%] right-[24%] flex aspect-[5/6] w-[38%] justify-center rounded-lg border border-border bg-accent overflow-hidden">
                 <Image
                   src="/images/hero/two.jpg"
                   alt="decorative image about our blog"
-                  width={350}
-                  height={260}
+                  width={640}
+                  height={426}
                 />
               </div>
             </div>
