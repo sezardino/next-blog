@@ -1,5 +1,7 @@
 export const ProjectUrls = {
+  // landing
   home: "/",
+  roadMap: "/road-map",
 
   // auth
   login: "/auth/login",
