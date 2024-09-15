@@ -5,7 +5,7 @@ import { cn } from "@/utils/styles";
 import { Check } from "lucide-react";
 import { roadmapPage } from "./content";
 
-const currentMVPVersion = 0;
+const currentMVPVersion = 1;
 
 const RoadMapPage = () => {
   return (
