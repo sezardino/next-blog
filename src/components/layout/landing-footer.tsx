@@ -1,4 +1,5 @@
 import { landingNavigationLinks } from "@/const";
+import { Github } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "../ui/typography";
 
@@ -25,9 +26,17 @@ export const LandingFooter = () => {
       <Typography className="mt-6 text-muted-foreground">
         Copyright &copy; {currentYear} Next-blog
       </Typography>
-      <Typography styling="xxs" className="mt-6 text-muted-foreground">
-        Created for educational purposes
-      </Typography>
+      <div className="flex items-center gap-3 mt-6">
+        <Typography styling="xxs" className="text-muted-foreground">
+          Created for educational purposes
+        </Typography>
+        <Link
+          href="https://github.com/sezardino/next-blog"
+          className="hover:text-muted-foreground"
+        >
+          <Github className="w-4 h-4" />
+        </Link>
+      </div>
     </footer>
   );
 };
