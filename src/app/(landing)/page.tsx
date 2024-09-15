@@ -9,7 +9,7 @@ const HomePage = () => {
       <section>
         <div className="container">
           <div className="grid items-center gap-8 lg:grid-cols-2">
-            <header className="flex flex-col items-center py-32 text-center lg:mx-auto lg:items-start lg:px-0 lg:text-left">
+            <div className="flex flex-col items-center py-32 text-center lg:mx-auto lg:items-start lg:px-0 lg:text-left">
               {/* TODO: uncomment when mvp v2 will be ready */}
               {/* <p>{homeHeroSection.newVersion}</p> */}
               <h1 className="my-6 text-pretty text-4xl font-bold lg:text-6xl">
@@ -23,7 +23,7 @@ const HomePage = () => {
                   <Link href="#features">{homeHeroSection.cta}</Link>
                 </Button>
               </div>
-            </header>
+            </div>
             <div className="relative aspect-[3/4]">
               <div className="absolute inset-0 flex items-center justify-center">
                 <svg

@@ -1,4 +1,5 @@
 import { cn } from "@/utils/styles";
+import { Slot } from "@radix-ui/react-slot";
 import {
   ComponentPropsWithRef,
   ForwardRefRenderFunction,
@@ -41,6 +42,7 @@ const weightMap: Record<TypographyWeight, string> = {
 
 type Props = {
   level?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span";
+  asChild?: boolean;
   styling?: TypographyStyling;
   weight?: TypographyWeight;
   isMuted?: boolean;
@@ -55,9 +57,10 @@ const TypographyComponent: ForwardRefRenderFunction<
   TypographyProps
 > = (props, ref) => {
   const {
-    level: Level = "p",
+    level,
     weight = "normal",
     styling = "base",
+    asChild = false,
     isUppercase = false,
     isUnderlined,
     isMuted,
@@ -66,8 +69,10 @@ const TypographyComponent: ForwardRefRenderFunction<
     ...rest
   } = props;
 
+  const Comp = level ? level : asChild ? Slot : "p";
+
   return (
-    <Level
+    <Comp
       {...rest}
       ref={ref}
       className={cn(
@@ -80,7 +85,7 @@ const TypographyComponent: ForwardRefRenderFunction<
       )}
     >
       {children}
-    </Level>
+    </Comp>
   );
 };
 
