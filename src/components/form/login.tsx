@@ -1,14 +1,21 @@
+"use client";
+
+import { LoginFormSchema, LoginFormValues } from "@/schemas/auth";
 import { cn } from "@/utils/styles";
 import { ClerkAPIError } from "@clerk/types";
-import { Label } from "@radix-ui/react-label";
-import { ComponentPropsWithoutRef, FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ComponentPropsWithoutRef } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { Typography } from "../ui/typography";
-
-export type LoginFormValues = {
-  email: string;
-  password: string;
-};
 
 type LoginFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: LoginFormValues) => void;
@@ -18,43 +25,61 @@ type LoginFormProps = ComponentPropsWithoutRef<"form"> & {
 export const LoginForm = (props: LoginFormProps) => {
   const { errors, onFormSubmit, className, ...rest } = props;
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const email = target.email.value;
-    const password = target.password.value;
-    onFormSubmit({ email, password: password });
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(LoginFormSchema),
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    onFormSubmit(data);
   };
 
   return (
-    <form
-      {...rest}
-      className={cn("space-y-4 md:space-y-6", className)}
-      onSubmit={submitHandler}
-    >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" placeholder="Email" />
-      </div>
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="password">Password</Label>
-        <Input type="password" id="password" placeholder="Password" />
-      </div>
+    <Form {...form}>
+      <form
+        {...rest}
+        className={cn("space-y-4 md:space-y-6", className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" placeholder="Email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {errors && (
-        <ul>
-          {errors.map((el, index) => (
-            <li key={index}>
-              <Typography level="span" className="text-red-400">
-                {el.longMessage}
-              </Typography>
-            </li>
-          ))}
-        </ul>
-      )}
-    </form>
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" placeholder="Password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {errors && (
+          <ul>
+            {errors.map((el, index) => (
+              <li key={index}>
+                <Typography level="span" className="text-red-400">
+                  {el.longMessage}
+                </Typography>
+              </li>
+            ))}
+          </ul>
+        )}
+      </form>
+    </Form>
   );
 };

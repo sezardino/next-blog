@@ -11,6 +11,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { useAuth } from "@clerk/nextjs";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLogin } from "./use-login";
@@ -18,7 +19,7 @@ import { useLogin } from "./use-login";
 const LOGIN_FORM_ID = "login-form";
 
 const LoginPage = () => {
-  const { errors, login } = useLogin();
+  const { errors, login, isLoading } = useLogin();
   const router = useRouter();
 
   const { isSignedIn } = useAuth();
@@ -41,7 +42,13 @@ const LoginPage = () => {
       </CardContent>
 
       <CardFooter className="grid grid-cols-1 gap-3 items-start">
-        <Button form={LOGIN_FORM_ID} type="submit" className="w-full">
+        <Button
+          form={LOGIN_FORM_ID}
+          type="submit"
+          disabled={isLoading}
+          className="w-full"
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
         <Button asChild variant={"link"}>
