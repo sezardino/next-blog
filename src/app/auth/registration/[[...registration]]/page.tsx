@@ -11,13 +11,14 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRegistration } from "./use-registration";
 
 const REGISTRATION_FORM_ID = "registration-form-id";
 
 const RegistrationPage = () => {
-  const { error, registration } = useRegistration();
+  const { error, registration, isLoading } = useRegistration();
 
   return (
     <Card className="md:w-96">
@@ -35,7 +36,13 @@ const RegistrationPage = () => {
       </CardContent>
 
       <CardFooter className="grid grid-cols-1 gap-3 items-start">
-        <Button form={REGISTRATION_FORM_ID} type="submit" className="w-full">
+        <Button
+          form={REGISTRATION_FORM_ID}
+          disabled={isLoading}
+          type="submit"
+          className="w-full"
+        >
+          {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Register
         </Button>
 

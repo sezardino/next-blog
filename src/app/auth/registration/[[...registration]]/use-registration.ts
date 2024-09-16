@@ -7,6 +7,7 @@ import { useState } from "react";
 export const useRegistration = () => {
   const { isLoaded, signUp } = useSignUp();
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // Handle submission of the sign-up form
@@ -17,6 +18,7 @@ export const useRegistration = () => {
 
     // Start the sign-up process using the email and password provided
     try {
+      setIsLoading(true);
       await signUp.create({
         emailAddress: email,
         password,
@@ -35,8 +37,10 @@ export const useRegistration = () => {
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
       setError(err.errors[0].message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { error, registration };
+  return { error, registration, isLoading };
 };
