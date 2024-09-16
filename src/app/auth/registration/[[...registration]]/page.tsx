@@ -18,7 +18,7 @@ import { useRegistration } from "./use-registration";
 const REGISTRATION_FORM_ID = "registration-form-id";
 
 const RegistrationPage = () => {
-  const { error, registration, isLoading } = useRegistration();
+  const { errors, registration, isLoading } = useRegistration();
 
   return (
     <Card className="md:w-96">
@@ -31,7 +31,7 @@ const RegistrationPage = () => {
         <RegistrationForm
           id={REGISTRATION_FORM_ID}
           onFormSubmit={registration}
-          error={error}
+          errors={errors}
         />
       </CardContent>
 

@@ -1,12 +1,14 @@
-import { RegistrationFormValues } from "@/components/form/registration";
 import { ProjectUrls } from "@/const";
+import { RegistrationFormValues } from "@/schemas/auth";
 import { useSignUp } from "@clerk/nextjs";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const useRegistration = () => {
   const { isLoaded, signUp } = useSignUp();
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<ClerkAPIError[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -35,12 +37,12 @@ export const useRegistration = () => {
     } catch (err: any) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
+      if (isClerkAPIResponseError(err)) setErrors(err.errors);
       console.error(JSON.stringify(err, null, 2));
-      setError(err.errors[0].message);
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { error, registration, isLoading };
+  return { errors, registration, isLoading };
 };

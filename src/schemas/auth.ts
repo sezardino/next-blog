@@ -17,8 +17,15 @@ export const RegistrationFormSchema = baseAuthFields
     path: ["confirm"],
   });
 
+export const VerificationFormSchema = z.object({
+  code: z
+    .string({ required_error: "Code is required" })
+    .length(6, "Code should have 6 digits"),
+});
+
 export type RegistrationFormValues = z.infer<typeof RegistrationFormSchema>;
 
 export const LoginFormSchema = baseAuthFields;
 
 export type LoginFormValues = z.infer<typeof LoginFormSchema>;
+export type VerificationFormValues = z.infer<typeof VerificationFormSchema>;

@@ -20,12 +20,10 @@ export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
   if (!userId) return null;
 
   try {
-    console.log(userId);
     const user = await prismaClient.user.findUnique({
       where: { clerkId: userId },
       select: { email: true, avatarUrl: true },
     });
-    console.log(user);
 
     return user;
   } catch (error) {

@@ -52,7 +52,9 @@ const LoginPage = () => {
           Login
         </Button>
         <Button asChild variant={"link"}>
-          <Link href={ProjectUrls.forgotPassword}>Forgot password?</Link>
+          <Link href={ProjectUrls.forgotPassword} className="!justify-start">
+            Forgot password?
+          </Link>
         </Button>
         <Typography level="p" styling="small">
           Don’t have an account yet?{" "}

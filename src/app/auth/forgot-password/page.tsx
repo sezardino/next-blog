@@ -10,8 +10,11 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
+import { ProjectUrls } from "@/const";
 import { useAuth, useSignIn } from "@clerk/nextjs";
+import { ArrowLeft } from "lucide-react";
 import type { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForgotPassword } from "./use-forgot-password";
 
@@ -36,7 +39,7 @@ const ForgotPasswordPage: NextPage = () => {
 
   return (
     <Card className="md:w-96">
-      <CardHeader>
+      <CardHeader className="gap-4">
         <Typography level="h1" styling="h3">
           Forgot Password?
         </Typography>
@@ -45,6 +48,16 @@ const ForgotPasswordPage: NextPage = () => {
             Check your email, for verification code
           </Typography>
         )}
+
+        <Button asChild variant="link">
+          <Link
+            href={ProjectUrls.login}
+            className="-order-1 !justify-start gap-2"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Login
+          </Link>
+        </Button>
       </CardHeader>
       <CardContent>
         {!isResettingStep && (

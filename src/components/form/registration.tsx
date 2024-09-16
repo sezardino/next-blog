@@ -2,6 +2,7 @@
 
 import { RegistrationFormSchema, RegistrationFormValues } from "@/schemas/auth";
 import { cn } from "@/utils/styles";
+import { ClerkAPIError } from "@clerk/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ComponentPropsWithoutRef } from "react";
 import { useForm } from "react-hook-form";
@@ -18,11 +19,11 @@ import { Typography } from "../ui/typography";
 
 type RegistrationFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: RegistrationFormValues) => void;
-  error: string;
+  errors?: ClerkAPIError[];
 };
 
 export const RegistrationForm = (props: RegistrationFormProps) => {
-  const { error, onFormSubmit, className, ...rest } = props;
+  const { errors, onFormSubmit, className, ...rest } = props;
 
   const form = useForm<RegistrationFormValues>({
     resolver: zodResolver(RegistrationFormSchema),
@@ -85,10 +86,16 @@ export const RegistrationForm = (props: RegistrationFormProps) => {
           )}
         />
 
-        {error && (
-          <Typography level="span" className="text-red-400">
-            {error}
-          </Typography>
+        {errors && (
+          <ul>
+            {errors.map((el, index) => (
+              <li key={index}>
+                <Typography level="span" className="text-red-400">
+                  {el.longMessage}
+                </Typography>
+              </li>
+            ))}
+          </ul>
         )}
       </form>
     </Form>
