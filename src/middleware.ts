@@ -1,19 +1,17 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
-import { ProjectUrls } from "./const";
 
 // TODO: for 2+ mvp version
-// const isPublicRoute = createRouteMatcher(["/", "/auth/(.*)", "/api/(.*)"]);
-const isPublicRoute = createRouteMatcher([
-  ProjectUrls.home,
-  ProjectUrls.roadMap,
-]);
+const isPublicRoute = createRouteMatcher(["/", "/auth/(.*)", "/api/(.*)"]);
+// const isPublicRoute = createRouteMatcher([
+//   ProjectUrls.home,
+//   ProjectUrls.roadMap,
+// ]);
 
 export default clerkMiddleware((auth, req) => {
   if (!isPublicRoute(req)) {
     // TODO: for 2+ mvp version
-    // auth().protect();
-    return NextResponse.redirect(new URL(ProjectUrls.home, req.url));
+    auth().protect();
+    // return NextResponse.redirect(new URL(ProjectUrls.home, req.url));
   }
 });
 

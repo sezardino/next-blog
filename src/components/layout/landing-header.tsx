@@ -6,7 +6,9 @@ import { Rss } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentPropsWithoutRef, useState } from "react";
+import { Button } from "../ui/button";
 import { HamburgerButton } from "./hamburger-button";
+import { UserDropdown } from "./user-dropdown";
 
 const MOBILE_MENU_ID = "mobile-menu";
 
@@ -41,8 +43,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
             </span>
           </Link>
           <div className="flex items-center lg:order-2">
-            {/* TODO: hiden in first mvp */}
-            {/* {!user && (
+            {!user && (
               <>
                 <Button asChild variant={"ghost"}>
                   <Link href={ProjectUrls.login}>Log in</Link>
@@ -54,7 +55,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
               </>
             )}
 
-            {user && <UserDropdown user={user} />} */}
+            {user && <UserDropdown user={user} />}
 
             <HamburgerButton
               isActive={isMenuOpened}

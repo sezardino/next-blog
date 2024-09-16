@@ -4,9 +4,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ComponentPropsWithoutRef, useState } from "react";
 
+import { DEFAULT_DATE_FORMAT } from "@/const/date";
 import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
+import { cn } from "@/utils/styles";
+
+import dayjs from "dayjs";
+import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
 import {
   Form,
   FormControl,
@@ -18,10 +24,17 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
-import { Label } from "../ui/label";
-import { PostEditor } from "../ui/post-editor";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
+
+import dynamic from "next/dynamic";
+import { Skeleton } from "../ui/skeleton";
+
+const PostEditor = dynamic(() => import("../ui/post-editor"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-96 w-full" />,
+});
 
 type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   withPublicationDate?: boolean;
@@ -131,64 +144,76 @@ export const PostForm = (props: PostFormProps) => {
               <FormControl>
                 <PostEditor {...field} placeholder="Type something nice ..." />
               </FormControl>
-              <FormDescription>This is body of the post</FormDescription>
+              <FormDescription>
+                This is body of the post, select text to modify styles
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Label className="flex items-center gap-2 cursor-pointer">
-          Publish?
-          <Switch
-            checked={isSelectPublicationVisible}
-            onCheckedChange={changePublicationVisibility}
-          />
-        </Label>
+        <FormItem>
+          <div className="flex items-center gap-3">
+            <FormLabel>Already know when you wont publish this quiz?</FormLabel>
+            <FormControl>
+              <Switch
+                checked={isSelectPublicationVisible}
+                onCheckedChange={changePublicationVisibility}
+              />
+            </FormControl>
+          </div>
+          <FormDescription>
+            If selected, all fields should be filled.
+          </FormDescription>
+        </FormItem>
 
-        {/* {isSelectPublicationVisible && <FormField
-          control={form.control}
-          name="dob"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        dayjs(field.value)
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />} */}
+        {isSelectPublicationVisible && (
+          <FormField
+            control={form.control}
+            name="publishedAt"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Publication Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          dayjs(field.value).format(DEFAULT_DATE_FORMAT)
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        dayjs(date).isBefore(dayjs(new Date()).add(-1, "day"))
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormDescription>
+                  Date when this post should be published (you can change it at
+                  any time)
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button type="submit" className="justify-self-end">
           Save
