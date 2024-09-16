@@ -62,58 +62,59 @@ const bodyRequiredSchema = bodySchema
     `Body maximum characters length should be ${BODY_MAX_LENGTH}`
   );
 
-export const PostFormSchema = z
-  .object({
-    title: z
-      .string({ required_error: "Title is required" })
-      .min(8, "Title is too short")
-      .max(64, "Title is too long"),
-    description: descriptionOptionalSchema.optional(),
-    // thumbnail: z.any(),
-    publishedAt: z
-      .date()
-      .optional()
-      .refine((date) => !date || date > new Date(), {
-        message: "Publication date must be in the future",
-      }),
-    tags: tagsOptionalSchema,
-    body: bodyOptionalSchema,
-  })
-  .superRefine((data, ctx) => {
-    const { publishedAt, body, tags, description } = data;
+export const PostSchema = z.object({
+  title: z
+    .string({ required_error: "Title is required" })
+    .min(8, "Title is too short")
+    .max(64, "Title is too long"),
+  description: descriptionOptionalSchema.optional(),
+  // thumbnail: z.any(),
+  publishedAt: z
+    .date()
+    .optional()
+    .refine((date) => !date || date > new Date(), {
+      message: "Publication date must be in the future",
+    }),
+  tags: tagsOptionalSchema,
+  body: bodyOptionalSchema,
+});
 
-    if (!publishedAt) return;
+export const PostFormSchema = PostSchema.superRefine((data, ctx) => {
+  const { publishedAt, body, tags, description } = data;
 
-    const descriptionValidation =
-      descriptionRequiredSchema.safeParse(description);
-    const tagsValidation = tagsRequiredSchema.safeParse(tags);
-    const bodyValidation = bodyRequiredSchema.safeParse(body);
+  if (!publishedAt) return;
 
-    if (!descriptionValidation.success) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["description"],
-        message:
-          descriptionValidation.error.errors[0]?.message ||
-          "Invalid description",
-      });
-    }
+  const descriptionValidation =
+    descriptionRequiredSchema.safeParse(description);
+  const tagsValidation = tagsRequiredSchema.safeParse(tags);
+  const bodyValidation = bodyRequiredSchema.safeParse(body);
 
-    if (!tagsValidation.success) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["tags"],
-        message: tagsValidation.error.errors[0]?.message || "Invalid tags",
-      });
-    }
+  if (!descriptionValidation.success) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["description"],
+      message:
+        descriptionValidation.error.errors[0]?.message || "Invalid description",
+    });
+  }
 
-    if (!bodyValidation.success) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["body"],
-        message: bodyValidation.error.errors[0]?.message || "Invalid body",
-      });
-    }
-  });
+  if (!tagsValidation.success) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["tags"],
+      message: tagsValidation.error.errors[0]?.message || "Invalid tags",
+    });
+  }
+
+  if (!bodyValidation.success) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["body"],
+      message: bodyValidation.error.errors[0]?.message || "Invalid body",
+    });
+  }
+});
+
+export const EditPostSchema = PostSchema.partial();
 
 export type PostFormValues = z.infer<typeof PostFormSchema>;

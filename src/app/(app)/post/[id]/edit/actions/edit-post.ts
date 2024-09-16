@@ -1,20 +1,17 @@
 "use server";
 
 import prismaClient from "@/lib/prisma";
-import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
+import { EditPostSchema, PostFormValues } from "@/schemas/post-form";
 import { convertArrayToTags } from "@/utils/array-to-tags";
 
 import { auth } from "@clerk/nextjs/server";
 
-type Args = PostFormValues;
-
-export const editPostAction = async (postId: string, data: Args) => {
+export const editPostAction = async (postId: string, data: PostFormValues) => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { body, description, tags, title } =
-    PostFormSchema.partial().parse(data);
+  const { body, description, tags, title } = EditPostSchema.parse(data);
 
   try {
     await prismaClient.post.update({
