@@ -25,7 +25,7 @@ const ForgotPasswordPage: NextPage = () => {
   const { isSignedIn } = useAuth();
   const { isLoaded } = useSignIn();
 
-  const { error, isResettingStep, resetPassword, resetPasswordRequest } =
+  const { errors, isResettingStep, resetPassword, resetPasswordRequest } =
     useForgotPassword();
 
   if (!isLoaded) {
@@ -64,14 +64,14 @@ const ForgotPasswordPage: NextPage = () => {
           <PasswordResetRequestForm
             id={FORGOT_PASSWORD_FORM_ID}
             onFormSubmit={resetPasswordRequest}
-            error={error}
+            errors={errors}
           />
         )}
         {isResettingStep && (
           <PasswordResetForm
             id={FORGOT_PASSWORD_FORM_ID}
             onFormSubmit={resetPassword}
-            error={error}
+            errors={errors}
           />
         )}
       </CardContent>

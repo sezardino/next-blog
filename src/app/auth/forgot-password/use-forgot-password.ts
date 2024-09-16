@@ -1,14 +1,18 @@
-import { PasswordResetFormValues } from "@/components/form/password-reset";
-import { PasswordResetRequestFormValues } from "@/components/form/password-reset-request";
 import { ProjectUrls } from "@/const";
+import {
+  PasswordResetFormValues,
+  PasswordResetRequestFormValues,
+} from "@/schemas/auth";
 import { useSignIn } from "@clerk/nextjs";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 export const useForgotPassword = () => {
   const [isResettingStep, setIsResettingStep] = useState(false);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<ClerkAPIError[]>([]);
 
   const router = useRouter();
   const { signIn, setActive } = useSignIn();
@@ -25,12 +29,14 @@ export const useForgotPassword = () => {
         })
         .then((_) => {
           setIsResettingStep(true);
-          setError("");
+          setErrors([]);
           toast.success("Check email for verification code");
         })
         .catch((err) => {
-          console.error("error", err.errors[0].longMessage);
-          setError(err.errors[0].longMessage);
+          // See https://clerk.com/docs/custom-flows/error-handling
+          // for more info on error handling
+          if (isClerkAPIResponseError(err)) setErrors(err.errors);
+          console.error(JSON.stringify(err, null, 2));
         });
     },
     [signIn]
@@ -50,27 +56,26 @@ export const useForgotPassword = () => {
           password,
         })
         .then((result) => {
-          // Check if 2FA is required
-          if (result.status === "needs_second_factor") {
-            setError("2FA is required");
-          } else if (result.status === "complete") {
+          if (result.status === "complete") {
             // Set the active session to
             // the newly created session (user is now signed in)
             setActive({ session: result.createdSessionId });
             toast("Password successfully reset");
             router.push(ProjectUrls.home);
-            setError("");
+            setErrors([]);
           } else {
             console.log(result);
           }
         })
         .catch((err) => {
-          console.error("error", err.errors[0].longMessage);
-          setError(err.errors[0].longMessage);
+          // See https://clerk.com/docs/custom-flows/error-handling
+          // for more info on error handling
+          if (isClerkAPIResponseError(err)) setErrors(err.errors);
+          console.error(JSON.stringify(err, null, 2));
         });
     },
     [router, setActive, signIn]
   );
 
-  return { isResettingStep, resetPassword, resetPasswordRequest, error };
+  return { isResettingStep, resetPassword, resetPasswordRequest, errors };
 };

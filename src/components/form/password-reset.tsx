@@ -1,7 +1,22 @@
 "use client";
 
+import {
+  PasswordResetFormSchema,
+  PasswordResetFormValues,
+} from "@/schemas/auth";
 import { cn } from "@/utils/styles";
-import { ComponentPropsWithoutRef, FormEvent } from "react";
+import { ClerkAPIError } from "@clerk/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ComponentPropsWithoutRef } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import {
   InputOTP,
@@ -9,73 +24,82 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "../ui/input-otp";
-import { Label } from "../ui/label";
 import { Typography } from "../ui/typography";
-
-export type PasswordResetFormValues = {
-  password: string;
-  code: string;
-};
 
 type PasswordResetFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: PasswordResetFormValues) => void;
-  error: string;
+  errors?: ClerkAPIError[];
 };
 
 export const PasswordResetForm = (props: PasswordResetFormProps) => {
-  const { onFormSubmit, error, className, ...rest } = props;
+  const { onFormSubmit, errors, className, ...rest } = props;
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const form = useForm<PasswordResetFormValues>({
+    resolver: zodResolver(PasswordResetFormSchema),
+  });
 
-    const target = e.target as typeof e.target & {
-      password: { value: string };
-      code: { value: string };
-    };
-
-    const password = target.password.value;
-    const code = target.code.value;
-
-    onFormSubmit({ password, code });
+  const onSubmit = (data: PasswordResetFormValues) => {
+    onFormSubmit(data);
   };
 
   return (
-    <form
-      {...rest}
-      className={cn("flex flex-col gap-3", className)}
-      onSubmit={submitHandler}
-    >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="password">Password</Label>
-        <Input type="password" id="password" placeholder="Password" />
-      </div>
+    <Form {...form}>
+      <form
+        {...rest}
+        className={cn("flex flex-col gap-4", className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input {...field} type="password" placeholder="Password" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <Label htmlFor="code">
-        Enter the password reset code that was sent to your email
-      </Label>
-      <InputOTP id="code" name="code" maxLength={6}>
-        <InputOTPGroup>
-          <InputOTPSlot index={0} />
-          <InputOTPSlot index={1} />
-          <InputOTPSlot index={2} />
-        </InputOTPGroup>
-        <InputOTPSeparator />
-        <InputOTPGroup>
-          <InputOTPSlot index={3} />
-          <InputOTPSlot index={4} />
-          <InputOTPSlot index={5} />
-        </InputOTPGroup>
-      </InputOTP>
+        <FormField
+          control={form.control}
+          name="code"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <InputOTP {...field} maxLength={6}>
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                  </InputOTPGroup>
+                  <InputOTPSeparator />
+                  <InputOTPGroup>
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {error && (
-        <Typography
-          level="span"
-          styling="small"
-          className="mt-2 text-center text-red-400"
-        >
-          {error}
-        </Typography>
-      )}
-    </form>
+        {errors && (
+          <ul>
+            {errors.map((el, index) => (
+              <li key={index}>
+                <Typography level="span" className="text-red-400">
+                  {el.longMessage}
+                </Typography>
+              </li>
+            ))}
+          </ul>
+        )}
+      </form>
+    </Form>
   );
 };
