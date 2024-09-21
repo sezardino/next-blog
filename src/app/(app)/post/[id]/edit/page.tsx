@@ -2,6 +2,7 @@
 
 import { PostForm } from "@/components/form/post-form";
 import { Typography } from "@/components/ui/typography";
+import dayjs from "dayjs";
 import { notFound } from "next/navigation";
 import { editPostAction } from "./actions/edit-post";
 import { getMyPostForEdition } from "./actions/get-post";
@@ -29,7 +30,14 @@ const EditPostPage = async (props: Props) => {
           post.
         </Typography>
       </header>
-      <PostForm initialValues={post} onFormSubmit={editPostWithId} />
+      <PostForm
+        initialValues={post}
+        onFormSubmit={editPostWithId}
+        isDateEditable={
+          (!post.isPublished && !!post.publicationDate) ||
+          dayjs(post.publicationDate).isAfter(new Date())
+        }
+      />
     </main>
   );
 };

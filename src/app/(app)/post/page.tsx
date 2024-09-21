@@ -1,50 +1,54 @@
-import { PaginationWidget } from "@/components/ui/pagination-widget";
 import { Typography } from "@/components/ui/typography";
 import { DEFAULT_PAGE_LIMIT } from "@/utils/get-pagination";
-import { getMyPostsAction } from "./actions/get-posts";
-import { MyPostsTable } from "@/components/base/my-posts-table";
 
-const TABLE_PAGE_PATH_NAME = "page";
-const TABLE_LIMIT_PATH_NAME = "limit";
+import { DeleteModal } from "./components/delete-post";
+import { MyPostsSection } from "./components/my-posts";
+import { ScheduleModal } from "./components/shedule-modal";
+import { MyPostsSearchParams } from "./const";
 
-const MyPostsPage = async ({
+const MyPostsPage = ({
   searchParams,
 }: {
   searchParams?: {
-    [TABLE_PAGE_PATH_NAME]?: string;
-    [TABLE_LIMIT_PATH_NAME]?: string;
+    [MyPostsSearchParams.page]?: string;
+    [MyPostsSearchParams.limit]?: string;
+    [MyPostsSearchParams.schedulePublicationDate]?: string;
+    [MyPostsSearchParams.deletePost]?: string;
   };
 }) => {
-  const page = Number(searchParams?.[TABLE_PAGE_PATH_NAME]) || 1;
+  const page = Number(searchParams?.[MyPostsSearchParams.page]) || 1;
   const limit =
-    Number(searchParams?.[TABLE_LIMIT_PATH_NAME]) || DEFAULT_PAGE_LIMIT;
-  const posts = await getMyPostsAction({ page: page - 1, limit });
+    Number(searchParams?.[MyPostsSearchParams.limit]) || DEFAULT_PAGE_LIMIT;
+  const postToSchedulePublicationDate =
+    searchParams?.[MyPostsSearchParams.schedulePublicationDate] || "";
+  const postToDelete = searchParams?.[MyPostsSearchParams.deletePost] || "";
 
   return (
-    <main className="grid grid-cols-1 gap-8">
-      <header className="flex flex-col gap-2">
-        <Typography level="h1" styling="h2">
-          My posts
-        </Typography>
-        <Typography styling="small">
-          Here you can find all posts that you write in our platform. Here you
-          can find base analytics about your posts.
-        </Typography>
-      </header>
+    <>
+      <main className="grid grid-cols-1 gap-8">
+        <header className="flex flex-col gap-2">
+          <Typography level="h1" styling="h2">
+            My posts
+          </Typography>
+          <Typography styling="small">
+            Here you can find all posts that you write in our platform. Here you
+            can find base analytics about your posts.
+          </Typography>
+        </header>
 
-      <section className="flex flex-col gap-4">
-        <MyPostsTable data={posts.data || []} />
+        <MyPostsSection page={page} limit={limit} />
+      </main>
 
-        <PaginationWidget
-          totalPages={posts.meta?.totalPages || 0}
-          currentPage={posts.meta?.page || 0}
-          paginationPathName={TABLE_PAGE_PATH_NAME}
-          limitPathName={TABLE_LIMIT_PATH_NAME}
-          currentLimit={posts.meta?.limit || DEFAULT_PAGE_LIMIT}
-          className="ml-auto"
-        />
-      </section>
-    </main>
+      <ScheduleModal
+        postId={postToSchedulePublicationDate}
+        paramName={MyPostsSearchParams.schedulePublicationDate}
+      />
+
+      <DeleteModal
+        paramName={MyPostsSearchParams.deletePost}
+        postId={postToDelete}
+      />
+    </>
   );
 };
 

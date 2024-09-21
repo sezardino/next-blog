@@ -15,6 +15,8 @@ export const getMyPostForEdition = async (id: string) => {
         title: true,
         tags: true,
         description: true,
+        publicationDate: true,
+        isPublished: true,
         thumbnailUrl: true,
         body: true,
       },

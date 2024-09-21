@@ -10,7 +10,7 @@ export const getMyPost = async (id: string) => {
 
   try {
     const post = await prismaClient.post.findUnique({
-      where: { id, author: { clerkId: userId } },
+      where: { id, author: { clerkId: userId }, deletedAt: null },
       select: {
         title: true,
         tags: true,

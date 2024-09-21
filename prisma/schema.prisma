@@ -39,6 +39,7 @@ model Post {
   body         String   @default("")
 
   publicationDate DateTime? @map("publication_date")
+  isPublished     Boolean   @default(false) @map("is_published")
 
   author   User   @relation(name: "author", fields: [authorId], references: [id])
   authorId String @map("author_id")

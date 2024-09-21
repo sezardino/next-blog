@@ -8,10 +8,11 @@ export const useGenerateSearchParamsUrl = (paramName?: string) => {
   const searchParams = useSearchParams();
 
   return useCallback(
-    (value: string | number) => {
+    (value: string | number, paramNameArg?: string) => {
       const params = new URLSearchParams(searchParams);
+      const param = paramNameArg ? paramNameArg : paramName;
 
-      if (paramName) params.set(paramName, value.toString());
+      if (param) params.set(param, value.toString());
 
       return `${pathname}?${params.toString()}`;
     },

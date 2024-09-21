@@ -9,18 +9,21 @@ import { faker } from "@faker-js/faker";
 import { revalidatePath } from "next/cache";
 
 const generateFakePosts = (length: number) => {
-  const isFutureDate = faker.datatype.boolean();
-  const publicationDate = isFutureDate
-    ? faker.date.future()
-    : faker.date.past();
+  return Array.from({ length }, () => {
+    const isPublished = faker.datatype.boolean();
+    const publicationDate = isPublished
+      ? faker.date.past()
+      : faker.date.future();
 
-  return Array.from({ length }, () => ({
-    title: faker.lorem.sentence(),
-    description: faker.lorem.sentence(),
-    body: faker.lorem.paragraphs(3),
-    tags: [faker.word.adjective(), faker.word.noun()],
-    publicationDate,
-  }));
+    return {
+      title: faker.lorem.sentence(),
+      description: faker.lorem.sentence(),
+      body: faker.lorem.paragraphs(3),
+      tags: [faker.word.adjective(), faker.word.noun()],
+      publicationDate,
+      isPublished: faker.datatype.boolean(),
+    };
+  });
 };
 
 export const seedPostsForCurrentUser = async () => {
@@ -37,14 +40,12 @@ export const seedPostsForCurrentUser = async () => {
           data: {
             ...post,
             author: { connect: { clerkId: userId } },
-            publicationDate: new Date(),
           },
         })
       )
     );
 
     revalidatePath(ProjectUrls.myPosts);
-    return { success: true };
   } catch (error) {
     console.error("Error creating seeds:", error);
     return { message: "There was an error when trying to seed posts" };

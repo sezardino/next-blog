@@ -1,4 +1,5 @@
 import { getHTMLStringLength } from "@/utils/html-length";
+import dayjs from "dayjs";
 import { z } from "zod";
 
 const DESCRIPTION_MIN_LENGTH = 8;
@@ -69,10 +70,11 @@ export const PostSchema = z.object({
     .max(64, "Title is too long"),
   description: descriptionOptionalSchema.optional(),
   // thumbnail: z.any(),
-  publishedAt: z
+  publicationDate: z
     .date()
+    .nullable()
     .optional()
-    .refine((date) => !date || date > new Date(), {
+    .refine((date) => dayjs(date).isAfter(dayjs(new Date()).add(-1, "day")), {
       message: "Publication date must be in the future",
     }),
   tags: tagsOptionalSchema,
@@ -80,9 +82,9 @@ export const PostSchema = z.object({
 });
 
 export const PostFormSchema = PostSchema.superRefine((data, ctx) => {
-  const { publishedAt, body, tags, description } = data;
+  const { publicationDate, body, tags, description } = data;
 
-  if (!publishedAt) return;
+  if (!publicationDate) return;
 
   const descriptionValidation =
     descriptionRequiredSchema.safeParse(description);
