@@ -1,6 +1,6 @@
 "use client";
 
-import { landingNavigationLinks, ProjectUrls } from "@/const";
+import { ProjectUrls } from "@/const";
 import { cn } from "@/utils/styles";
 import { Rss } from "lucide-react";
 import Link from "next/link";
@@ -24,6 +24,12 @@ export const LandingHeader = (props: LandingHeaderProps) => {
   const pathname = usePathname();
 
   const [isMenuOpened, setIsMenuOpened] = useState(false);
+
+  const landingNavigationLinks = [
+    { label: "Home", href: ProjectUrls.home },
+    { label: "Road Map", href: ProjectUrls.roadMap },
+    ...(user ? [{ label: "Dashboard", href: ProjectUrls.dashboard }] : []),
+  ];
 
   return (
     <header

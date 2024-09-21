@@ -25,8 +25,3 @@ export const ProjectUrls = {
   settings: "/settings",
   accountSettings: "/settings/account",
 };
-
-export const landingNavigationLinks = [
-  { label: "Home", href: ProjectUrls.home },
-  { label: "Road Map", href: ProjectUrls.roadMap },
-];

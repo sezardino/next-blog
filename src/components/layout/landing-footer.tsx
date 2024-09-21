@@ -1,11 +1,25 @@
-import { landingNavigationLinks } from "@/const";
+import { ProjectUrls } from "@/const";
 import { Github } from "lucide-react";
 import Link from "next/link";
 import { Typography } from "../ui/typography";
 
 const currentYear = new Date().getFullYear();
 
-export const LandingFooter = () => {
+type Props = {
+  isUserAuthenticated: boolean;
+};
+
+export const LandingFooter = (props: Props) => {
+  const { isUserAuthenticated } = props;
+
+  const landingNavigationLinks = [
+    { label: "Home", href: ProjectUrls.home },
+    { label: "Road Map", href: ProjectUrls.roadMap },
+    ...(isUserAuthenticated
+      ? [{ label: "Dashboard", href: ProjectUrls.dashboard }]
+      : []),
+  ];
+
   return (
     <footer className="container py-28 flex flex-col items-center">
       <nav className="flex flex-wrap items-center justify-center gap-8 pb-8">
