@@ -23,7 +23,7 @@ export const PostInner = async (props: Props) => {
           <Typography level="h1" styling="h1">
             {title}
           </Typography>
-          {tags.length && (
+          {!!tags.length && (
             <ul className="flex flex-wrap justify-center gap-2">
               {tags.map((tag, index) => (
                 <Badge key={`${tag}-${index}`} variant={"secondary"}>
