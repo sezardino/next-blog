@@ -40,11 +40,13 @@ type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   withPublicationDate?: boolean;
   initialValues?: Partial<PostFormValues>;
   onFormSubmit: (values: PostFormValues) => void;
+  isDateEditable?: boolean;
 };
 
 export const PostForm = (props: PostFormProps) => {
   const {
     withPublicationDate = false,
+    isDateEditable = false,
     initialValues,
     onFormSubmit,
     className,
@@ -61,6 +63,7 @@ export const PostForm = (props: PostFormProps) => {
       description: initialValues?.description || "",
       tags: initialValues?.tags || [],
       title: initialValues?.title || "",
+      publicationDate: initialValues?.publicationDate,
     },
   });
 
@@ -69,8 +72,9 @@ export const PostForm = (props: PostFormProps) => {
   };
 
   const changePublicationVisibility = (value: boolean) => {
-    if (value) form.setValue("publishedAt", new Date());
-    else form.setValue("publishedAt", new Date());
+    if (!isDateEditable) return;
+    if (value) form.setValue("publicationDate", new Date());
+    else form.setValue("publicationDate", new Date());
 
     setIsSelectPublicationVisible(value);
   };
@@ -152,67 +156,75 @@ export const PostForm = (props: PostFormProps) => {
           )}
         />
 
-        <FormItem>
-          <div className="flex items-center gap-3">
-            <FormLabel>Already know when you wont publish this quiz?</FormLabel>
-            <FormControl>
-              <Switch
-                checked={isSelectPublicationVisible}
-                onCheckedChange={changePublicationVisibility}
-              />
-            </FormControl>
-          </div>
-          <FormDescription>
-            If selected, all fields should be filled.
-          </FormDescription>
-        </FormItem>
+        {isDateEditable && (
+          <>
+            <FormItem>
+              <div className="flex items-center gap-3">
+                <FormLabel>
+                  Already know when you wont publish this quiz?
+                </FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={isSelectPublicationVisible}
+                    onCheckedChange={changePublicationVisibility}
+                  />
+                </FormControl>
+              </div>
+              <FormDescription>
+                If selected, all fields should be filled.
+              </FormDescription>
+            </FormItem>
 
-        {isSelectPublicationVisible && (
-          <FormField
-            control={form.control}
-            name="publishedAt"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Publication Date</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          dayjs(field.value).format(DEFAULT_DATE_FORMAT)
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        dayjs(date).isBefore(dayjs(new Date()).add(-1, "day"))
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>
-                  Date when this post should be published (you can change it at
-                  any time)
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
+            {isSelectPublicationVisible && (
+              <FormField
+                control={form.control}
+                name="publicationDate"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Publication Date</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-[240px] pl-3 text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              dayjs(field.value).format(DEFAULT_DATE_FORMAT)
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value || undefined}
+                          onSelect={field.onChange}
+                          disabled={(date) =>
+                            dayjs(date).isBefore(
+                              dayjs(new Date()).add(-1, "day")
+                            )
+                          }
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      Date when this post should be published (you can change it
+                      at any time)
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
-          />
+          </>
         )}
 
         <Button type="submit" className="justify-self-end">
