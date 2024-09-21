@@ -1,7 +1,7 @@
 import { MyPostsTable } from "@/components/modules/my-posts/my-posts-table";
 import { PaginationWidget } from "@/components/ui/pagination-widget";
 import { DEFAULT_PAGE_LIMIT } from "@/utils/get-pagination";
-import { getMyPostsAction } from "../actions/get-posts";
+import { getMyPostsAction } from "../actions/get-my-posts";
 import { MyPostsSearchParams } from "../const";
 
 type Props = {

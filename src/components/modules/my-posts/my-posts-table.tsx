@@ -1,41 +1,29 @@
 "use client";
 
-import { getMyPostsAction } from "@/app/(app)/post/actions/get-posts";
+import { getMyPostsAction } from "@/app/(app)/post/actions/get-my-posts";
 import { MyPostsSearchParams } from "@/app/(app)/post/const";
-import { Button } from "@/components/ui/button";
 import { DataTable, DataTableProps } from "@/components/ui/data-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Typography } from "@/components/ui/typography";
-import { ProjectUrls } from "@/const";
 import { DEFAULT_DATE_FORMAT } from "@/const/date";
 import { useGenerateSearchParamsUrl } from "@/hooks/use-generate-search-params-url";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import {
-  Calendar,
   Check,
-  Ellipsis,
-  Eye,
   Ghost,
-  Pencil,
   ThumbsDown,
   ThumbsUp,
-  Trash,
   UserCheck,
   Users,
   X,
 } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { MyPostActionsDropdown } from "./my-post-actions";
 
 type MyPostsTableType = Exclude<
   Awaited<ReturnType<typeof getMyPostsAction>>["data"],
@@ -51,6 +39,7 @@ type MyPostsTableProps = OmittedProps;
 
 export const MyPostsTable = (props: MyPostsTableProps) => {
   const { ...rest } = props;
+  const router = useRouter();
   const createPageURL = useGenerateSearchParamsUrl();
 
   const columns: ColumnDef<MyPostsTableType>[] = [
@@ -160,86 +149,28 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
     {
       accessorKey: "id",
       header: "",
-      cell: (cell) => {
-        const canSchedule = cell.row.original.canSchedulePublication;
-        const scheduleInner = (
-          <>
-            <Calendar className="w-4 h-4" /> Schedule post
-          </>
-        );
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                size="icon"
-                variant={"outline"}
-                color={"secondary"}
-                aria-label="Open menu"
-              >
-                <Ellipsis />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={ProjectUrls.myPost(cell.row.original.id)}
-                  className="flex items-center gap-2"
-                >
-                  <Eye className="w-4 h-4" /> See post
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={ProjectUrls.editMyPost(cell.row.original.id)}
-                  className="flex items-center gap-2"
-                >
-                  <Pencil className="w-4 h-4" /> Edit post
-                </Link>
-              </DropdownMenuItem>
-              {canSchedule ? (
-                <DropdownMenuItem asChild>
-                  <Link
-                    href={createPageURL(
-                      cell.row.original.id,
-                      MyPostsSearchParams.schedulePublicationDate
-                    )}
-                    className="flex items-center gap-2"
-                  >
-                    {scheduleInner}
-                  </Link>
-                </DropdownMenuItem>
-              ) : (
-                <Tooltip>
-                  <TooltipTrigger>
-                    <DropdownMenuItem disabled asChild>
-                      <button className="flex items-center gap-2">
-                        {scheduleInner}
-                      </button>
-                    </DropdownMenuItem>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    The publication date cannot be changed as the post has
-                    already been published.
-                  </TooltipContent>
-                </Tooltip>
-              )}
-
-              <DropdownMenuItem asChild>
-                <Link
-                  href={createPageURL(
-                    cell.row.original.id,
-                    MyPostsSearchParams.deletePost
-                  )}
-                  className="flex items-center gap-2 text-destructive"
-                >
-                  <Trash className="w-4 h-4" /> Delete post
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: (cell) => (
+        <MyPostActionsDropdown
+          postId={cell.row.original.id}
+          canSchedulePublication={cell.row.original.canSchedulePublication}
+          onDeletePostClick={() =>
+            router.replace(
+              createPageURL(
+                cell.row.original.id,
+                MyPostsSearchParams.deletePost
+              )
+            )
+          }
+          onSchedulePublicationDateClick={() =>
+            router.replace(
+              createPageURL(
+                cell.row.original.id,
+                MyPostsSearchParams.schedulePublicationDate
+              )
+            )
+          }
+        />
+      ),
     },
   ];
 

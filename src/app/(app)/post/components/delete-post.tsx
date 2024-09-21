@@ -4,14 +4,15 @@ import { deleteMyPostById } from "../actions/delete";
 import { isPostExistOnCurrentUser } from "../actions/is-post-exist";
 
 type Props = {
-  postId: string;
+  isOpen: boolean;
+  postId?: string;
   paramName: string;
 };
 
 export const DeleteModal = async (props: Props) => {
-  const { paramName, postId } = props;
+  const { isOpen, paramName, postId } = props;
 
-  if (!postId) return;
+  if (!postId || !isOpen) return;
 
   const deletePostWithId = deleteMyPostById.bind(null, postId);
   const postExistResponse = await isPostExistOnCurrentUser(postId);

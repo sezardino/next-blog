@@ -3,7 +3,7 @@
 import prismaClient from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-export const getPostScheduledDate = async (postId: string) => {
+export const getMyPostScheduledDate = async (postId: string) => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");

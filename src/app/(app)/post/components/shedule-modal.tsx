@@ -1,22 +1,23 @@
 import { SchedulePublicationDateModal } from "@/components/modules/my-posts/schedule-publication-date-modal";
-import { getPostScheduledDate } from "../actions/get-publication-date";
+import { getMyPostScheduledDate } from "../actions/get-publication-date";
 import { schedulePublicationDate } from "../actions/schedule-publication-date";
 
 type Props = {
+  isOpen: boolean;
   postId?: string;
   paramName: string;
 };
 
 export const ScheduleModal = async (props: Props) => {
-  const { paramName, postId } = props;
+  const { isOpen, paramName, postId } = props;
 
-  if (!postId) return;
+  if (!postId || !isOpen) return;
 
   const schedulePublicationDateWithId = schedulePublicationDate.bind(
     null,
     postId
   );
-  const postDate = await getPostScheduledDate(postId);
+  const postDate = await getMyPostScheduledDate(postId);
 
   if ("message" in postDate) return;
 

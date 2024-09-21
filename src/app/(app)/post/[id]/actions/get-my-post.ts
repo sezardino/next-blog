@@ -2,6 +2,7 @@
 
 import prismaClient from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import dayjs from "dayjs";
 
 export const getMyPost = async (id: string) => {
   const { userId } = auth();
@@ -16,10 +17,19 @@ export const getMyPost = async (id: string) => {
         tags: true,
         thumbnailUrl: true,
         body: true,
+        isPublished: true,
+        publicationDate: true,
       },
     });
 
-    return post;
+    if (!post) return { message: "Post not found" };
+
+    return {
+      ...post,
+      canSchedulePublication:
+        !dayjs(post.publicationDate).isValid() ||
+        dayjs(post.publicationDate).isAfter(new Date()),
+    };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

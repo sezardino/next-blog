@@ -6,16 +6,16 @@ import { MyPostsSection } from "./components/my-posts";
 import { ScheduleModal } from "./components/shedule-modal";
 import { MyPostsSearchParams } from "./const";
 
-const MyPostsPage = ({
-  searchParams,
-}: {
+type Props = {
   searchParams?: {
     [MyPostsSearchParams.page]?: string;
     [MyPostsSearchParams.limit]?: string;
     [MyPostsSearchParams.schedulePublicationDate]?: string;
     [MyPostsSearchParams.deletePost]?: string;
   };
-}) => {
+};
+
+const MyPostsPage = ({ searchParams }: Props) => {
   const page = Number(searchParams?.[MyPostsSearchParams.page]) || 1;
   const limit =
     Number(searchParams?.[MyPostsSearchParams.limit]) || DEFAULT_PAGE_LIMIT;
@@ -40,11 +40,13 @@ const MyPostsPage = ({
       </main>
 
       <ScheduleModal
+        isOpen={!!postToSchedulePublicationDate}
         postId={postToSchedulePublicationDate}
         paramName={MyPostsSearchParams.schedulePublicationDate}
       />
 
       <DeleteModal
+        isOpen={!!postToDelete}
         paramName={MyPostsSearchParams.deletePost}
         postId={postToDelete}
       />
