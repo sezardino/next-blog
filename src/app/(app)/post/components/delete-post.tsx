@@ -1,5 +1,4 @@
 import { DeleteMyPostModal } from "@/components/modules/my-posts/delete-post";
-import { toast } from "sonner";
 import { deleteMyPostById } from "../actions/delete";
 import { isPostExistOnCurrentUser } from "../actions/is-post-exist";
 
@@ -18,8 +17,6 @@ export const DeleteModal = async (props: Props) => {
   const postExistResponse = await isPostExistOnCurrentUser(postId);
 
   if ("message" in postExistResponse) {
-    toast.error(postExistResponse.message);
-
     return null;
   }
 

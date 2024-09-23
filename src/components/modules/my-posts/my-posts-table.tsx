@@ -86,7 +86,7 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
             <Tooltip>
               <TooltipTrigger className="flex items-center gap-1">
                 <ThumbsUp className="w-4 h-4" />
-                {cell.row.original.likes}
+                {cell.row.original.reactions.likes}
               </TooltipTrigger>
               <TooltipContent>Likes</TooltipContent>
             </Tooltip>
@@ -95,7 +95,7 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
             <Tooltip>
               <TooltipTrigger className="flex items-center gap-1">
                 <ThumbsDown className="w-4 h-4" />
-                {cell.row.original.dislikes}
+                {cell.row.original.reactions.dislikes}
               </TooltipTrigger>
               <TooltipContent>Dislikes</TooltipContent>
             </Tooltip>

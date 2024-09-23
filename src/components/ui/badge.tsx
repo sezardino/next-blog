@@ -4,9 +4,13 @@ import { cn } from "@/utils/styles";
 import { HTMLAttributes } from "react";
 
 const badgeVariants = cva(
-  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+  "inline-flex items-center rounded-full border font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
   {
     variants: {
+      size: {
+        sm: "px-2.5 py-0.5 text-xs",
+        md: "px-4 py-1 text-md",
+      },
       variant: {
         default:
           "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
@@ -19,6 +23,7 @@ const badgeVariants = cva(
     },
     defaultVariants: {
       variant: "default",
+      size: "sm",
     },
   }
 );
@@ -27,9 +32,12 @@ export interface BadgeProps
   extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof badgeVariants> {}
 
-function Badge({ className, variant, ...props }: BadgeProps) {
+function Badge({ className, variant, size, ...props }: BadgeProps) {
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div
+      className={cn(badgeVariants({ variant, size }), className)}
+      {...props}
+    />
   );
 }
 

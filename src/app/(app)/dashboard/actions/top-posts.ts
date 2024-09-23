@@ -1,45 +1,34 @@
 "use server";
 
 import prismaClient from "@/lib/prisma";
-import { BaseGetRequest } from "@/types/base";
-import {
-  DEFAULT_PAGE_LIMIT,
-  getBackendPagination,
-} from "@/utils/get-pagination";
 import { auth } from "@clerk/nextjs/server";
-import { Prisma } from "@prisma/client";
-import dayjs from "dayjs";
 
-export const getMyPostsAction = async (data: BaseGetRequest) => {
+export const getMyTopPosts = async () => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { page = 0, limit = DEFAULT_PAGE_LIMIT } = data;
-
-  const where: Prisma.PostWhereInput = {
-    author: { clerkId: userId },
-    deletedAt: null,
-  };
-
   try {
-    const count = await prismaClient.post.count({ where });
-    const { meta, skip, take } = getBackendPagination({ count, page, limit });
-
     const posts = await prismaClient.post.findMany({
-      where,
-      skip,
-      take,
+      where: {
+        author: { clerkId: userId },
+        isPublished: true,
+        deletedAt: null,
+      },
       select: {
         id: true,
         title: true,
-        createdAt: true,
-        isPublished: true,
-        publicationDate: true,
         reactions: { select: { isLike: true } },
         views: { select: { userId: true } },
         comments: { select: { id: true } },
       },
+      orderBy: [
+        { views: { _count: "desc" } },
+        { reactions: { _count: "desc" } },
+        { comments: { _count: "desc" } },
+        { publicationDate: "asc" },
+      ],
+      take: 5,
     });
 
     const postsWithAnalytics = posts.map((post) => {
@@ -63,12 +52,6 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
       return {
         id: post.id,
         title: post.title,
-        createdAt: post.createdAt,
-        canSchedulePublication:
-          !dayjs(post.publicationDate).isValid() ||
-          dayjs(post.publicationDate).isAfter(new Date()),
-        isPublished: post.isPublished,
-        publicationDate: post.publicationDate,
         comments: commentCount,
         reactions: {
           likes: likeCount,
@@ -82,9 +65,9 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
       };
     });
 
-    return { data: postsWithAnalytics, meta };
+    return { data: postsWithAnalytics };
   } catch (error) {
-    console.log(error);
-    return { message: "There was an error when trying to fetch posts" };
+    console.error("Error fetching top posts:", error);
+    return { message: "Something went wrong while fetching top posts" };
   }
 };

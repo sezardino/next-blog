@@ -15,7 +15,9 @@ export const MyPostsSection = async (props: Props) => {
 
   return (
     <section className="flex flex-col gap-4">
-      <MyPostsTable data={posts.data || []} />
+      <div className="border rounded-md">
+        <MyPostsTable data={posts.data || []} />
+      </div>
 
       <PaginationWidget
         totalPages={posts.meta?.totalPages || 0}
