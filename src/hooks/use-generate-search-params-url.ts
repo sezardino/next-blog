@@ -3,8 +3,11 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
-export const useGenerateSearchParamsUrl = (paramName?: string) => {
-  const pathname = usePathname();
+export const useGenerateSearchParamsUrl = (
+  paramName?: string,
+  pathname?: string
+) => {
+  const currentPathname = usePathname();
   const searchParams = useSearchParams();
 
   return useCallback(
@@ -14,8 +17,10 @@ export const useGenerateSearchParamsUrl = (paramName?: string) => {
 
       if (param) params.set(param, value.toString());
 
-      return `${pathname}?${params.toString()}`;
+      const neededPathName = pathname ? pathname : currentPathname;
+
+      return `${neededPathName}?${params.toString()}`;
     },
-    [paramName, pathname, searchParams]
+    [currentPathname, paramName, pathname, searchParams]
   );
 };
