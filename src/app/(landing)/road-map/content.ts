@@ -15,28 +15,27 @@ export const roadmapPage = {
     },
     {
       version: "MVP 2",
-      name: "Core Blogging Platform with User Authentication",
+      name: "Core Blogging Platform with Content Maker Authentication",
       description:
         "Launches the foundational platform, enabling user registration, authentication, and basic blog management.",
       features: [
-        "User registration and authentication",
-        "Blog creation and management",
-        "Basic post editor (WYSIWYG)",
-        "Tag and hashtag system",
-        "Post analytics (views, likes, comments)",
+        "Registration as content creators",
+        "Content creator dashboard - basic analytics for your posts",
+        "Creating blog posts",
         "Scheduled publishing",
         "Search by keywords, tags, and authors",
-        "Multilingual post support (posts can be written in any language)",
       ],
     },
     {
       version: "MVP 3",
       name: "Extended Author Profile and Post Discovery",
-      description:
-        "Adds more features to the author profile, including showing all posts by a specific author and more search functionality.",
+      description: "Adds more features to the content maker profile.",
       features: [
-        "View all posts by an author on their profile",
-        "Enhanced search by authors and tags",
+        "Registration as basic user",
+        "Possibility to change type of account, basic user to content creator",
+        "Author profile - view all posts by an author on their profile",
+        "Multilingual post support (posts can be written in any language)",
+        "Comments support",
       ],
     },
     {
