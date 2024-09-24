@@ -27,6 +27,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
 
   const landingNavigationLinks = [
     { label: "Home", href: ProjectUrls.home },
+    { label: "About", href: ProjectUrls.about },
     { label: "Road Map", href: ProjectUrls.roadMap },
     ...(user ? [{ label: "Dashboard", href: ProjectUrls.dashboard }] : []),
   ];

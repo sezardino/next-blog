@@ -1,6 +1,7 @@
 export const ProjectUrls = {
   // landing
   home: "/",
+  about: "/about",
   roadMap: "/road-map",
 
   // auth

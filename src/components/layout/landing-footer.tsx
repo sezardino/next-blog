@@ -14,6 +14,7 @@ export const LandingFooter = (props: Props) => {
 
   const landingNavigationLinks = [
     { label: "Home", href: ProjectUrls.home },
+    { label: "About", href: ProjectUrls.about },
     { label: "Road Map", href: ProjectUrls.roadMap },
     ...(isUserAuthenticated
       ? [{ label: "Dashboard", href: ProjectUrls.dashboard }]

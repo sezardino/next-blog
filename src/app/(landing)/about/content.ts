@@ -19,7 +19,7 @@ import {
   Users,
 } from "lucide-react";
 
-export const homeHeroSection = {
+export const aboutHeroSection = {
   title: "Welcome to the Future of Blogging",
   subtitle: `A powerful platform for creating, managing, and sharing your ideas
               with the world. Empower your voice with a blog designed for
@@ -28,7 +28,7 @@ export const homeHeroSection = {
   cta: "Explore Features",
 };
 
-export const homeFeaturesSection = {
+export const aboutFeaturesSection = {
   title: "Our Core Features",
   badge: "Features",
   subtitle:
