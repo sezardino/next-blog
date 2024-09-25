@@ -32,7 +32,7 @@ export const seedPostsForCurrentUser = async () => {
   if (!userId) throw new Error("Unauthorized");
 
   try {
-    const posts = generateFakePosts(faker.number.int({ min: 5, max: 20 }));
+    const posts = generateFakePosts(faker.number.int({ min: 100, max: 2000 }));
 
     await Promise.all(
       posts.map((post) =>

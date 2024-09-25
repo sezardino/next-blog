@@ -39,7 +39,7 @@ export const SearchHero = (props: SearchHeroProps) => {
       search: formData.get("search") as string,
     };
 
-    if (!search) return;
+    if (!search && !isPostsPage) return;
 
     const path = generateUrl(search);
 

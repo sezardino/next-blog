@@ -1,6 +1,6 @@
 import { Typography } from "@/components/ui/typography";
-import { DEFAULT_PAGE_LIMIT } from "@/utils/get-pagination";
 
+import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
 import { DeleteModal } from "./components/delete-post";
 import { MyPostsSection } from "./components/my-posts";
 import { ScheduleModal } from "./components/shedule-modal";
@@ -18,7 +18,7 @@ type Props = {
 const MyPostsPage = ({ searchParams }: Props) => {
   const page = Number(searchParams?.[MyPostsSearchParams.page]) || 1;
   const limit =
-    Number(searchParams?.[MyPostsSearchParams.limit]) || DEFAULT_PAGE_LIMIT;
+    Number(searchParams?.[MyPostsSearchParams.limit]) || DEFAULT_ITEMS_PER_PAGE;
   const postToSchedulePublicationDate =
     searchParams?.[MyPostsSearchParams.schedulePublicationDate] || "";
   const postToDelete = searchParams?.[MyPostsSearchParams.deletePost] || "";

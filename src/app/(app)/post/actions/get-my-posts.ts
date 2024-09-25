@@ -1,11 +1,9 @@
 "use server";
 
+import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
 import prismaClient from "@/lib/prisma";
 import { BaseGetRequest } from "@/types/base";
-import {
-  DEFAULT_PAGE_LIMIT,
-  getBackendPagination,
-} from "@/utils/get-pagination";
+import { getBackendPagination } from "@/utils/get-pagination";
 import { auth } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
@@ -15,7 +13,7 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { page = 0, limit = DEFAULT_PAGE_LIMIT } = data;
+  const { page = 0, limit = DEFAULT_ITEMS_PER_PAGE } = data;
 
   const where: Prisma.PostWhereInput = {
     author: { clerkId: userId },

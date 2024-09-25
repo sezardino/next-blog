@@ -1,38 +1,15 @@
 "use server";
 
+import { BASE_POSTS_SELECT } from "@/const/post";
 import prismaClient from "@/lib/prisma";
 
 export const getLatestPublishedPosts = async () => {
   try {
     const posts = await prismaClient.post.findMany({
       where: { isPublished: true, deletedAt: null },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        thumbnailUrl: true,
-        publicationDate: true,
-        tags: true,
-        author: {
-          select: {
-            firstName: true,
-            lastName: true,
-            email: true,
-            avatarUrl: true,
-          },
-        },
-        reactions: { select: { isLike: true } },
-        _count: {
-          select: {
-            views: true,
-            comments: true,
-          },
-        },
-      },
-      orderBy: {
-        publicationDate: "desc",
-      },
-      take: 10,
+      select: BASE_POSTS_SELECT,
+      orderBy: { publicationDate: "desc" },
+      take: 9,
     });
 
     const formattedPosts = posts.map(({ _count, reactions, ...rest }) => ({
