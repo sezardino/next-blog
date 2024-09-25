@@ -2,7 +2,9 @@
 
 import { ProjectUrls } from "@/const";
 import { useApplicationLogout } from "@/hooks/use-logout";
+import { CurrentUserData } from "@/types/user";
 import { cn } from "@/utils/styles";
+import { getUserAvatarFallback } from "@/utils/user";
 import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { LogOut, LucideProps, Plus, Settings, User } from "lucide-react";
 import Link from "next/link";
@@ -20,10 +22,7 @@ import {
 import { Typography } from "../ui/typography";
 
 type UserDropdownProps = DropdownMenuProps & {
-  user: {
-    avatarUrl: string | null;
-    email: string;
-  };
+  user: CurrentUserData;
   className?: string;
 };
 
@@ -63,7 +62,13 @@ export const UserDropdown = (props: UserDropdownProps) => {
             src={user.avatarUrl || undefined}
             alt={`Avatar of user with email ${user.email}`}
           />
-          <AvatarFallback>{user.email.slice(0, 2)}</AvatarFallback>
+          <AvatarFallback>
+            {getUserAvatarFallback({
+              email: user.email,
+              firstName: user.firstName,
+              lastName: user.lastName,
+            })}
+          </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -2,6 +2,7 @@
 
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
+import { CurrentUserData } from "@/types/user";
 import { auth } from "@clerk/nextjs/server";
 import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -12,8 +13,6 @@ export type FormState = {
   message?: string | null;
 };
 
-type CurrentUserData = Pick<User, "avatarUrl" | "email">;
-
 export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
   const { userId } = auth();
 
@@ -22,7 +21,7 @@ export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
   try {
     const user = await prismaClient.user.findUnique({
       where: { clerkId: userId },
-      select: { email: true, avatarUrl: true },
+      select: { email: true, avatarUrl: true, firstName: true, lastName: true },
     });
 
     return user;

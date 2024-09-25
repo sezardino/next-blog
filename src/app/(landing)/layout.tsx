@@ -9,9 +9,9 @@ const LandingLayout = async ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <LandingHeader user={user || undefined} />
+      <LandingHeader user={user} />
       {children}
-      <LandingFooter />
+      <LandingFooter isUserAuthenticated={!!user} />
     </>
   );
 };

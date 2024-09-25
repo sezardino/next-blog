@@ -1,6 +1,7 @@
 "use client";
 
 import { ProjectUrls } from "@/const";
+import { CurrentUserData } from "@/types/user";
 import { cn } from "@/utils/styles";
 import { Rss } from "lucide-react";
 import Link from "next/link";
@@ -13,10 +14,7 @@ import { UserDropdown } from "./user-dropdown";
 const MOBILE_MENU_ID = "mobile-menu";
 
 type LandingHeaderProps = ComponentPropsWithoutRef<"header"> & {
-  user?: {
-    avatarUrl: string | null;
-    email: string;
-  };
+  user: CurrentUserData | null;
 };
 
 export const LandingHeader = (props: LandingHeaderProps) => {

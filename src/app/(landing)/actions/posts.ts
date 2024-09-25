@@ -1,13 +1,19 @@
 "use server";
 
+const author = {
+  firstName: "Samuel",
+  lastName: "Samuel",
+  avatar: null,
+};
+
 const blogPosts = [
   {
     id: "1",
     title: "The Future of Web Development: Trends to Watch",
-    thumbnail: "https://example.com/thumbnails/webdev.jpg",
+    thumbnail: null,
     description:
       "Explore the top web development trends that are shaping the future of digital experiences.",
-    author: "Jane Doe",
+    author,
     tags: [
       "Web Development",
       "Trends",
@@ -99,10 +105,10 @@ const blogPosts = [
   {
     id: "2",
     title: "10 JavaScript Frameworks You Should Know in 2024",
-    thumbnail: "https://example.com/thumbnails/js-frameworks.jpg",
+    thumbnail: null,
     description:
-      "A breakdown of the most popular JavaScript frameworks and how they can enhance your projects.",
-    author: "John Smith",
+      "ost popular JavaScript frameworks and how they can enhance your projects.",
+    author,
     tags: ["JavaScript", "Frameworks", "Development"],
     views: 2980,
     comments: 30,
@@ -112,10 +118,10 @@ const blogPosts = [
   {
     id: "3",
     title: "How to Create a Personal Blog Using Next.js",
-    thumbnail: "https://example.com/thumbnails/nextjs-blog.jpg",
+    thumbnail: null,
     description:
       "Step-by-step guide on building a blog with Next.js, from setup to deployment.",
-    author: "Alex Johnson",
+    author,
     tags: ["Next.js", "Tutorial", "Blog"],
     views: 1650,
     comments: 18,
@@ -125,10 +131,10 @@ const blogPosts = [
   {
     id: "4",
     title: "Why Dark Mode is More Than Just a Trend",
-    thumbnail: "https://example.com/thumbnails/dark-mode.jpg",
+    thumbnail: null,
     description:
       "Learn about the benefits of dark mode and why it's becoming a standard in UI design.",
-    author: "Emily Davis",
+    author,
     tags: ["UI Design", "Dark Mode", "UX"],
     views: 845,
     comments: 7,
@@ -138,10 +144,10 @@ const blogPosts = [
   {
     id: "5",
     title: "Mastering Tailwind CSS: Tips and Tricks",
-    thumbnail: "https://example.com/thumbnails/tailwind-css.jpg",
+    thumbnail: null,
     description:
       "A comprehensive guide to optimizing your workflow with Tailwind CSS.",
-    author: "Michael Lee",
+    author,
     tags: ["Tailwind CSS", "CSS", "Design"],
     views: 1902,
     comments: 24,
@@ -151,10 +157,10 @@ const blogPosts = [
   {
     id: "6",
     title: "How Artificial Intelligence is Revolutionizing Content Creation",
-    thumbnail: "https://example.com/thumbnails/ai-content.jpg",
+    thumbnail: null,
     description:
       "Discover how AI tools are changing the landscape of content creation and automation.",
-    author: "Sophia Martinez",
+    author,
     tags: ["AI", "Content Creation", "Automation"],
     views: 1240,
     comments: 16,
@@ -164,10 +170,10 @@ const blogPosts = [
   {
     id: "7",
     title: "SEO Best Practices for 2024: What You Need to Know",
-    thumbnail: "https://example.com/thumbnails/seo-2024.jpg",
+    thumbnail: null,
     description:
       "Stay ahead of the competition with these SEO tips and tricks for the coming year.",
-    author: "James Brown",
+    author,
     tags: ["SEO", "Marketing", "2024"],
     views: 2154,
     comments: 33,
@@ -177,10 +183,10 @@ const blogPosts = [
   {
     id: "8",
     title: "Understanding Progressive Web Apps (PWAs): The Future of Mobile",
-    thumbnail: "https://example.com/thumbnails/pwa.jpg",
+    thumbnail: null,
     description:
       "Learn why PWAs are gaining traction and how they compare to native mobile apps.",
-    author: "Rachel Green",
+    author,
     tags: ["PWA", "Mobile", "Development"],
     views: 960,
     comments: 9,
@@ -190,10 +196,10 @@ const blogPosts = [
   {
     id: "9",
     title: "Top 5 Productivity Tools for Remote Developers",
-    thumbnail: "https://example.com/thumbnails/productivity-tools.jpg",
+    thumbnail: null,
     description:
       "Boost your productivity with these must-have tools for remote development.",
-    author: "Tom Wilson",
+    author,
     tags: ["Productivity", "Remote Work", "Tools"],
     views: 1425,
     comments: 20,
@@ -203,10 +209,10 @@ const blogPosts = [
   {
     id: "10",
     title: "A Guide to Building Accessible Websites",
-    thumbnail: "https://example.com/thumbnails/accessible-web.jpg",
+    thumbnail: null,
     description:
       "Ensure your website is accessible to everyone with this comprehensive guide to web accessibility.",
-    author: "Anna Taylor",
+    author,
     tags: ["Accessibility", "Web Design", "Inclusivity"],
     views: 1340,
     comments: 14,
