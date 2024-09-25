@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Typography } from "@/components/ui/typography";
 import { useGenerateSearchParamsUrl } from "@/hooks/use-generate-search-params-url";
 import { cn } from "@/utils/styles";
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ComponentPropsWithoutRef, FormEvent } from "react";
 
@@ -59,16 +60,31 @@ export const SearchHero = (props: SearchHeroProps) => {
           >
             Next-blog
           </Typography>
-          <form className="flex items-center gap-2" onSubmit={searchHandler}>
-            <Input
-              name="search"
-              defaultValue={initialValue}
-              className="z-20 shadow-sm shadow-white"
-            />
-            <Button type="submit" size={"icon"} aria-label="Search">
-              <Search />
-            </Button>
-          </form>
+          <div className="flex flex-col gap-4">
+            <form className="flex items-center gap-2" onSubmit={searchHandler}>
+              <Input
+                name="search"
+                defaultValue={initialValue}
+                className="z-20 shadow-sm shadow-white"
+              />
+              <Button type="submit" size={"icon"} aria-label="Search">
+                <Search />
+              </Button>
+            </form>
+            {initialValue && isPostsPage && (
+              <Button
+                asChild
+                variant={"outline"}
+                color="secondary"
+                size={"sm"}
+                className="self-center"
+              >
+                <Link href={generateUrl("")}>
+                  Reset filters <X className="w-4 h-4 ml-1" />
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </section>
