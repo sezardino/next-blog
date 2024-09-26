@@ -29,6 +29,7 @@ import {
   ClipboardCheck,
   ClipboardPlus,
   Grid,
+  Home,
   LogOut,
   LucideProps,
   Settings,
@@ -81,6 +82,7 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
   const pathname = usePathname();
 
   const footerLinks = [
+    { label: "Back to landing", href: ProjectUrls.home, icon: Home },
     { label: "Settings", href: ProjectUrls.settings, icon: Settings },
     { label: "Log Out", onClick: logout, icon: LogOut },
   ];
