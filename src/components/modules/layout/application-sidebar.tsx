@@ -120,7 +120,7 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
                           </AccordionTrigger>
                         </SidebarTrigger>
                         <AccordionContent>
-                          <ul className="pl-4 pt-1">
+                          <ul className="pl-4 pt-1 flex flex-col gap-1">
                             {item.links?.map((link) => (
                               <li key={link.href}>
                                 <SidebarTrigger
