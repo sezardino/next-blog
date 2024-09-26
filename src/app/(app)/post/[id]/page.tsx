@@ -1,4 +1,5 @@
-import { PostInner } from "@/components/modules/my-posts/post-inner/post-inner";
+import { PostBody } from "@/components/modules/post/post-body/post-inner";
+import { PostHeader } from "@/components/modules/post/post-header";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -66,12 +67,12 @@ const MyPostPage = async (props: Props) => {
         </header>
 
         <section className="p-4 lg:p-10 border rounded-md">
-          <PostInner
+          <PostHeader
             title={post.title}
             tags={post.tags}
             thumbnailUrl={post.thumbnailUrl}
-            body={post.body}
           />
+          <PostBody body={post.body} />
         </section>
       </main>
 
