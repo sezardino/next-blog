@@ -38,8 +38,6 @@ export const getSearchedPosts = async (args: Args) => {
       limit: GRID_ITEMS_PER_PAGE,
     });
 
-    console.log(take, skip, meta);
-
     const posts = await prismaClient.post.findMany({
       where,
       select: BASE_POSTS_SELECT,

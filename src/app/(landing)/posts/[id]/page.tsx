@@ -1,7 +1,19 @@
 import { PostBody } from "@/components/modules/post/post-body/post-inner";
 import { PostHeader } from "@/components/modules/post/post-header";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPost } from "./actiona/get-post";
+import { getPostMetadata } from "./actiona/post-metadata";
+
+export const generateMetadata = async (props: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const post = await getPostMetadata(props.params.id);
+
+  if ("message" in post) return { title: "Post not found" };
+
+  return post;
+};
 
 type Props = {
   params: { id: string };

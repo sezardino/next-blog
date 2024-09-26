@@ -3,9 +3,12 @@ import { SearchHero } from "@/components/modules/landing/seatch-hero";
 import { Button } from "@/components/ui/button";
 import { ProjectUrls } from "@/const";
 import { ArrowRight } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { getLatestPublishedPosts } from "./actions/latest-published-posts";
 import { PostsSearchParams } from "./posts/const";
+
+export const metadata: Metadata = { title: "Home" };
 
 const HomePage = async () => {
   const blogPosts = await getLatestPublishedPosts();

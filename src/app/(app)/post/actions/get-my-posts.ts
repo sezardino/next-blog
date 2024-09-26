@@ -13,7 +13,7 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { page = 0, limit = DEFAULT_ITEMS_PER_PAGE } = data;
+  const { page = 1, limit = DEFAULT_ITEMS_PER_PAGE } = data;
 
   const where: Prisma.PostWhereInput = {
     author: { clerkId: userId },

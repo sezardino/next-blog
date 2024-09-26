@@ -3,8 +3,11 @@ import { SearchHero } from "@/components/modules/landing/seatch-hero";
 import { PaginationWidget } from "@/components/ui/pagination-widget";
 import { ProjectUrls } from "@/const";
 import { GRID_ITEMS_PER_PAGE } from "@/const/pagination";
+import { Metadata } from "next";
 import { getSearchedPosts } from "./actions/search-posts";
 import { PostsSearchParams } from "./const";
+
+export const metadata: Metadata = { title: "All posts" };
 
 type Props = {
   searchParams?: {

@@ -1,5 +1,5 @@
+import { Button, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/utils/styles";
-import { Button, ButtonProps } from "../ui/button";
 
 type HamburgerButtonProps = ButtonProps & {
   isActive: boolean;

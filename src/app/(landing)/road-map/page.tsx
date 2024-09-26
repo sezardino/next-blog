@@ -3,9 +3,12 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Typography } from "@/components/ui/typography";
 import { cn } from "@/utils/styles";
 import { Check } from "lucide-react";
+import { Metadata } from "next";
 import { roadmapPage } from "./content";
 
 const currentMVPVersion = 1;
+
+export const metadata: Metadata = { title: "Road Map" };
 
 const RoadMapPage = () => {
   return (

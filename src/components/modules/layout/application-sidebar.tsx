@@ -6,12 +6,19 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { BrandLogo } from "@/components/ui/brand-logo";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Typography } from "@/components/ui/typography";
 
 import { ProjectUrls } from "@/const";
@@ -32,9 +39,6 @@ import {
   Fragment,
   RefAttributes,
 } from "react";
-import { BrandLogo } from "../ui/brand-logo";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type ApplicationSidebarProps = ComponentPropsWithRef<"div"> & {};
 

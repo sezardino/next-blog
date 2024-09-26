@@ -1,7 +1,7 @@
+import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { Github } from "lucide-react";
 import Link from "next/link";
-import { Typography } from "../ui/typography";
 
 const currentYear = new Date().getFullYear();
 

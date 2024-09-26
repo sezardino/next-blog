@@ -5,6 +5,7 @@ import { DeleteModal } from "./components/delete-post";
 import { MyPostsSection } from "./components/my-posts";
 import { ScheduleModal } from "./components/shedule-modal";
 import { MyPostsSearchParams } from "./const";
+import { Metadata } from "next";
 
 type Props = {
   searchParams?: {
@@ -14,6 +15,8 @@ type Props = {
     [MyPostsSearchParams.deletePost]?: string;
   };
 };
+
+export const metadata: Metadata = { title: "My Posts" };
 
 const MyPostsPage = ({ searchParams }: Props) => {
   const page = Number(searchParams?.[MyPostsSearchParams.page]) || 1;

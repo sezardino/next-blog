@@ -1,5 +1,16 @@
 "use client";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { useApplicationLogout } from "@/hooks/use-logout";
 import { CurrentUserData } from "@/types/user";
@@ -9,17 +20,6 @@ import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
 import { LogOut, LucideProps, Plus, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { ForwardRefExoticComponent, Fragment, RefAttributes } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { Typography } from "../ui/typography";
 
 type UserDropdownProps = DropdownMenuProps & {
   user: CurrentUserData;

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { ProjectUrls } from "@/const";
 import { CurrentUserData } from "@/types/user";
 import { cn } from "@/utils/styles";
@@ -7,7 +8,6 @@ import { Rss } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ComponentPropsWithoutRef, useState } from "react";
-import { Button } from "../ui/button";
 import { HamburgerButton } from "./hamburger-button";
 import { UserDropdown } from "./user-dropdown";
 

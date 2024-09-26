@@ -14,8 +14,11 @@ import { ProjectUrls } from "@/const";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRegistration } from "./use-registration";
+import { Metadata } from "next";
 
 const REGISTRATION_FORM_ID = "registration-form-id";
+
+export const metadata: Metadata = { title: "Registration" };
 
 const RegistrationPage = () => {
   const { errors, registration, isLoading } = useRegistration();

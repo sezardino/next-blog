@@ -13,8 +13,11 @@ import { ProjectUrls } from "@/const";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRegistrationVerification } from "./use-registration-verification";
+import { Metadata } from "next";
 
 const VERIFICATION_FORM_ID = "vERIFICATION-form-id";
+
+export const metadata: Metadata = { title: "Verify account" };
 
 const RegistrationVerificationPage = () => {
   const { errors, verify, isLoading } = useRegistrationVerification();

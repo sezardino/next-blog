@@ -13,12 +13,14 @@ import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { useAuth, useSignIn } from "@clerk/nextjs";
 import { ArrowLeft } from "lucide-react";
-import type { NextPage } from "next";
+import type { Metadata, NextPage } from "next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForgotPassword } from "./use-forgot-password";
 
 const FORGOT_PASSWORD_FORM_ID = "forgot-password-form-id";
+
+export const metadata: Metadata = { title: "Forgot password" };
 
 const ForgotPasswordPage: NextPage = () => {
   const router = useRouter();

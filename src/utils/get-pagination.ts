@@ -16,7 +16,7 @@ export const getBackendPagination = (args: Args) => {
 
   return {
     skip: transformedPage * transformedLimit,
-    take: Number(transformedLimit),
+    take: transformedLimit,
     meta: {
       totalPages: totalPages < 0 ? 0 : totalPages,
       page: transformedPage,

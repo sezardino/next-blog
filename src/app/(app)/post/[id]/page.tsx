@@ -16,6 +16,8 @@ import { DeleteModal } from "../components/delete-post";
 import { ScheduleModal } from "../components/shedule-modal";
 import { getMyPost } from "./actions/get-my-post";
 import { MyPostSearchParams } from "./const";
+import { Metadata } from "next";
+import { getPostMetadata } from "./actions/post-metadata";
 
 type Props = {
   params: { id: string };
@@ -23,6 +25,16 @@ type Props = {
     [MyPostSearchParams.deletePost]?: string;
     [MyPostSearchParams.schedulePublicationDate]?: string;
   };
+};
+
+export const generateMetadata = async (props: {
+  params: { id: string };
+}): Promise<Metadata> => {
+  const post = await getPostMetadata(props.params.id);
+
+  if ("message" in post) return { title: "Post not found" };
+
+  return post;
 };
 
 const MyPostPage = async (props: Props) => {

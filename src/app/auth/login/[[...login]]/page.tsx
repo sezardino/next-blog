@@ -15,8 +15,11 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLogin } from "./use-login";
+import { Metadata } from "next";
 
 const LOGIN_FORM_ID = "login-form";
+
+export const metadata: Metadata = { title: "Login" };
 
 const LoginPage = () => {
   const { errors, login, isLoading } = useLogin();

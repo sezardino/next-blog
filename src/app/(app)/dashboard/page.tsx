@@ -1,8 +1,11 @@
+import { Metadata } from "next";
 import { PostsStatistics } from "./components/posts-statistic";
 import { ReactionsStatistic } from "./components/reactions-statistic";
 import { MyTopPosts } from "./components/top-posts";
 import { MyUpcomingPosts } from "./components/upcoming-posts";
 import { ViewsStatistic } from "./components/views-statistic";
+
+export const metadata: Metadata = { title: "Home" };
 
 const AppDashboardPage = () => {
   return (

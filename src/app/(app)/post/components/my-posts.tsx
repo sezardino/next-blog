@@ -11,7 +11,7 @@ type Props = {
 
 export const MyPostsSection = async (props: Props) => {
   const { limit, page } = props;
-  const posts = await getMyPostsAction({ page: page - 1, limit });
+  const posts = await getMyPostsAction({ page, limit });
 
   return (
     <section className="flex flex-col gap-4">
