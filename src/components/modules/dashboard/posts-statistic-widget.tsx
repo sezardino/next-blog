@@ -28,6 +28,10 @@ export const PostsStatisticWidget = (props: PostsStatisticWidgetProps) => {
 
   const statistics = [
     {
+      label: "Total posts",
+      value: total,
+    },
+    {
       label: "Published",
       value: published,
     },
