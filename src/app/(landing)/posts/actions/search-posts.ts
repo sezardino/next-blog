@@ -8,24 +8,26 @@ import { Prisma } from "@prisma/client";
 
 type Args = {
   search?: string;
-  tags?: string[];
   page: number;
 };
 
 export const getSearchedPosts = async (args: Args) => {
-  const { search = "", tags = [], page = 1 } = args;
+  const { search = "", page = 1 } = args;
 
   const where: Prisma.PostWhereInput = {
     isPublished: true,
     deletedAt: null,
-    AND: [
+    OR: [
+      { title: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
+      { body: { contains: search, mode: "insensitive" } },
       {
         OR: [
-          { title: { contains: search, mode: "insensitive" } },
-          { description: { contains: search, mode: "insensitive" } },
+          { author: { firstName: { contains: search, mode: "insensitive" } } },
+          { author: { lastName: { contains: search, mode: "insensitive" } } },
+          { author: { email: { contains: search, mode: "insensitive" } } },
         ],
       },
-      ...(tags.length ? [{ tags: { hasSome: tags } }] : []),
     ],
   };
 

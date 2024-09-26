@@ -13,19 +13,15 @@ type Props = {
   searchParams?: {
     [PostsSearchParams.search]?: string;
     [PostsSearchParams.page]?: string;
-    [PostsSearchParams.tags]?: string | string[];
   };
 };
 
 const PostsPage = async ({ searchParams }: Props) => {
   const search = searchParams?.[PostsSearchParams.search] || "";
   const page = Number(searchParams?.[PostsSearchParams.page]) || 1;
-  const tagsParam = searchParams?.[PostsSearchParams.tags] || [];
-  const tags = Array.isArray(tagsParam) ? tagsParam : [tagsParam];
   const posts = await getSearchedPosts({
     search,
     page,
-    tags,
   });
 
   return (

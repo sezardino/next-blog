@@ -27,6 +27,7 @@ export const LandingHeader = (props: LandingHeaderProps) => {
     { label: "Home", href: ProjectUrls.home },
     { label: "About", href: ProjectUrls.about },
     { label: "Road Map", href: ProjectUrls.roadMap },
+    { label: "Posts", href: ProjectUrls.posts },
     ...(user ? [{ label: "Dashboard", href: ProjectUrls.dashboard }] : []),
   ];
 
