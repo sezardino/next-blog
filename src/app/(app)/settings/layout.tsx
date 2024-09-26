@@ -8,7 +8,7 @@ import { PropsWithChildren } from "react";
 
 const links = [
   { name: "Public Profile", href: ProjectUrls.settings },
-  { name: "Account Settings", href: ProjectUrls.accountSettings },
+  // { name: "Account Settings", href: ProjectUrls.accountSettings },
 ];
 
 const SettingsLayout = ({ children }: PropsWithChildren) => {
