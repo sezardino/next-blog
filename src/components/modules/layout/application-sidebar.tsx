@@ -24,6 +24,7 @@ import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { useApplicationLogout } from "@/hooks/use-logout";
 import { cn } from "@/utils/styles";
+import { Slot } from "@radix-ui/react-slot";
 import {
   ClipboardCheck,
   ClipboardPlus,
@@ -33,7 +34,9 @@ import {
   Settings,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
+  ComponentPropsWithoutRef,
   ComponentPropsWithRef,
   ForwardRefExoticComponent,
   Fragment,
@@ -50,16 +53,21 @@ type LinkInner = {
   >;
 };
 
-type SideBarLink = Omit<LinkInner, "href" | "icon"> & {
-  links?: LinkInner[];
+type SidebarLink = LinkInner;
+type SidebarLinkList = Omit<LinkInner, "href" | "icon"> & {
+  key: string;
+  links: LinkInner[];
+  startWith: string;
 };
 
-type SidebarMenu = (LinkInner | SideBarLink)[];
+type SidebarMenu = (SidebarLink | SidebarLinkList)[];
 
 const mainLinks: SidebarMenu = [
   { label: "Dashboard", href: ProjectUrls.dashboard, icon: Grid },
   {
     label: "Posts",
+    key: "posts",
+    startWith: ProjectUrls.myPosts,
     links: [
       { label: "My posts", href: ProjectUrls.myPosts, icon: ClipboardCheck },
       { label: "Add new post", href: ProjectUrls.newPost, icon: ClipboardPlus },
@@ -70,11 +78,18 @@ const mainLinks: SidebarMenu = [
 export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
   const { className, ...rest } = props;
   const { logout } = useApplicationLogout();
+  const pathname = usePathname();
 
   const footerLinks = [
     { label: "Settings", href: ProjectUrls.dashboard, icon: Settings },
     { label: "Log Out", onClick: logout, icon: LogOut },
   ];
+
+  const defaultOpenedAccordion = (
+    mainLinks.filter(
+      (m) => "key" in m && pathname.startsWith(m.startWith)
+    ) as SidebarLinkList[]
+  ).map((m) => m.key);
 
   return (
     <Card {...rest} className={cn("h-screen px-0.5 flex flex-col", className)}>
@@ -82,30 +97,39 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
         <BrandLogo href={ProjectUrls.dashboard} />
       </CardHeader>
       <CardContent className="p-2">
-        <Accordion asChild type="single" collapsible>
+        <Accordion
+          asChild
+          type="multiple"
+          defaultValue={defaultOpenedAccordion}
+        >
           <nav>
-            <ul>
+            <ul className="flex flex-col gap-1">
               {mainLinks.map((item, index) => (
                 <Fragment key={index}>
                   {"links" in item && (
-                    <AccordionItem asChild value={item.label}>
+                    <AccordionItem asChild value={item.key}>
                       <li className="border-none">
-                        <Button
+                        <SidebarTrigger
                           asChild
-                          variant={"ghost"}
-                          color={"secondary"}
-                          className="w-full justify-between gap-1"
+                          isActive={pathname.startsWith(item.startWith)}
                         >
                           <AccordionTrigger>
                             <Typography level="span" styling="small">
                               {item.label}
                             </Typography>
                           </AccordionTrigger>
-                        </Button>
+                        </SidebarTrigger>
                         <AccordionContent>
-                          <ul className="pl-4">
-                            {item.links?.map((link, index) => (
-                              <SidebarLink key={link.href} {...link} />
+                          <ul className="pl-4 pt-1">
+                            {item.links?.map((link) => (
+                              <li key={link.href}>
+                                <SidebarTrigger
+                                  asChild
+                                  isActive={pathname === link.href}
+                                >
+                                  <SidebarLink {...link} />
+                                </SidebarTrigger>
+                              </li>
                             ))}
                           </ul>
                         </AccordionContent>
@@ -115,7 +139,9 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
 
                   {"href" in item && (
                     <li key={index}>
-                      <SidebarLink {...item} />
+                      <SidebarTrigger asChild isActive={pathname === item.href}>
+                        <SidebarLink {...item} />
+                      </SidebarTrigger>
                     </li>
                   )}
                 </Fragment>
@@ -161,6 +187,33 @@ export const ApplicationSidebar = (props: ApplicationSidebarProps) => {
   );
 };
 
+type SidebarTriggerProps = ComponentPropsWithoutRef<"button"> & {
+  asChild?: boolean;
+  isActive: boolean;
+};
+
+const SidebarTrigger = (props: SidebarTriggerProps) => {
+  const { asChild, className, isActive, children, ...rest } = props;
+
+  const Comp = asChild ? Slot : "button";
+
+  return (
+    <>
+      <Comp
+        {...rest}
+        className={cn(
+          "flex py-2 px-4 rounded-lg hover:bg-secondary",
+          "whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          isActive && "bg-secondary",
+          className
+        )}
+      >
+        {children}
+      </Comp>
+    </>
+  );
+};
+
 type SidebarLinkProps = {
   label: string;
   href: string;
@@ -169,13 +222,16 @@ type SidebarLinkProps = {
   >;
 };
 
-const SidebarLink = ({ label, href, icon: Icon }: SidebarLinkProps) => (
-  <Button asChild variant={"ghost"} color={"secondary"}>
-    <Link href={href} className="w-full !justify-start gap-1">
-      <Icon className="h-5 w-5" />
-      <Typography level="span" styling="small">
-        {label}
-      </Typography>
-    </Link>
-  </Button>
+const SidebarLink = ({
+  label,
+  href,
+  icon: Icon,
+  ...rest
+}: SidebarLinkProps) => (
+  <Link {...rest} href={href}>
+    <Icon className="h-5 w-5 mr-1 inline" />
+    <Typography level="span" styling="small">
+      {label}
+    </Typography>
+  </Link>
 );
