@@ -6,7 +6,6 @@ import { redirect, RedirectType } from "next/navigation";
 import { ProjectUrls } from "@/const";
 import { normalizeTags } from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
-import dayjs from "dayjs";
 
 export const createPostAction = async (data: PostFormValues) => {
   const { userId } = auth();
@@ -15,8 +14,7 @@ export const createPostAction = async (data: PostFormValues) => {
 
   let newPostId = "";
 
-  const { body, description, tags, title, publicationDate } =
-    PostFormSchema.parse(data);
+  const { body, description, tags, title } = PostFormSchema.parse(data);
 
   try {
     const newPost = await prismaClient.post.create({
@@ -29,10 +27,6 @@ export const createPostAction = async (data: PostFormValues) => {
             create: { name },
           })),
         },
-        publicationDate: dayjs(publicationDate).isValid()
-          ? publicationDate
-          : null,
-        isPublished: dayjs(publicationDate).isSame(new Date(), "date"),
         description,
         title,
       },

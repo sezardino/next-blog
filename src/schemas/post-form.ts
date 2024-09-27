@@ -1,5 +1,4 @@
 import { getHTMLStringLength } from "@/utils/html-length";
-import dayjs from "dayjs";
 import { z } from "zod";
 
 const DESCRIPTION_MIN_LENGTH = 8;
@@ -70,52 +69,51 @@ export const PostSchema = z.object({
     .max(64, "Title is too long"),
   description: descriptionOptionalSchema.optional(),
   // thumbnail: z.any(),
-  publicationDate: z
-    .date()
-    .nullable()
-    .optional()
-    .refine((date) => dayjs(date).isAfter(dayjs(new Date()).add(-1, "day")), {
-      message: "Publication date must be in the future",
-    }),
+  // publicationDate: z
+  //   .date()
+  //   .nullable()
+  //   .optional()
+  //   .refine((date) => dayjs(date).isAfter(dayjs(new Date()).add(-1, "day")), {
+  //     message: "Publication date must be in the future",
+  //   }),
   tags: tagsOptionalSchema,
   body: bodyOptionalSchema,
 });
 
-export const PostFormSchema = PostSchema.superRefine((data, ctx) => {
-  const { publicationDate, body, tags, description } = data;
+export const PostFormSchema = PostSchema;
 
-  if (!publicationDate) return;
+// if (!publicationDate) return;
 
-  const descriptionValidation =
-    descriptionRequiredSchema.safeParse(description);
-  const tagsValidation = tagsRequiredSchema.safeParse(tags);
-  const bodyValidation = bodyRequiredSchema.safeParse(body);
+// const descriptionValidation =
+//   descriptionRequiredSchema.safeParse(description);
+// const tagsValidation = tagsRequiredSchema.safeParse(tags);
+// const bodyValidation = bodyRequiredSchema.safeParse(body);
 
-  if (!descriptionValidation.success) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["description"],
-      message:
-        descriptionValidation.error.errors[0]?.message || "Invalid description",
-    });
-  }
+// if (!descriptionValidation.success) {
+//   ctx.addIssue({
+//     code: z.ZodIssueCode.custom,
+//     path: ["description"],
+//     message:
+//       descriptionValidation.error.errors[0]?.message || "Invalid description",
+//   });
+// }
 
-  if (!tagsValidation.success) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["tags"],
-      message: tagsValidation.error.errors[0]?.message || "Invalid tags",
-    });
-  }
+// if (!tagsValidation.success) {
+//   ctx.addIssue({
+//     code: z.ZodIssueCode.custom,
+//     path: ["tags"],
+//     message: tagsValidation.error.errors[0]?.message || "Invalid tags",
+//   });
+// }
 
-  if (!bodyValidation.success) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ["body"],
-      message: bodyValidation.error.errors[0]?.message || "Invalid body",
-    });
-  }
-});
+// if (!bodyValidation.success) {
+//   ctx.addIssue({
+//     code: z.ZodIssueCode.custom,
+//     path: ["body"],
+//     message: bodyValidation.error.errors[0]?.message || "Invalid body",
+//   });
+// }
+// });
 
 export const EditPostSchema = PostSchema.partial();
 

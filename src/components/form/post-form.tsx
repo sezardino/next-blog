@@ -4,15 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ComponentPropsWithoutRef, useState } from "react";
 
-import { DEFAULT_DATE_FORMAT } from "@/const/date";
 import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
-import { cn } from "@/utils/styles";
 
-import dayjs from "dayjs";
-import { CalendarIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
 import {
   Form,
   FormControl,
@@ -24,11 +19,10 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
 import { normalizeTags } from "@/utils/post";
+import { cn } from "@/utils/styles";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 
@@ -41,6 +35,7 @@ type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   withPublicationDate?: boolean;
   initialValues?: Partial<PostFormValues>;
   onFormSubmit: (values: PostFormValues) => void;
+  onCancelClick?: () => void;
   isDateEditable?: boolean;
 };
 
@@ -50,6 +45,7 @@ export const PostForm = (props: PostFormProps) => {
     isDateEditable = false,
     initialValues,
     onFormSubmit,
+    onCancelClick,
     className,
     ...rest
   } = props;
@@ -64,20 +60,12 @@ export const PostForm = (props: PostFormProps) => {
       description: initialValues?.description || "",
       tags: initialValues?.tags || [],
       title: initialValues?.title || "",
-      publicationDate: initialValues?.publicationDate,
+      // publicationDate: initialValues?.publicationDate,
     },
   });
 
   const onSubmit = (data: PostFormValues) => {
     onFormSubmit(data);
-  };
-
-  const changePublicationVisibility = (value: boolean) => {
-    if (!isDateEditable) return;
-    if (value) form.setValue("publicationDate", new Date());
-    else form.setValue("publicationDate", new Date());
-
-    setIsSelectPublicationVisible(value);
   };
 
   return (
@@ -131,9 +119,7 @@ export const PostForm = (props: PostFormProps) => {
                   {...field}
                   placeholder="programming, people"
                   value={field.value}
-                  onChange={(value) =>
-                    form.setValue("tags", normalizeTags(value))
-                  }
+                  onChange={(value) => field.onChange(normalizeTags(value))}
                 />
               </FormControl>
               <FormDescription>Press Enter to save tag</FormDescription>
@@ -159,80 +145,20 @@ export const PostForm = (props: PostFormProps) => {
           )}
         />
 
-        {isDateEditable && (
-          <>
-            <FormItem>
-              <div className="flex items-center gap-3">
-                <FormLabel>
-                  Already know when you wont publish this quiz?
-                </FormLabel>
-                <FormControl>
-                  <Switch
-                    checked={isSelectPublicationVisible}
-                    onCheckedChange={changePublicationVisibility}
-                  />
-                </FormControl>
-              </div>
-              <FormDescription>
-                If selected, all fields should be filled.
-              </FormDescription>
-            </FormItem>
-
-            {isSelectPublicationVisible && (
-              <FormField
-                control={form.control}
-                name="publicationDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Publication Date</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-[240px] pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              dayjs(field.value).format(DEFAULT_DATE_FORMAT)
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value || undefined}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            dayjs(date).isBefore(
-                              dayjs(new Date()).add(-1, "day")
-                            )
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      Date when this post should be published (you can change it
-                      at any time)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-          </>
-        )}
-
-        <Button type="submit" className="justify-self-end">
-          Save
-        </Button>
+        <footer className="flex items-center justify-between">
+          {onCancelClick && (
+            <Button type="button" variant={"outline"} onClick={onCancelClick}>
+              Cancel
+            </Button>
+          )}
+          <Button
+            type="submit"
+            disabled={!form.formState.isDirty}
+            className={cn(!onCancelClick && "ml-auto")}
+          >
+            Save
+          </Button>
+        </footer>
       </form>
     </Form>
   );

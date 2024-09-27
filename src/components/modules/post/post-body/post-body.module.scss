@@ -1,0 +1,156 @@
+.element {
+  @apply max-w-3xl mx-auto text-gray-200;
+
+  a {
+    @apply text-primary border-b border-primary;
+    transition: color 0.2s, border-color 0.2s;
+
+    &:hover {
+      @apply text-primary/80 border-primary/80;
+    }
+  }
+
+  ul,
+  ol {
+    @apply list-inside list-disc my-4 pl-6;
+
+    li {
+      @apply mb-2;
+    }
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  blockquote {
+    @apply italic border-l-4 pl-4 bg-gray-800 text-gray-300 border-gray-500 my-6 py-2;
+  }
+
+  img {
+    @apply max-w-full h-auto my-4;
+  }
+
+  pre {
+    @apply bg-gray-800 text-gray-200 p-4 rounded my-4 overflow-x-auto;
+
+    code {
+      @apply text-sm;
+    }
+  }
+
+  code {
+    @apply bg-gray-800 text-gray-200 px-2 py-1 rounded;
+  }
+
+  table {
+    @apply w-full table-auto border-collapse my-6;
+
+    th,
+    td {
+      @apply border border-gray-600 px-4 py-2;
+    }
+
+    th {
+      @apply bg-gray-700 text-gray-300 font-bold;
+    }
+
+    td {
+      @apply bg-gray-800 text-gray-200;
+    }
+  }
+
+  iframe {
+    @apply w-full h-auto my-6;
+  }
+}
+
+.xs {
+  h1 {
+    font-size: 1rem; /* 16px */
+    margin-bottom: 0.5rem; /* 8px */
+  }
+
+  h2 {
+    font-size: 0.875rem; /* 14px */
+    margin-bottom: 0.4rem; /* 6.4px */
+  }
+
+  h3 {
+    font-size: 0.75rem; /* 12px */
+    margin-bottom: 0.3rem; /* 4.8px */
+  }
+
+  h4 {
+    font-size: 0.625rem; /* 10px */
+    margin-bottom: 0.25rem; /* 4px */
+  }
+
+  h5 {
+    font-size: 0.5rem; /* 8px */
+    margin-bottom: 0.2rem; /* 3.2px */
+  }
+
+  h6 {
+    font-size: 0.375rem; /* 6px */
+    margin-bottom: 0.15rem; /* 2.4px */
+  }
+
+  p {
+    font-size: 0.75rem; /* 12px */
+    margin-bottom: 0.5rem; /* 8px */
+    line-height: 1.2;
+  }
+}
+
+.sm {
+  h1 {
+    @apply text-3xl mb-5;
+  }
+  h2 {
+    @apply text-2xl mb-4;
+  }
+  h3 {
+    @apply text-xl mb-3.5;
+  }
+  h4 {
+    @apply text-lg mb-3;
+  }
+  h5 {
+    @apply text-base mb-2.5;
+  }
+  h6 {
+    @apply text-sm mb-2;
+  }
+
+  p {
+    @apply mb-3.5;
+    line-height: 1.6;
+  }
+}
+
+.md {
+  h1 {
+    @apply text-4xl mb-6;
+  }
+  h2 {
+    @apply text-3xl mb-5;
+  }
+  h3 {
+    @apply text-2xl mb-4;
+  }
+  h4 {
+    @apply text-xl mb-4;
+  }
+  h5 {
+    @apply text-lg mb-3.5;
+  }
+  h6 {
+    @apply text-base mb-3;
+  }
+
+  p {
+    @apply mb-4;
+    line-height: 1.75;
+  }
+}

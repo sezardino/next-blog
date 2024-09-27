@@ -28,11 +28,11 @@ export const normalizeTags = (tags: string[]) => {
   return uniqueTags;
 };
 
-function getChangedFields<T extends Record<string, any>>(
+export const getChangedFields = <T extends Record<string, any>>(
   original: T,
   updated: T,
   includeNewFields = false
-): Partial<T> {
+): Partial<T> => {
   const changes: Partial<T> = {};
 
   for (const key in original) {
@@ -40,14 +40,12 @@ function getChangedFields<T extends Record<string, any>>(
       const originalValue = original[key];
       const updatedValue = updated[key];
 
-      // Проверка простых типов и массивов
       if (!areEqual(originalValue, updatedValue)) {
         changes[key] = updatedValue;
       }
     }
   }
 
-  // Добавление новых полей, если включена опция includeNewFields
   if (includeNewFields) {
     for (const key in updated) {
       if (updated.hasOwnProperty(key) && !(key in original)) {
@@ -57,21 +55,17 @@ function getChangedFields<T extends Record<string, any>>(
   }
 
   return changes;
-}
+};
 
-// Функция для сравнения значений, включая массивы
-function areEqual(a: any, b: any): boolean {
-  // Проверка для Date
+const areEqual = (a: any, b: any): boolean => {
   if (a instanceof Date && b instanceof Date) {
     return a.getTime() === b.getTime();
   }
 
-  // Проверка для массивов
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
     return a.every((value, index) => areEqual(value, b[index]));
   }
 
-  // Простое сравнение для других типов (строки, числа, булевы значения и т.д.)
   return a === b;
-}
+};

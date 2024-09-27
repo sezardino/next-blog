@@ -1,4 +1,4 @@
-import { PostBody } from "@/components/modules/post/post-body/post-inner";
+import { PostBody } from "@/components/modules/post/post-body/post-body";
 import { PostHeader } from "@/components/modules/post/post-header";
 import {
   Breadcrumb,
@@ -10,14 +10,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
+import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteModal } from "../components/delete-post";
 import { ScheduleModal } from "../components/shedule-modal";
 import { getMyPost } from "./actions/get-my-post";
-import { MyPostSearchParams } from "./const";
-import { Metadata } from "next";
 import { getPostMetadata } from "./actions/post-metadata";
+import { MyPostSearchParams } from "./const";
 
 type Props = {
   params: { id: string };

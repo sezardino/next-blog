@@ -4,10 +4,7 @@ import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
 import { EditPostSchema, PostFormValues } from "@/schemas/post-form";
 import { normalizeTags } from "@/utils/post";
-import {
-  checkIfPostCanBeModified,
-  checkIfPostCanBePublished,
-} from "@/utils/post-dates";
+import { checkIfPostCanBeModified } from "@/utils/post-dates";
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect, RedirectType } from "next/navigation";
@@ -16,13 +13,15 @@ const errors = {
   "already-published": "Already published post can't edit publication date",
 };
 
-export const editPostAction = async (postId: string, data: PostFormValues) => {
+export const editPostAction = async (
+  postId: string,
+  data: Partial<PostFormValues>
+) => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { body, description, tags, title, publicationDate } =
-    EditPostSchema.parse(data);
+  const { body, description, tags, title } = EditPostSchema.parse(data);
 
   let editedPostId = "";
 
@@ -75,8 +74,8 @@ export const editPostAction = async (postId: string, data: PostFormValues) => {
         },
         description: description ?? description,
         title: title ?? title,
-        isPublished: checkIfPostCanBePublished(publicationDate),
-        publicationDate: publicationDate ?? publicationDate,
+        // isPublished: checkIfPostCanBePublished(publicationDate),
+        // publicationDate: publicationDate ?? publicationDate,
       },
       select: { id: true },
     });
