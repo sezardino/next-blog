@@ -2,6 +2,7 @@
 
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
+import { normalizeTags } from "@/utils/post";
 
 import { auth } from "@clerk/nextjs/server";
 
@@ -15,11 +16,17 @@ const generateFakePosts = (length: number) => {
       ? faker.date.past()
       : faker.date.future();
 
+    const tagsCount = faker.number.int({ min: 1, max: 10 });
+
+    const tags = Array.from({ length: tagsCount }, () =>
+      faker.word.adjective()
+    );
+
     return {
       title: faker.lorem.sentence(),
       description: faker.lorem.sentence(),
       body: faker.lorem.paragraphs(3),
-      tags: [faker.word.adjective(), faker.word.noun()],
+      tags,
       publicationDate,
       isPublished: faker.datatype.boolean(),
     };
@@ -35,11 +42,17 @@ export const seedPostsForCurrentUser = async () => {
     const posts = generateFakePosts(faker.number.int({ min: 100, max: 2000 }));
 
     await Promise.all(
-      posts.map((post) =>
+      posts.map(({ tags, ...post }) =>
         prismaClient.post.create({
           data: {
             ...post,
             author: { connect: { clerkId: userId } },
+            tags: {
+              connectOrCreate: normalizeTags(tags).map((name) => ({
+                where: { name },
+                create: { name },
+              })),
+            },
           },
         })
       )

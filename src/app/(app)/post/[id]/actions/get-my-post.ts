@@ -14,7 +14,7 @@ export const getMyPost = async (id: string) => {
       where: { id, author: { clerkId: userId }, deletedAt: null },
       select: {
         title: true,
-        tags: true,
+        tags: { select: { name: true } },
         thumbnailUrl: true,
         body: true,
         isPublished: true,
@@ -26,6 +26,7 @@ export const getMyPost = async (id: string) => {
 
     return {
       ...post,
+      tags: post.tags.map((t) => t.name),
       canSchedulePublication:
         !dayjs(post.publicationDate).isValid() ||
         dayjs(post.publicationDate).isAfter(new Date()),

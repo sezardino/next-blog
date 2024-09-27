@@ -17,7 +17,7 @@ export const getPost = async (id: string) => {
 
     if (!post) return { message: "Post not found" };
 
-    return post;
+    return { ...post, tags: post.tags.map((t) => t.name) };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

@@ -26,11 +26,12 @@ export const BASE_POSTS_SELECT = {
 
 export type BasePost = Pick<
   Post,
-  "title" | "tags" | "thumbnailUrl" | "description" | "id"
+  "title" | "thumbnailUrl" | "description" | "id"
 > & {
   author: Pick<User, "firstName" | "lastName" | "email" | "avatarUrl">;
   views: number;
   likes: number;
   dislikes: number;
   comments: number;
+  tags: string[];
 };

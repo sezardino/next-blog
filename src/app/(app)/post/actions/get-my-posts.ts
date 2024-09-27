@@ -38,6 +38,7 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
         views: { select: { userId: true } },
         comments: { select: { id: true } },
       },
+      orderBy: { publicationDate: "desc" },
     });
 
     const postsWithAnalytics = posts.map((post) => {

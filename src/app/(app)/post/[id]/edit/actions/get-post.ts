@@ -13,7 +13,7 @@ export const getMyPostForEdition = async (id: string) => {
       where: { id, author: { clerkId: userId } },
       select: {
         title: true,
-        tags: true,
+        tags: { select: { name: true } },
         description: true,
         publicationDate: true,
         isPublished: true,
@@ -22,7 +22,9 @@ export const getMyPostForEdition = async (id: string) => {
       },
     });
 
-    return post;
+    if (!post) return { message: "Post not found" };
+
+    return { ...post, tags: post.tags.map((t) => t.name) };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

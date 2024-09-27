@@ -1,5 +1,4 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { ProjectUrls } from "./const";
 
 const isPublicRoute = createRouteMatcher([
@@ -12,9 +11,10 @@ const isPublicRoute = createRouteMatcher([
   "/api/(.*)",
 ]);
 
-export default clerkMiddleware((_, req) => {
-  if (!isPublicRoute(req))
-    return NextResponse.redirect(new URL(ProjectUrls.login, req.url));
+export default clerkMiddleware((auth, req) => {
+  if (!isPublicRoute(req)) {
+    auth().protect();
+  }
 });
 
 export const config = {

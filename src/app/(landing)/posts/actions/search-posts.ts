@@ -48,13 +48,16 @@ export const getSearchedPosts = async (args: Args) => {
       take,
     });
 
-    const formattedPosts = posts.map(({ _count, reactions, ...rest }) => ({
-      ...rest,
-      views: _count.views,
-      comments: _count.comments,
-      likes: reactions.filter((r) => r.isLike).length,
-      dislikes: reactions.filter((r) => !r.isLike).length,
-    }));
+    const formattedPosts = posts.map(
+      ({ _count, tags, reactions, ...rest }) => ({
+        ...rest,
+        views: _count.views,
+        comments: _count.comments,
+        likes: reactions.filter((r) => r.isLike).length,
+        dislikes: reactions.filter((r) => !r.isLike).length,
+        tags: tags.map((t) => t.name),
+      })
+    );
 
     return {
       data: formattedPosts,

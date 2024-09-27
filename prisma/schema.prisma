@@ -29,14 +29,24 @@ model User {
   @@map("users")
 }
 
+model Tag {
+  id String @id @default(uuid())
+
+  name  String @unique
+  posts Post[]
+
+  @@map("tags")
+}
+
 model Post {
   id String @id @default(uuid())
 
+  tags Tag[]
+
   title        String
-  description  String   @default("")
-  tags         String[] @default([])
-  thumbnailUrl String?  @map("thumbnail_url")
-  body         String   @default("")
+  description  String  @default("")
+  thumbnailUrl String? @map("thumbnail_url")
+  body         String  @default("")
 
   publicationDate DateTime? @map("publication_date")
   isPublished     Boolean   @default(false) @map("is_published")

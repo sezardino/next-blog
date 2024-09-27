@@ -28,6 +28,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
+import { normalizeTags } from "@/utils/post";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 
@@ -130,7 +131,9 @@ export const PostForm = (props: PostFormProps) => {
                   {...field}
                   placeholder="programming, people"
                   value={field.value}
-                  onChange={(value) => form.setValue("tags", value)}
+                  onChange={(value) =>
+                    form.setValue("tags", normalizeTags(value))
+                  }
                 />
               </FormControl>
               <FormDescription>Press Enter to save tag</FormDescription>

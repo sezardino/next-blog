@@ -3,7 +3,7 @@ export const BASE_POSTS_SELECT = {
   title: true,
   description: true,
   thumbnailUrl: true,
-  tags: true,
+  tags: { select: { name: true } },
   author: {
     select: {
       firstName: true,

@@ -19,7 +19,7 @@ const HomePage = async () => {
         searchParamName={PostsSearchParams.search}
         searchPathname={ProjectUrls.posts}
       />
-      <PostsSection title="Latest posts" posts={blogPosts.data!}>
+      <PostsSection title="Latest posts" posts={blogPosts.data || []}>
         <Button asChild variant={"outline"}>
           <Link href={ProjectUrls.posts} className="self-center">
             See more Posts <ArrowRight className="w-5 h-5 ml-1" />

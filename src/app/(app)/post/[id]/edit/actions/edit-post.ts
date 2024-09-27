@@ -3,7 +3,7 @@
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
 import { EditPostSchema, PostFormValues } from "@/schemas/post-form";
-import { convertArrayToTags } from "@/utils/array-to-tags";
+import { normalizeTags } from "@/utils/post";
 import {
   checkIfPostCanBeModified,
   checkIfPostCanBePublished,
@@ -29,7 +29,11 @@ export const editPostAction = async (postId: string, data: PostFormValues) => {
   try {
     const neededPost = await prismaClient.post.findUnique({
       where: { id: postId, author: { clerkId: userId } },
-      select: { publicationDate: true, isPublished: true },
+      select: {
+        publicationDate: true,
+        isPublished: true,
+        tags: { select: { name: true, _count: { select: { posts: true } } } },
+      },
     });
 
     if (!neededPost) return { message: "Post not found" };
@@ -42,11 +46,33 @@ export const editPostAction = async (postId: string, data: PostFormValues) => {
         message: errors[canChangePublicationDate],
       };
 
+    const formattedTags = tags?.length ? normalizeTags(tags) : [];
+    const currentTags = neededPost.tags.map((t) => t.name);
+    const tagsToRemovePermanent = neededPost.tags.filter(
+      (tag) => !formattedTags.includes(tag.name) && tag._count.posts <= 1
+    );
+    const tagsToRemove = neededPost.tags.filter(
+      (tag) => !formattedTags.includes(tag.name) && tag._count.posts > 1
+    );
+    const tagsToAdd = formattedTags.filter((tag) => !currentTags.includes(tag));
+
+    if (tagsToRemovePermanent.length) {
+      await prismaClient.tag.deleteMany({
+        where: { name: { in: tagsToRemovePermanent.map((t) => t.name) } },
+      });
+    }
+
     const editedPost = await prismaClient.post.update({
       where: { id: postId, author: { clerkId: userId } },
       data: {
         body: body ?? body,
-        tags: tags ?? convertArrayToTags(tags!),
+        tags: {
+          disconnect: tagsToRemove.map((t) => ({ name: t.name })),
+          connectOrCreate: tagsToAdd.map((name) => ({
+            where: { name },
+            create: { name },
+          })),
+        },
         description: description ?? description,
         title: title ?? title,
         isPublished: checkIfPostCanBePublished(publicationDate),

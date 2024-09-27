@@ -12,7 +12,11 @@ export const deleteMyPostById = async (postId: string) => {
   try {
     const neededPost = await prismaClient?.post.findUnique({
       where: { id: postId, author: { clerkId: userId } },
-      select: { isPublished: true, publicationDate: true },
+      select: {
+        isPublished: true,
+        publicationDate: true,
+        tags: { select: { id: true, _count: { select: { posts: true } } } },
+      },
     });
 
     if (!neededPost) return { message: "Post not found" };
@@ -22,9 +26,19 @@ export const deleteMyPostById = async (postId: string) => {
     );
 
     if (!isPostCanBePublished) {
-      await prismaClient.post.delete({
-        where: { id: postId, author: { clerkId: userId } },
-      });
+      const tagsToDelete = neededPost.tags
+        .filter((t) => t._count.posts <= 1)
+        .map((t) => t.id);
+
+      await prismaClient.$transaction([
+        prismaClient.post.delete({
+          where: { id: postId, author: { clerkId: userId } },
+        }),
+        prismaClient.tag.deleteMany({
+          where: { id: { in: tagsToDelete } },
+        }),
+      ]);
+
       return;
     }
 

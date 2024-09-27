@@ -1,7 +1,7 @@
 import { PostForm } from "@/components/form/post-form";
 import { Typography } from "@/components/ui/typography";
-import { createPostAction } from "./actions/create-new-post";
 import { Metadata } from "next";
+import { createPostAction } from "./actions/create-new-post";
 
 export const metadata: Metadata = { title: "Create mew post" };
 
