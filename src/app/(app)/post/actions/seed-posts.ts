@@ -11,10 +11,17 @@ import { revalidatePath } from "next/cache";
 
 const generateFakePosts = (length: number) => {
   return Array.from({ length }, () => {
-    const isPublished = faker.datatype.boolean();
-    const publicationDate = isPublished
-      ? faker.date.past()
-      : faker.date.future();
+    const status = faker.helpers.arrayElement([
+      "PUBLISHED",
+      "SCHEDULED",
+      "DRAFT",
+    ]);
+    const publicationDate =
+      status === "PUBLISHED"
+        ? faker.date.past()
+        : status === "SCHEDULED"
+        ? faker.date.future()
+        : null;
 
     const tagsCount = faker.number.int({ min: 1, max: 10 });
 
@@ -28,7 +35,7 @@ const generateFakePosts = (length: number) => {
       body: faker.lorem.paragraphs(3),
       tags,
       publicationDate,
-      isPublished: faker.datatype.boolean(),
+      isPublished: status === "PUBLISHED",
     };
   });
 };

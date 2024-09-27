@@ -1,11 +1,11 @@
 import { Typography } from "@/components/ui/typography";
 
 import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
+import { Metadata } from "next";
 import { DeleteModal } from "./components/delete-post";
 import { MyPostsSection } from "./components/my-posts";
 import { ScheduleModal } from "./components/shedule-modal";
 import { MyPostsSearchParams } from "./const";
-import { Metadata } from "next";
 
 type Props = {
   searchParams?: {
