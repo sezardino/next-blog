@@ -1,26 +1,43 @@
 "use server";
 import prismaClient from "@/lib/prisma";
-import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
+import {
+  CreatePostValues,
+  PostFormSchema,
+  PostReadyForScheduleSchema,
+} from "@/schemas/post";
 import { redirect, RedirectType } from "next/navigation";
 
 import { ProjectUrls } from "@/const";
 import { normalizeTags } from "@/utils/post";
+import { checkIfPostCanBePublished } from "@/utils/post-dates";
 import { auth } from "@clerk/nextjs/server";
+import dayjs from "dayjs";
 
-export const createPostAction = async (data: PostFormValues) => {
+export const createPostAction = async (data: CreatePostValues) => {
   const { userId } = auth();
-
+  console.log(1);
   if (!userId) throw new Error("Unauthorized");
 
-  let newPostId = "";
+  const { publicationDate, ...rest } = data;
 
-  const { body, description, tags, title } = PostFormSchema.parse(data);
+  let newPostId = "";
+  const isPublicationDateValid =
+    !!publicationDate && dayjs(publicationDate).isValid();
+
+  const { body, description, tags, title } = isPublicationDateValid
+    ? PostReadyForScheduleSchema.parse(rest)
+    : PostFormSchema.parse(rest);
+
+  const isPublished =
+    isPublicationDateValid && checkIfPostCanBePublished(publicationDate);
 
   try {
     const newPost = await prismaClient.post.create({
       data: {
         author: { connect: { clerkId: userId } },
         body,
+        isPublished,
+        publicationDate: isPublicationDateValid ? publicationDate : null,
         tags: {
           connectOrCreate: normalizeTags(tags).map((name) => ({
             where: { name },

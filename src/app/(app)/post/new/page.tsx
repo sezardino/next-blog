@@ -1,4 +1,4 @@
-import { PostForm } from "@/components/form/post-form";
+import { CreatePostWrapper } from "@/components/modules/my-posts/create-post";
 import { Typography } from "@/components/ui/typography";
 import { Metadata } from "next";
 import { createPostAction } from "./actions/create-new-post";
@@ -20,7 +20,7 @@ const NewPostPage = () => {
           it with your audience!
         </Typography>
       </header>
-      <PostForm onFormSubmit={createPostAction} />
+      <CreatePostWrapper onCreatePost={createPostAction} />
     </main>
   );
 };

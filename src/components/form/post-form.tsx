@@ -2,9 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ComponentPropsWithoutRef, useState } from "react";
-
-import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
+import { ComponentPropsWithoutRef } from "react";
 
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
@@ -21,6 +19,7 @@ import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
 import { Textarea } from "../ui/textarea";
 
+import { PostFormSchema, PostFormValues } from "@/schemas/post";
 import { normalizeTags } from "@/utils/post";
 import { cn } from "@/utils/styles";
 import dynamic from "next/dynamic";
@@ -50,9 +49,6 @@ export const PostForm = (props: PostFormProps) => {
     ...rest
   } = props;
 
-  const [isSelectPublicationVisible, setIsSelectPublicationVisible] =
-    useState(false);
-
   const form = useForm<PostFormValues>({
     resolver: zodResolver(PostFormSchema),
     defaultValues: {
@@ -60,7 +56,6 @@ export const PostForm = (props: PostFormProps) => {
       description: initialValues?.description || "",
       tags: initialValues?.tags || [],
       title: initialValues?.title || "",
-      // publicationDate: initialValues?.publicationDate,
     },
   });
 

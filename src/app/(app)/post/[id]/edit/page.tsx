@@ -32,20 +32,12 @@ const EditPostPage = async (props: Props) => {
           post.
         </Typography>
       </header>
-      {JSON.stringify({ post })}
+
       <EditMyPost
         post={restPost}
         onEditPost={editPostWithId}
         postId={props.params.id}
       />
-      {/* <PostForm
-        initialValues={post}
-        onFormSubmit={editPostWithId}
-        isDateEditable={
-          (!post.isPublished && !!post.publicationDate) ||
-          dayjs(post.publicationDate).isAfter(new Date())
-        }
-      /> */}
     </main>
   );
 };

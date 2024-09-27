@@ -2,7 +2,7 @@
 
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
-import { EditPostSchema, PostFormValues } from "@/schemas/post-form";
+import { EditPostSchema, PostFormValues } from "@/schemas/post";
 import { normalizeTags } from "@/utils/post";
 import { checkIfPostCanBeModified } from "@/utils/post-dates";
 
@@ -74,8 +74,6 @@ export const editPostAction = async (
         },
         description: description ?? description,
         title: title ?? title,
-        // isPublished: checkIfPostCanBePublished(publicationDate),
-        // publicationDate: publicationDate ?? publicationDate,
       },
       select: { id: true },
     });

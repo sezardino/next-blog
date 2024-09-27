@@ -11,4 +11,4 @@ export const checkIfPostCanBeModified = (
 };
 
 export const checkIfPostCanBePublished = (publicationDate?: Date | null) =>
-  dayjs(publicationDate).isSame(new Date(), "date");
+  !!publicationDate && dayjs(publicationDate).isSame(new Date(), "date");

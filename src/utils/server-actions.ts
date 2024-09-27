@@ -4,12 +4,13 @@ type Args<Response, Arguments = undefined> = {
   action: (args: Arguments) => Promise<ServerActionResponse<Response>>;
   onSuccess?: (result: Response) => void;
   onError?: (error: string) => void;
+  onFinally?: () => void;
 };
 
 export const createActionHandler = <T = void, A = undefined>(
   args: Args<T, A>
 ) => {
-  const { action, onError, onSuccess } = args;
+  const { action, onError, onSuccess, onFinally } = args;
 
   return async (actionArgs: A): Promise<void> => {
     try {
@@ -26,6 +27,8 @@ export const createActionHandler = <T = void, A = undefined>(
       }
     } catch (error) {
       onError?.(error instanceof Error ? error.message : "Unexpected error");
+    } finally {
+      onFinally?.();
     }
   };
 };
