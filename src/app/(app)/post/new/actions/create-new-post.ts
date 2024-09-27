@@ -15,7 +15,7 @@ import dayjs from "dayjs";
 
 export const createPostAction = async (data: CreatePostValues) => {
   const { userId } = auth();
-  console.log(1);
+
   if (!userId) throw new Error("Unauthorized");
 
   const { publicationDate, ...rest } = data;
