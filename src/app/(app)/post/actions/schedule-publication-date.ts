@@ -5,7 +5,7 @@ import { SchedulePost, SchedulePostSchema } from "@/schemas/schedule-post";
 import {
   checkIfPostCanBeModified,
   checkIfPostCanBePublished,
-} from "@/utils/post-dates";
+} from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
 
 const errors = {
@@ -24,7 +24,7 @@ export const schedulePublicationDate = async (
 
   try {
     const neededPost = await prismaClient?.post.findUnique({
-      where: { id: postId, author: { clerkId: userId } },
+      where: { id: postId, author: { clerkId: userId }, deletedAt: null },
       select: { isPublished: true, publicationDate: true },
     });
 

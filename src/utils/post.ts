@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const numberToReadableFormat = (views: number) => {
   if (views < 1000) {
     return views.toString();
@@ -69,3 +71,27 @@ const areEqual = (a: any, b: any): boolean => {
 
   return a === b;
 };
+
+type ReturnString = "already-published";
+
+export const checkIfPostWasPublished = (
+  isPublished: boolean,
+  publicationDate: undefined | Date | null
+) => {
+  if (isPublished) return true;
+  if (!publicationDate) return false;
+  if (dayjs(publicationDate).isBefore(dayjs(new Date()).add(1, "day")))
+    return true;
+  return false;
+};
+
+export const checkIfPostCanBeModified = (
+  isPublished: boolean,
+  publicationDate: Date | null
+): ReturnString | void => {
+  if (isPublished || dayjs(publicationDate).isBefore(new Date()))
+    return "already-published";
+};
+
+export const checkIfPostCanBePublished = (publicationDate?: Date | null) =>
+  !!publicationDate && dayjs(publicationDate).isSame(new Date(), "date");

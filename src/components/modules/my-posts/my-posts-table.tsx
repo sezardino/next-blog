@@ -11,6 +11,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { DEFAULT_DATE_FORMAT } from "@/const/date";
 import { useGenerateSearchParamsUrl } from "@/hooks/use-generate-search-params-url";
+import { checkIfPostWasPublished } from "@/utils/post";
 import { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
 import {
@@ -152,7 +153,10 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
       cell: (cell) => (
         <MyPostActionsDropdown
           postId={cell.row.original.id}
-          canSchedulePublication={cell.row.original.canSchedulePublication}
+          isPostAlreadyPublished={checkIfPostWasPublished(
+            cell.row.original.isPublished,
+            cell.row.original.publicationDate
+          )}
           onDeletePostClick={() =>
             router.replace(
               createPageURL(

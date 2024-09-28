@@ -3,8 +3,7 @@
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
 import { EditPostSchema, PostFormValues } from "@/schemas/post";
-import { normalizeTags } from "@/utils/post";
-import { checkIfPostCanBeModified } from "@/utils/post-dates";
+import { checkIfPostCanBeModified, normalizeTags } from "@/utils/post";
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect, RedirectType } from "next/navigation";

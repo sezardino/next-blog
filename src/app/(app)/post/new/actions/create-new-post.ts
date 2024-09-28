@@ -8,8 +8,7 @@ import {
 import { redirect, RedirectType } from "next/navigation";
 
 import { ProjectUrls } from "@/const";
-import { normalizeTags } from "@/utils/post";
-import { checkIfPostCanBePublished } from "@/utils/post-dates";
+import { checkIfPostCanBePublished, normalizeTags } from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
 import dayjs from "dayjs";
 

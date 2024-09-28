@@ -1,31 +1,32 @@
-import { SchedulePublicationDateModal } from "@/components/modules/my-posts/schedule-publication-date-modal";
-import { getMyPostScheduledDate } from "../actions/get-publication-date";
+import {
+  PostScheduleModal,
+  PostScheduleModalProps,
+} from "@/components/modules/my-posts/post-schedule-modal";
+import { checkIfCanSchedulePublicationDate } from "../actions/can-schedule-publication-date";
 import { schedulePublicationDate } from "../actions/schedule-publication-date";
 
-type Props = {
-  isOpen: boolean;
-  postId?: string;
-  paramName: string;
+type Props = Pick<PostScheduleModalProps, "isOpen" | "onClose"> & {
+  postId: string;
 };
 
 export const ScheduleModal = async (props: Props) => {
-  const { isOpen, paramName, postId } = props;
-
-  if (!postId || !isOpen) return;
+  const { postId, ...rest } = props;
 
   const schedulePublicationDateWithId = schedulePublicationDate.bind(
     null,
     postId
   );
-  const postDate = await getMyPostScheduledDate(postId);
-
-  if ("message" in postDate) return;
+  const checkResponse = await checkIfCanSchedulePublicationDate(postId);
 
   return (
-    <SchedulePublicationDateModal
-      paramName={paramName}
-      initialDate={postDate.publicationDate}
-      onScheduleDate={schedulePublicationDateWithId}
+    <PostScheduleModal
+      {...rest}
+      title="Schedule post publication date"
+      noSwitch
+      onConfirm={rest.onClose}
+      onSchedule={schedulePublicationDateWithId}
+      errors={checkResponse.errors || []}
+      errorMessage={checkResponse.message || ""}
     />
   );
 };

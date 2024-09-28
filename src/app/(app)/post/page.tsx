@@ -52,11 +52,13 @@ const MyPostsPage = ({ searchParams }: Props) => {
         <MyPostsSection page={page} limit={limit} />
       </main>
 
-      <ScheduleModal
-        isOpen={!!postToSchedulePublicationDate}
-        postId={postToSchedulePublicationDate}
-        paramName={MyPostsSearchParams.schedulePublicationDate}
-      />
+      {postToSchedulePublicationDate && (
+        <ScheduleModal
+          isOpen={!!postToSchedulePublicationDate}
+          postId={postToSchedulePublicationDate}
+          onClose={closeModalHandler}
+        />
+      )}
 
       <DeleteMyPostModal
         isOpen={!!postToDelete}

@@ -6,7 +6,6 @@ import { BaseGetRequest } from "@/types/base";
 import { getBackendPagination } from "@/utils/get-pagination";
 import { auth } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
-import dayjs from "dayjs";
 
 export const getMyPostsAction = async (data: BaseGetRequest) => {
   const { userId } = auth();
@@ -63,9 +62,6 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
         id: post.id,
         title: post.title,
         createdAt: post.createdAt,
-        canSchedulePublication:
-          !dayjs(post.publicationDate).isValid() ||
-          dayjs(post.publicationDate).isAfter(new Date()),
         isPublished: post.isPublished,
         publicationDate: post.publicationDate,
         comments: commentCount,

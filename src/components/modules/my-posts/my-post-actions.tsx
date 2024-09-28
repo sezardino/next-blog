@@ -20,7 +20,7 @@ import Link from "next/link";
 type Props = {
   type?: "all-posts" | "post";
   postId: string;
-  canSchedulePublication: boolean;
+  isPostAlreadyPublished: boolean;
   onDeletePostClick: () => void;
   onSchedulePublicationDateClick: () => void;
 };
@@ -28,7 +28,7 @@ type Props = {
 export const MyPostActionsDropdown = (props: Props) => {
   const {
     type = "all-posts",
-    canSchedulePublication,
+    isPostAlreadyPublished,
     postId,
     onDeletePostClick,
     onSchedulePublicationDateClick,
@@ -78,7 +78,7 @@ export const MyPostActionsDropdown = (props: Props) => {
             <Pencil className="w-4 h-4" /> Edit post
           </Link>
         </DropdownMenuItem>
-        {canSchedulePublication ? (
+        {!isPostAlreadyPublished ? (
           <DropdownMenuItem asChild>
             <button
               onClick={onSchedulePublicationDateClick}

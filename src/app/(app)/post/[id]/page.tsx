@@ -13,8 +13,6 @@ import { ProjectUrls } from "@/const";
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { DeleteModal } from "../components/delete-post";
-import { ScheduleModal } from "../components/shedule-modal";
 import { getMyPost } from "./actions/get-my-post";
 import { getPostMetadata } from "./actions/post-metadata";
 import { MyPostSearchParams } from "./const";
@@ -87,18 +85,6 @@ const MyPostPage = async (props: Props) => {
           <PostBody body={post.body} />
         </section>
       </main>
-
-      <ScheduleModal
-        isOpen={isScheduleModalOpen === "true"}
-        postId={params.id}
-        paramName={MyPostSearchParams.schedulePublicationDate}
-      />
-
-      <DeleteModal
-        isOpen={isDeleteModalOpen === "true"}
-        postId={params.id}
-        paramName={MyPostSearchParams.deletePost}
-      />
     </>
   );
 };
