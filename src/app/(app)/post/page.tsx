@@ -1,8 +1,11 @@
 import { Typography } from "@/components/ui/typography";
 
+import { DeleteMyPostModal } from "@/components/modules/my-posts/delete-post";
+import { ProjectUrls } from "@/const";
 import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
 import { Metadata } from "next";
-import { DeleteModal } from "./components/delete-post";
+import { redirect } from "next/navigation";
+import { deleteMyPostById } from "./actions/delete";
 import { MyPostsSection } from "./components/my-posts";
 import { ScheduleModal } from "./components/shedule-modal";
 import { MyPostsSearchParams } from "./const";
@@ -16,6 +19,11 @@ type Props = {
   };
 };
 
+const closeModalHandler = async () => {
+  "use server";
+  redirect(ProjectUrls.myPosts);
+};
+
 export const metadata: Metadata = { title: "My Posts" };
 
 const MyPostsPage = ({ searchParams }: Props) => {
@@ -25,6 +33,8 @@ const MyPostsPage = ({ searchParams }: Props) => {
   const postToSchedulePublicationDate =
     searchParams?.[MyPostsSearchParams.schedulePublicationDate] || "";
   const postToDelete = searchParams?.[MyPostsSearchParams.deletePost] || "";
+
+  const deletePostWithId = deleteMyPostById.bind(null, postToDelete);
 
   return (
     <>
@@ -48,10 +58,10 @@ const MyPostsPage = ({ searchParams }: Props) => {
         paramName={MyPostsSearchParams.schedulePublicationDate}
       />
 
-      <DeleteModal
+      <DeleteMyPostModal
         isOpen={!!postToDelete}
-        paramName={MyPostsSearchParams.deletePost}
-        postId={postToDelete}
+        onClose={closeModalHandler}
+        onDeletePost={deletePostWithId}
       />
     </>
   );

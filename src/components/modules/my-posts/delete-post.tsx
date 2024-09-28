@@ -11,30 +11,23 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGenerateSearchParamsUrl } from "@/hooks/use-generate-search-params-url";
 import { ServerActionResponse } from "@/types/base";
 import { createActionHandler } from "@/utils/server-actions";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type DeletePostModalProps = {
-  paramName: string;
+  isOpen: boolean;
+  onClose: () => void;
   onDeletePost: () => Promise<ServerActionResponse>;
 };
 
 export const DeleteMyPostModal = async (props: DeletePostModalProps) => {
-  const { paramName, onDeletePost } = props;
-
-  const router = useRouter();
-
-  const createPageURL = useGenerateSearchParamsUrl(paramName);
-
-  const closeHandler = () => router.replace(createPageURL(""));
+  const { isOpen, onClose, onDeletePost } = props;
 
   const deletePost = createActionHandler({
     action: onDeletePost,
     onSuccess: () => {
-      closeHandler();
+      onClose();
       toast.success("Post was successful deleted");
     },
     onError: (error) => {
@@ -43,7 +36,7 @@ export const DeleteMyPostModal = async (props: DeletePostModalProps) => {
   });
 
   return (
-    <AlertDialog open onOpenChange={closeHandler}>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -53,7 +46,7 @@ export const DeleteMyPostModal = async (props: DeletePostModalProps) => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={closeHandler}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={onClose}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive hover:bg-destructive/80"
             onClick={() => deletePost(undefined)}

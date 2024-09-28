@@ -1,7 +1,7 @@
 "use server";
 import prismaClient from "@/lib/prisma";
 
-import { checkIfPostCanBeModified } from "@/utils/post-dates";
+import { checkIfPostCanBeModified } from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
 
 export const deleteMyPostById = async (postId: string) => {
