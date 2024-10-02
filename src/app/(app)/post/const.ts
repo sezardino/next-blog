@@ -3,4 +3,5 @@ export const MyPostsSearchParams = Object.freeze({
   limit: "limit",
   schedulePublicationDate: "schedule",
   deletePost: "delete",
+  publicationStatus: "publication",
 });

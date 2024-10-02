@@ -165,6 +165,18 @@ export const MyPostsTable = (props: MyPostsTableProps) => {
               )
             )
           }
+          canChangePublicationStatus={
+            true
+            // cell.row.original.canChangePublicationStatus
+          }
+          onChangePublicationStatusClick={() =>
+            router.replace(
+              createPageURL(
+                cell.row.original.id,
+                MyPostsSearchParams.publicationStatus
+              )
+            )
+          }
           onSchedulePublicationDateClick={() =>
             router.replace(
               createPageURL(

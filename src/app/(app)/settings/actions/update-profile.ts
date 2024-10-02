@@ -2,55 +2,9 @@
 
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
-import { CurrentUserData } from "@/types/user";
 import { auth } from "@clerk/nextjs/server";
-import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import z from "zod";
-
-export type FormState = {
-  errors?: { field: string; error: string }[];
-  message?: string | null;
-};
-
-export const getCurrentUserData = async (): Promise<CurrentUserData | null> => {
-  const { userId } = auth();
-
-  if (!userId) return null;
-
-  try {
-    const user = await prismaClient.user.findUnique({
-      where: { clerkId: userId },
-      select: { email: true, avatarUrl: true, firstName: true, lastName: true },
-    });
-
-    return user;
-  } catch (error) {
-    console.log("error", error);
-    throw new Error("Error when try to fetch user");
-  }
-};
-
-export const getCurrentUserProfile = async (): Promise<Pick<
-  User,
-  "avatarUrl" | "firstName" | "lastName" | "bio"
-> | null> => {
-  const { userId } = auth();
-
-  if (!userId) return null;
-
-  try {
-    const user = await prismaClient.user.findUnique({
-      where: { clerkId: userId },
-      select: { bio: true, firstName: true, lastName: true, avatarUrl: true },
-    });
-
-    return user;
-  } catch (error) {
-    console.log("error", error);
-    throw new Error(JSON.stringify(error));
-  }
-};
 
 export const uploadAvatarImage = async () => {};
 

@@ -9,7 +9,7 @@ export const BASE_POSTS_SELECT = {
       firstName: true,
       lastName: true,
       email: true,
-      avatarUrl: true,
+      avatar: { select: { publicPath: true } },
     },
   },
   reactions: { select: { isLike: true } },

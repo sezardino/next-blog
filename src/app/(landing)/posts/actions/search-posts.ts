@@ -49,13 +49,20 @@ export const getSearchedPosts = async (args: Args) => {
     });
 
     const formattedPosts = posts.map(
-      ({ _count, tags, reactions, ...rest }) => ({
+      ({
+        _count,
+        tags,
+        reactions,
+        author: { avatar, ...restAuthor },
+        ...rest
+      }) => ({
         ...rest,
         views: _count.views,
         comments: _count.comments,
         likes: reactions.filter((r) => r.isLike).length,
         dislikes: reactions.filter((r) => !r.isLike).length,
         tags: tags.map((t) => t.name),
+        author: { ...restAuthor, avatarUrl: avatar?.publicPath || null },
       })
     );
 

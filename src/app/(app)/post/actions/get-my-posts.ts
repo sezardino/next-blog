@@ -4,6 +4,7 @@ import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
 import prismaClient from "@/lib/prisma";
 import { BaseGetRequest } from "@/types/base";
 import { getBackendPagination } from "@/utils/get-pagination";
+import { checkIfPostWasPublished } from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
 import { Prisma } from "@prisma/client";
 
@@ -57,6 +58,10 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
         (view) => !view.userId
       ).length;
       const authorizedViewsCount = totalViewsCount - anonymousViewsCount;
+      const canChangePublicationStatus = checkIfPostWasPublished(
+        post.isPublished,
+        post.publicationDate
+      );
 
       return {
         id: post.id,
@@ -64,6 +69,7 @@ export const getMyPostsAction = async (data: BaseGetRequest) => {
         createdAt: post.createdAt,
         isPublished: post.isPublished,
         publicationDate: post.publicationDate,
+        canChangePublicationStatus,
         comments: commentCount,
         reactions: {
           likes: likeCount,

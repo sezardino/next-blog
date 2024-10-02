@@ -28,7 +28,7 @@ export type BasePost = Pick<
   Post,
   "title" | "thumbnailUrl" | "description" | "id"
 > & {
-  author: Pick<User, "firstName" | "lastName" | "email" | "avatarUrl">;
+  author: Pick<User, "firstName" | "lastName" | "email"> & { avatarUrl: true };
   views: number;
   likes: number;
   dislikes: number;

@@ -17,7 +17,7 @@ import { CurrentUserData } from "@/types/user";
 import { cn } from "@/utils/styles";
 import { getUserAvatarFallback } from "@/utils/user";
 import { DropdownMenuProps } from "@radix-ui/react-dropdown-menu";
-import { LogOut, LucideProps, Plus, Settings, User } from "lucide-react";
+import { LogOut, LucideProps, Plus, Settings } from "lucide-react";
 import Link from "next/link";
 import { ForwardRefExoticComponent, Fragment, RefAttributes } from "react";
 
@@ -42,7 +42,7 @@ export const UserDropdown = (props: UserDropdownProps) => {
   const menuSections: Section[][] = [
     [{ icon: Plus, label: "Write post", href: ProjectUrls.newPost }],
     [
-      { icon: User, label: "Profile", href: ProjectUrls.profile },
+      // { icon: User, label: "Profile", href: ProjectUrls.profile },
       { icon: Settings, label: "Settings", href: ProjectUrls.settings },
     ],
     [

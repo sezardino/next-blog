@@ -8,14 +8,26 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model File {
+  id         String @id @default(uuid())
+  path       String
+  fullPath   String @map("full_path")
+  publicPath String @map("public_path")
+  avatar     User[]
+
+  @@map("files")
+}
+
 model User {
   id        String  @id @default(uuid())
   clerkId   String  @unique @map("clerk_id")
   email     String  @unique
-  avatarUrl String? @map("avatar_url")
   firstName String? @map("first_name")
   lastName  String? @map("last_name")
   bio       String?
+
+  avatar   File?   @relation(fields: [avatarId], references: [id])
+  avatarId String? @map("avatar_id")
 
   posts     Post[]     @relation(name: "author")
   reactions Reaction[]

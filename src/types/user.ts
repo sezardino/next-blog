@@ -1,6 +1,5 @@
 import { User } from "@prisma/client";
 
-export type CurrentUserData = Pick<
-  User,
-  "avatarUrl" | "email" | "firstName" | "lastName"
->;
+export type CurrentUserData = Pick<User, "email" | "firstName" | "lastName"> & {
+  avatarUrl: string | null;
+};

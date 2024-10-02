@@ -14,30 +14,22 @@ export const checkIfCanSchedulePublicationDate = async (postId: string) => {
 
   try {
     const neededPost = await prismaClient?.post.findUnique({
-      where: { id: postId, author: { clerkId: userId } },
+      where: { id: postId, author: { clerkId: userId }, deletedAt: null },
       select: {
         isPublished: true,
         publicationDate: true,
         title: true,
         description: true,
-        deletedAt: true,
         body: true,
         thumbnailUrl: true,
         tags: { select: { name: true } },
       },
     });
 
-    if (!neededPost || neededPost.deletedAt)
-      return { message: "Post not found" };
+    if (!neededPost) return { message: "Post not found" };
 
-    const {
-      tags,
-      isPublished,
-      publicationDate,
-      deletedAt,
-      thumbnailUrl,
-      ...rest
-    } = neededPost;
+    const { tags, isPublished, publicationDate, thumbnailUrl, ...rest } =
+      neededPost;
 
     const wasPublished = checkIfPostWasPublished(isPublished, publicationDate);
 

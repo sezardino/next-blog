@@ -14,19 +14,21 @@ export const MyPostsSection = async (props: Props) => {
   const posts = await getMyPostsAction({ page, limit });
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="border rounded-md">
-        <MyPostsTable data={posts.data || []} />
-      </div>
+    <>
+      <section className="flex flex-col gap-4">
+        <div className="border rounded-md">
+          <MyPostsTable data={posts.data || []} />
+        </div>
 
-      <PaginationWidget
-        totalPages={posts.meta?.totalPages || 0}
-        currentPage={posts.meta?.page || 0}
-        paginationPathName={MyPostsSearchParams.page}
-        limitPathName={MyPostsSearchParams.limit}
-        currentLimit={posts.meta?.limit || DEFAULT_ITEMS_PER_PAGE}
-        className="ml-auto"
-      />
-    </section>
+        <PaginationWidget
+          totalPages={posts.meta?.totalPages || 0}
+          currentPage={posts.meta?.page || 0}
+          paginationPathName={MyPostsSearchParams.page}
+          limitPathName={MyPostsSearchParams.limit}
+          currentLimit={posts.meta?.limit || DEFAULT_ITEMS_PER_PAGE}
+          className="ml-auto"
+        />
+      </section>
+    </>
   );
 };

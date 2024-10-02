@@ -20,8 +20,6 @@ type Props = ComponentPropsWithoutRef<"section"> & {
   onCreatePost: (values: CreatePostValues) => Promise<ServerActionResponse>;
 };
 
-const SCHEDULE_FORM_ID = "SCHEDULE_FORM_ID";
-
 export const CreatePostWrapper = (props: Props) => {
   const { onCreatePost, ...rest } = props;
   const router = useRouter();

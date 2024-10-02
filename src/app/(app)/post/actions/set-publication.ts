@@ -1,15 +1,16 @@
 "use server";
 
+import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
+import { checkIfPostWasPublished } from "@/utils/post";
 import { auth } from "@clerk/nextjs/server";
-import dayjs from "dayjs";
+import { revalidatePath } from "next/cache";
 
 export const setMyPostPublicationStatus = async (
   postId: string,
   isPublished: boolean
 ) => {
   const { userId } = auth();
-
   if (!userId) throw new Error("Unauthorized");
 
   try {
@@ -19,12 +20,10 @@ export const setMyPostPublicationStatus = async (
     });
 
     if (!neededPost) return { message: "Post not found" };
-    const canChangePublicationStatus =
-      neededPost.isPublished ||
-      (!!neededPost.publicationDate &&
-        dayjs(neededPost.publicationDate).isBefore(
-          dayjs(new Date()).add(1, "day")
-        ));
+    const canChangePublicationStatus = checkIfPostWasPublished(
+      neededPost.isPublished,
+      neededPost.publicationDate
+    );
 
     if (canChangePublicationStatus)
       return {
@@ -37,6 +36,8 @@ export const setMyPostPublicationStatus = async (
       data: { isPublished },
       select: { id: true },
     });
+
+    revalidatePath(ProjectUrls.myPosts);
   } catch (error) {
     console.log(error);
     return { message: "Error when try to change post publication status" };

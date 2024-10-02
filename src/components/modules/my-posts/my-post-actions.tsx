@@ -14,7 +14,15 @@ import {
 } from "@/components/ui/tooltip";
 import { ProjectUrls } from "@/const";
 import { cn } from "@/utils/styles";
-import { Calendar, Ellipsis, Eye, Flame, Pencil, Trash } from "lucide-react";
+import {
+  BookDashed,
+  Calendar,
+  Ellipsis,
+  Eye,
+  Flame,
+  Pencil,
+  Trash,
+} from "lucide-react";
 import Link from "next/link";
 
 type Props = {
@@ -23,12 +31,16 @@ type Props = {
   isPostAlreadyPublished: boolean;
   onDeletePostClick: () => void;
   onSchedulePublicationDateClick: () => void;
+  onChangePublicationStatusClick: () => void;
+  canChangePublicationStatus: boolean;
 };
 
 export const MyPostActionsDropdown = (props: Props) => {
   const {
     type = "all-posts",
     isPostAlreadyPublished,
+    canChangePublicationStatus,
+    onChangePublicationStatusClick,
     postId,
     onDeletePostClick,
     onSchedulePublicationDateClick,
@@ -101,6 +113,18 @@ export const MyPostActionsDropdown = (props: Props) => {
               been published.
             </TooltipContent>
           </Tooltip>
+        )}
+
+        {canChangePublicationStatus && (
+          <DropdownMenuItem asChild>
+            <button
+              type="button"
+              onClick={onChangePublicationStatusClick}
+              className="flex items-center gap-2"
+            >
+              <BookDashed className="w-4 h-4" /> Change publication status
+            </button>
+          </DropdownMenuItem>
         )}
 
         <DropdownMenuItem asChild>

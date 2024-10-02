@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { deleteMyPostById } from "./actions/delete";
 import { MyPostsSection } from "./components/my-posts";
+import { PublicationModal } from "./components/publication-modal";
 import { ScheduleModal } from "./components/shedule-modal";
 import { MyPostsSearchParams } from "./const";
 
@@ -16,6 +17,7 @@ type Props = {
     [MyPostsSearchParams.limit]?: string;
     [MyPostsSearchParams.schedulePublicationDate]?: string;
     [MyPostsSearchParams.deletePost]?: string;
+    [MyPostsSearchParams.publicationStatus]?: string;
   };
 };
 
@@ -33,6 +35,8 @@ const MyPostsPage = ({ searchParams }: Props) => {
   const postToSchedulePublicationDate =
     searchParams?.[MyPostsSearchParams.schedulePublicationDate] || "";
   const postToDelete = searchParams?.[MyPostsSearchParams.deletePost] || "";
+  const postToSetPublicationStatus =
+    searchParams?.[MyPostsSearchParams.publicationStatus] || "";
 
   const deletePostWithId = deleteMyPostById.bind(null, postToDelete);
 
@@ -56,6 +60,14 @@ const MyPostsPage = ({ searchParams }: Props) => {
         <ScheduleModal
           isOpen={!!postToSchedulePublicationDate}
           postId={postToSchedulePublicationDate}
+          onClose={closeModalHandler}
+        />
+      )}
+
+      {postToSetPublicationStatus && (
+        <PublicationModal
+          isOpen={!!postToSetPublicationStatus}
+          postId={postToSetPublicationStatus}
           onClose={closeModalHandler}
         />
       )}
