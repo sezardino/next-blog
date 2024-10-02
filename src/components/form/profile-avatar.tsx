@@ -97,7 +97,7 @@ export const ProfileAvatarForm = (props: ProfileAvatarFormProps) => {
           </div>
 
           <div className="flex gap-3 items-center flex-wrap">
-            <Button asChild size={"sm"}>
+            <Button asChild color={"secondary"} size={"sm"}>
               <label className="cursor-pointer">
                 Select Image
                 <input
