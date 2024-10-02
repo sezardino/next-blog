@@ -98,13 +98,12 @@ export const PostCard = (props: PostCardProps) => {
           <div className="flex items-center gap-3">
             <Tooltip>
               <TooltipTrigger asChild>
-                <Avatar>
+                <Avatar className="w-8 h-8">
                   <AvatarImage
                     src={author.avatarUrl || undefined}
-                    className="w-8 h-8"
                     alt={`${author.firstName} ${author.lastName} avatar`}
                   />
-                  <AvatarFallback asChild className="w-8 h-8">
+                  <AvatarFallback asChild>
                     <Typography styling="xs">
                       {getUserAvatarFallback(author)}
                     </Typography>
