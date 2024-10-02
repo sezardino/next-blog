@@ -9,7 +9,7 @@ export const getPost = async (id: string) => {
       select: {
         title: true,
         tags: true,
-        thumbnailUrl: true,
+        thumbnail: { select: { publicPath: true } },
         body: true,
         publicationDate: true,
       },
@@ -17,7 +17,13 @@ export const getPost = async (id: string) => {
 
     if (!post) return { message: "Post not found" };
 
-    return { ...post, tags: post.tags.map((t) => t.name) };
+    const { tags, thumbnail, ...restPost } = post;
+
+    return {
+      ...restPost,
+      thumbnailUrl: thumbnail?.publicPath || null,
+      tags: tags.map((t) => t.name),
+    };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

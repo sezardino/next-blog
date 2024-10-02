@@ -15,7 +15,7 @@ export const getMyPost = async (id: string) => {
       select: {
         title: true,
         tags: { select: { name: true } },
-        thumbnailUrl: true,
+        thumbnail: { select: { publicPath: true } },
         body: true,
         isPublished: true,
         publicationDate: true,
@@ -23,13 +23,15 @@ export const getMyPost = async (id: string) => {
     });
 
     if (!post) return { message: "Post not found" };
+    const { tags, thumbnail, publicationDate, ...restPost } = post;
 
     return {
-      ...post,
-      tags: post.tags.map((t) => t.name),
+      ...restPost,
+      tags: tags.map((t) => t.name),
+      thumbnailUrl: thumbnail?.publicPath || null,
       canSchedulePublication:
-        !dayjs(post.publicationDate).isValid() ||
-        dayjs(post.publicationDate).isAfter(new Date()),
+        !dayjs(publicationDate).isValid() ||
+        dayjs(publicationDate).isAfter(new Date()),
     };
   } catch (error) {
     console.log(error);

@@ -2,7 +2,7 @@ export const BASE_POSTS_SELECT = {
   id: true,
   title: true,
   description: true,
-  thumbnailUrl: true,
+  thumbnail: { select: { publicPath: true } },
   tags: { select: { name: true } },
   author: {
     select: {

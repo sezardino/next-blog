@@ -21,14 +21,14 @@ export const checkIfCanSchedulePublicationDate = async (postId: string) => {
         title: true,
         description: true,
         body: true,
-        thumbnailUrl: true,
+        thumbnail: { select: { publicPath: true } },
         tags: { select: { name: true } },
       },
     });
 
     if (!neededPost) return { message: "Post not found" };
 
-    const { tags, isPublished, publicationDate, thumbnailUrl, ...rest } =
+    const { tags, isPublished, publicationDate, thumbnail, ...rest } =
       neededPost;
 
     const wasPublished = checkIfPostWasPublished(isPublished, publicationDate);
@@ -39,6 +39,7 @@ export const checkIfCanSchedulePublicationDate = async (postId: string) => {
       PostReadyForScheduleSchema,
       {
         ...rest,
+        thumbnailUrl: thumbnail?.publicPath || null,
         tags: tags.map((t) => t.name),
       }
     );

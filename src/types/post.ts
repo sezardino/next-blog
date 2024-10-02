@@ -4,7 +4,7 @@ export const BASE_POSTS_SELECT = {
   id: true,
   title: true,
   description: true,
-  thumbnailUrl: true,
+  thumbnail: { select: { publicPath: true } },
   publicationDate: true,
   tags: true,
   author: {
@@ -24,10 +24,8 @@ export const BASE_POSTS_SELECT = {
   },
 };
 
-export type BasePost = Pick<
-  Post,
-  "title" | "thumbnailUrl" | "description" | "id"
-> & {
+export type BasePost = Pick<Post, "title" | "description" | "id"> & {
+  thumbnailUrl: string | null;
   author: Pick<User, "firstName" | "lastName" | "email"> & { avatarUrl: true };
   views: number;
   likes: number;

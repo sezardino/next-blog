@@ -14,6 +14,7 @@ model File {
   fullPath   String @map("full_path")
   publicPath String @map("public_path")
   avatar     User[]
+  post       Post[]
 
   @@map("files")
 }
@@ -55,10 +56,12 @@ model Post {
 
   tags Tag[]
 
-  title        String
-  description  String  @default("")
-  thumbnailUrl String? @map("thumbnail_url")
-  body         String  @default("")
+  title       String
+  description String @default("")
+  body        String @default("")
+
+  thumbnail   File?   @relation(fields: [thumbnailId], references: [id])
+  thumbnailId String? @map("thumbnail_id")
 
   publicationDate DateTime? @map("publication_date")
   isPublished     Boolean   @default(false) @map("is_published")

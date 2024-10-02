@@ -17,14 +17,20 @@ export const getMyPostForEdition = async (id: string) => {
         description: true,
         publicationDate: true,
         isPublished: true,
-        thumbnailUrl: true,
+        thumbnail: { select: { publicPath: true } },
         body: true,
       },
     });
 
     if (!post) return { message: "Post not found" };
 
-    return { ...post, tags: post.tags.map((t) => t.name) };
+    const { tags, thumbnail, ...restPost } = post;
+
+    return {
+      ...restPost,
+      thumbnailUrl: thumbnail?.publicPath || null,
+      tags: tags.map((t) => t.name),
+    };
   } catch (error) {
     console.log(error);
     return { message: "Something went wrong" };

@@ -2,13 +2,11 @@
 
 import { DateFormValues } from "@/components/form/date-form";
 import { PostForm } from "@/components/form/post-form";
+import { Toast } from "@/components/ui/toast";
 import { ProjectUrls } from "@/const";
-import {
-  CreatePostValues,
-  PostFormValues,
-  PostReadyForScheduleSchema,
-} from "@/schemas/post";
+import { PostFormValues, PostReadyForScheduleSchema } from "@/schemas/post";
 import { ServerActionResponse } from "@/types/base";
+import { convertObjectToFormData } from "@/utils/convert-object-to-form-data";
 import { createActionHandler } from "@/utils/server-actions";
 import { ZodFormattedError, zodValidateAndFormatErrors } from "@/utils/zod";
 import { useRouter } from "next/navigation";
@@ -17,7 +15,7 @@ import { toast } from "sonner";
 import { PostScheduleModal } from "./post-schedule-modal";
 
 type Props = ComponentPropsWithoutRef<"section"> & {
-  onCreatePost: (values: CreatePostValues) => Promise<ServerActionResponse>;
+  onCreatePost: (values: FormData) => Promise<ServerActionResponse>;
 };
 
 export const CreatePostWrapper = (props: Props) => {
@@ -43,14 +41,24 @@ export const CreatePostWrapper = (props: Props) => {
   };
 
   const createPostHandler = createActionHandler({
-    action: onCreatePost,
+    action: (values: PostFormValues & { publicationDate?: Date }) => {
+      const formData = convertObjectToFormData(values);
+      // console.log(Object.fromEntries(formData));
+      // // if (values.thumbnail) formData.set("thumbnail", values.thumbnail);
+      // console.log(Object.fromEntries(formData));
+
+      // formData.set("title", values.title);
+      if (values.thumbnail) formData.set("thumbnail", values.thumbnail);
+
+      return onCreatePost(formData);
+    },
     onSuccess: () => {
       setValueErrors([]);
       submittedValue.current = null;
       toast.success("Post was successful created");
     },
-    onError: (error) => {
-      toast.error(error);
+    onError: (error, zodErrors) => {
+      toast.error(<Toast message={error} errors={zodErrors} />);
     },
   });
 

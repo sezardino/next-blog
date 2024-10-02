@@ -9,10 +9,10 @@ export const uploadFileToStorage = async (file: File, prePath?: string) => {
     .upload(`${prePath + "/"}${randomUUID()}`, file);
 };
 
-export const getFilePublicPath = async (path: string) => {
+export const getFilePublicPath = (path: string) => {
   const supabase = createSSRClient();
 
-  return supabase.storage.from("storage").getPublicUrl(path);
+  return supabase.storage.from("storage").getPublicUrl(path).data.publicUrl;
 };
 
 export const deleteFileFromStorage = async (path: string) => {

@@ -55,9 +55,7 @@ export const setUserAvatar = async (
           avatar: {
             create: {
               ...uploadResponse.data,
-              publicPath: (
-                await getFilePublicPath(uploadResponse.data.path)
-              ).data.publicUrl,
+              publicPath: getFilePublicPath(uploadResponse.data.path),
             },
           },
         },
