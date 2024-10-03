@@ -5,6 +5,7 @@ import { ProjectUrls } from "@/const";
 import { PostFormValues } from "@/schemas/post";
 import { ServerActionResponse } from "@/types/base";
 import { PostToEditData } from "@/types/post";
+import { convertObjectToFormData } from "@/utils/convert-object-to-form-data";
 import { getChangedFields } from "@/utils/post";
 import { createActionHandler } from "@/utils/server-actions";
 import { cn } from "@/utils/styles";
@@ -16,9 +17,7 @@ import { PostEditionDifferenceModal } from "./post-edition-difference-modal";
 type EditMyPostProps = ComponentPropsWithRef<"section"> & {
   postId: string;
   post: PostToEditData;
-  onEditPost: (
-    values: Partial<PostFormValues>
-  ) => Promise<ServerActionResponse>;
+  onEditPost: (values: FormData) => Promise<ServerActionResponse>;
 };
 
 export const EditMyPost = (props: EditMyPostProps) => {
@@ -42,7 +41,13 @@ export const EditMyPost = (props: EditMyPostProps) => {
   };
 
   const editPostHandler = createActionHandler({
-    action: onEditPost,
+    action: (values: Partial<PostFormValues>) => {
+      const formData = convertObjectToFormData(values);
+
+      if (values.thumbnail) formData.set("thumbnail", values.thumbnail);
+
+      return onEditPost(formData);
+    },
     onSuccess: () => {
       router.push(ProjectUrls.myPost(postId));
       toast.success("Post successfully edited");

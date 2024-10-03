@@ -1,4 +1,4 @@
-import { PostBody } from "@/components/modules/post/post-body/post-body";
+import PostBody from "@/components/modules/post/post-body/post-body";
 import { PostHeader } from "@/components/modules/post/post-header";
 import {
   Breadcrumb,
@@ -36,11 +36,8 @@ export const generateMetadata = async (props: {
 };
 
 const MyPostPage = async (props: Props) => {
-  const { params, searchParams } = props;
+  const { params } = props;
   const post = await getMyPost(params.id);
-  const isScheduleModalOpen =
-    searchParams?.[MyPostSearchParams.schedulePublicationDate] || "";
-  const isDeleteModalOpen = searchParams?.[MyPostSearchParams.deletePost] || "";
 
   if (!post || "message" in post) notFound();
 
@@ -82,7 +79,8 @@ const MyPostPage = async (props: Props) => {
             tags={post.tags}
             thumbnailUrl={post.thumbnailUrl}
           />
-          <PostBody body={post.body} />
+
+          {post.body && <PostBody body={post.body} />}
         </section>
       </main>
     </>

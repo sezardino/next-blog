@@ -8,7 +8,11 @@ import {
 import { redirect, RedirectType } from "next/navigation";
 
 import { ProjectUrls } from "@/const";
-import { getFilePublicPath, uploadFileToStorage } from "@/lib/supabase/storage";
+import {
+  deleteFileFromStorage,
+  getFilePublicPath,
+  uploadFileToStorage,
+} from "@/lib/supabase/storage";
 import { checkIfPostCanBePublished, normalizeTags } from "@/utils/post";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 import { auth } from "@clerk/nextjs/server";
@@ -23,8 +27,7 @@ export const createPostAction = async (formData: FormData) => {
     CreatePostSchema,
     Object.fromEntries(formData)
   );
-  console.log(Object.fromEntries(formData));
-  console.log(validationResponse);
+
   if (!validationResponse.success) {
     return { message: "Validation error", errors: validationResponse.errors };
   }
@@ -74,6 +77,7 @@ export const createPostAction = async (formData: FormData) => {
       select: { id: true },
     });
 
+    let newThumbnailPath;
     if (thumbnail) {
       try {
         const response = await uploadFileToStorage(
@@ -84,10 +88,11 @@ export const createPostAction = async (formData: FormData) => {
         if (response.error)
           return console.log({
             message:
-              "Something went wrong when try ti upload thumbnail to bucket",
+              "Something went wrong when try to upload thumbnail to bucket",
             error: response.error,
           });
 
+        newThumbnailPath = response.data.path;
         await prismaClient.post.update({
           where: { id: newPost.id },
           data: {
@@ -100,11 +105,25 @@ export const createPostAction = async (formData: FormData) => {
           },
         });
       } catch (error) {
-        console.log({
-          message:
-            "Something went wrong when try ti upload thumbnail to bucket",
-          error,
-        });
+        if (newThumbnailPath) {
+          console.log({
+            message: "Something went wrong when try to set new image",
+            error,
+          });
+          const deleteResponse = await deleteFileFromStorage(newThumbnailPath);
+
+          if (deleteResponse.error)
+            console.log({
+              message: "Something went wrong when try to delete new image",
+              error,
+            });
+        } else {
+          console.log({
+            message:
+              "Something went wrong when try to upload thumbnail to bucket",
+            error,
+          });
+        }
       }
     }
 

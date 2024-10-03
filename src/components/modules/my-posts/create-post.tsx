@@ -43,11 +43,7 @@ export const CreatePostWrapper = (props: Props) => {
   const createPostHandler = createActionHandler({
     action: (values: PostFormValues & { publicationDate?: Date }) => {
       const formData = convertObjectToFormData(values);
-      // console.log(Object.fromEntries(formData));
-      // // if (values.thumbnail) formData.set("thumbnail", values.thumbnail);
-      // console.log(Object.fromEntries(formData));
 
-      // formData.set("title", values.title);
       if (values.thumbnail) formData.set("thumbnail", values.thumbnail);
 
       return onCreatePost(formData);

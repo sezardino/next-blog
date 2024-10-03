@@ -1,9 +1,11 @@
 "use server";
 
+import { setThumbnailForPost } from "@/actions/post";
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
-import { EditPostSchema, PostFormValues } from "@/schemas/post";
+import { EditPostSchema } from "@/schemas/post";
 import { checkIfPostCanBeModified, normalizeTags } from "@/utils/post";
+import { zodValidateAndFormatErrors } from "@/utils/zod";
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect, RedirectType } from "next/navigation";
@@ -12,15 +14,21 @@ const errors = {
   "already-published": "Already published post can't edit publication date",
 };
 
-export const editPostAction = async (
-  postId: string,
-  data: Partial<PostFormValues>
-) => {
+export const editPostAction = async (postId: string, formData: FormData) => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");
 
-  const { body, description, tags, title } = EditPostSchema.parse(data);
+  const validationResponse = zodValidateAndFormatErrors(
+    EditPostSchema,
+    Object.fromEntries(formData)
+  );
+
+  if (!validationResponse.success) {
+    return { message: "Validation error", errors: validationResponse.errors };
+  }
+
+  const { tags, thumbnail, description, body, title } = validationResponse.data;
 
   let editedPostId = "";
 
@@ -44,15 +52,8 @@ export const editPostAction = async (
         message: errors[canChangePublicationDate],
       };
 
-    const formattedTags = tags?.length ? normalizeTags(tags) : [];
-    const currentTags = neededPost.tags.map((t) => t.name);
-    const tagsToRemovePermanent = neededPost.tags.filter(
-      (tag) => !formattedTags.includes(tag.name) && tag._count.posts <= 1
-    );
-    const tagsToRemove = neededPost.tags.filter(
-      (tag) => !formattedTags.includes(tag.name) && tag._count.posts > 1
-    );
-    const tagsToAdd = formattedTags.filter((tag) => !currentTags.includes(tag));
+    const { tagsToRemovePermanent, tagsToRemove, tagsToAdd } =
+      getTagsToDoAction(neededPost.tags, tags);
 
     if (tagsToRemovePermanent.length) {
       await prismaClient.tag.deleteMany({
@@ -77,6 +78,8 @@ export const editPostAction = async (
       select: { id: true },
     });
 
+    if (thumbnail) await setThumbnailForPost(userId, editedPost.id, thumbnail);
+
     editedPostId = editedPost.id;
   } catch (error) {
     console.log(error);
@@ -85,4 +88,28 @@ export const editPostAction = async (
 
   if (editedPostId)
     redirect(ProjectUrls.myPost(editedPostId), RedirectType.replace);
+};
+
+type CurrentTag = {
+  _count: { posts: number };
+  name: string;
+};
+
+const getTagsToDoAction = (currentTags: CurrentTag[], newTags?: string[]) => {
+  if (!newTags)
+    return { tagsToAdd: [], tagsToRemove: [], tagsToRemovePermanent: [] };
+
+  const formattedTags = newTags?.length ? normalizeTags(newTags) : [];
+  const formattedCurrentTags = currentTags.map((t) => t.name);
+  const tagsToRemovePermanent = currentTags.filter(
+    (tag) => !formattedTags.includes(tag.name) && tag._count.posts <= 1
+  );
+  const tagsToRemove = currentTags.filter(
+    (tag) => !formattedTags.includes(tag.name) && tag._count.posts > 1
+  );
+  const tagsToAdd = formattedTags.filter(
+    (tag) => !formattedCurrentTags.includes(tag)
+  );
+
+  return { tagsToAdd, tagsToRemove, tagsToRemovePermanent };
 };
