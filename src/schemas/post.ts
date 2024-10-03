@@ -43,14 +43,14 @@ export const getBodySchema = (isOptional: boolean = false) => {
     .string()
     .refine(
       (value) =>
-        isOptional && value.length === 0
+        isOptional && getHTMLStringLength(value) === 0
           ? true
           : getHTMLStringLength(value) > BODY_MIN_LENGTH,
       `Body minimum characters length should be ${BODY_MIN_LENGTH}`
     )
     .refine(
       (value) =>
-        isOptional && value.length === 0
+        isOptional && getHTMLStringLength(value) === 0
           ? true
           : getHTMLStringLength(value) < BODY_MAX_LENGTH,
       `Body maximum characters length should be ${BODY_MAX_LENGTH}`

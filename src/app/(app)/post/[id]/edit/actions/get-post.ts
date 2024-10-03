@@ -1,9 +1,13 @@
 "use server";
 
 import prismaClient from "@/lib/prisma";
+import { ServerActionResponse } from "@/types/base";
+import { PostToEditData } from "@/types/post";
 import { auth } from "@clerk/nextjs/server";
 
-export const getMyPostForEdition = async (id: string) => {
+export const getMyPostForEdition = async (
+  id: string
+): Promise<ServerActionResponse<PostToEditData>> => {
   const { userId } = auth();
 
   if (!userId) throw new Error("Unauthorized");
@@ -15,8 +19,6 @@ export const getMyPostForEdition = async (id: string) => {
         title: true,
         tags: { select: { name: true } },
         description: true,
-        publicationDate: true,
-        isPublished: true,
         thumbnail: { select: { publicPath: true } },
         body: true,
       },

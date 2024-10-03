@@ -33,3 +33,8 @@ export type BasePost = Pick<Post, "title" | "description" | "id"> & {
   comments: number;
   tags: string[];
 };
+
+export type PostToEditData = Pick<Post, "title" | "description" | "body"> & {
+  tags: string[];
+  thumbnailUrl: string | null;
+};

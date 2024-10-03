@@ -16,8 +16,6 @@ const EditPostPage = async (props: Props) => {
 
   const editPostWithId = editPostAction.bind(null, props.params.id);
 
-  const { isPublished, publicationDate, thumbnailUrl, ...restPost } = post;
-
   return (
     <main className="grid grid-cols-1 gap-8">
       <header className="grid grid-cols-1 gap-2">
@@ -34,7 +32,7 @@ const EditPostPage = async (props: Props) => {
       </header>
 
       <EditMyPost
-        post={restPost}
+        post={post}
         onEditPost={editPostWithId}
         postId={props.params.id}
       />

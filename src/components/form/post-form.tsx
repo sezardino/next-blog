@@ -24,6 +24,7 @@ import {
   PostFormSchema,
   PostFormValues,
 } from "@/schemas/post";
+import { getHTMLStringLength } from "@/utils/html-length";
 import { normalizeTags } from "@/utils/post";
 import { cn } from "@/utils/styles";
 import { CloudUpload, Trash } from "lucide-react";
@@ -39,10 +40,10 @@ const PostEditor = dynamic(() => import("../ui/post-editor"), {
   loading: () => <Skeleton className="h-96 w-full" />,
 });
 
-type PostFormProps = ComponentPropsWithoutRef<"form"> & {
+export type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   withPublicationDate?: boolean;
   initialValues?: Omit<Partial<PostFormValues>, "thumbnail"> & {
-    thumbnail: string | null;
+    thumbnailUrl: string | null;
   };
   onFormSubmit: (values: PostFormValues) => void;
   onCancelClick?: () => void;
@@ -61,7 +62,7 @@ export const PostForm = (props: PostFormProps) => {
   } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
-    initialValues?.thumbnail || null
+    initialValues?.thumbnailUrl || null
   );
 
   const form = useForm<PostFormValues>({
@@ -69,7 +70,7 @@ export const PostForm = (props: PostFormProps) => {
     defaultValues: {
       body: initialValues?.body || "",
       description: initialValues?.description || "",
-      tags: initialValues?.tags || [],
+      tags: initialValues?.tags ? initialValues.tags : [],
       title: initialValues?.title || "",
     },
   });
@@ -216,7 +217,7 @@ export const PostForm = (props: PostFormProps) => {
                 <InputTag
                   {...field}
                   placeholder="programming, people"
-                  value={field.value}
+                  value={field.value || []}
                   onChange={(value) => field.onChange(normalizeTags(value))}
                 />
               </FormControl>
@@ -233,7 +234,17 @@ export const PostForm = (props: PostFormProps) => {
             <FormItem>
               <FormLabel>Body</FormLabel>
               <FormControl>
-                <PostEditor {...field} placeholder="Type something nice ..." />
+                <PostEditor
+                  {...field}
+                  onChange={(html) => {
+                    console.log(getHTMLStringLength(html) === 0);
+                    if (getHTMLStringLength(html) === 0)
+                      return field.onChange("");
+
+                    field.onChange(html);
+                  }}
+                  placeholder="Type something nice ..."
+                />
               </FormControl>
               <FormDescription>
                 This is body of the post, select text to modify styles
