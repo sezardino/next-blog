@@ -54,6 +54,7 @@ export const getSearchedPosts = async (args: Args) => {
         tags,
         reactions,
         author: { avatar, ...restAuthor },
+        thumbnail,
         ...rest
       }) => ({
         ...rest,
@@ -62,6 +63,7 @@ export const getSearchedPosts = async (args: Args) => {
         likes: reactions.filter((r) => r.isLike).length,
         dislikes: reactions.filter((r) => !r.isLike).length,
         tags: tags.map((t) => t.name),
+        thumbnailUrl: thumbnail?.publicPath || null,
         author: { ...restAuthor, avatarUrl: avatar?.publicPath || null },
       })
     );

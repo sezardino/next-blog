@@ -1,6 +1,5 @@
 import { MyPostsTable } from "@/components/modules/my-posts/my-posts-table";
 import { PaginationWidget } from "@/components/ui/pagination-widget";
-import { DEFAULT_ITEMS_PER_PAGE } from "@/const/pagination";
 import { getMyPostsAction } from "../actions/get-my-posts";
 import { MyPostsSearchParams } from "../const";
 
@@ -22,10 +21,10 @@ export const MyPostsSection = async (props: Props) => {
 
         <PaginationWidget
           totalPages={posts.meta?.totalPages || 0}
-          currentPage={posts.meta?.page || 0}
+          currentPage={page}
           paginationPathName={MyPostsSearchParams.page}
           limitPathName={MyPostsSearchParams.limit}
-          currentLimit={posts.meta?.limit || DEFAULT_ITEMS_PER_PAGE}
+          currentLimit={limit}
           className="ml-auto"
         />
       </section>

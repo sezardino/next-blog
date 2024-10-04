@@ -26,7 +26,9 @@ export const BASE_POSTS_SELECT = {
 
 export type BasePost = Pick<Post, "title" | "description" | "id"> & {
   thumbnailUrl: string | null;
-  author: Pick<User, "firstName" | "lastName" | "email"> & { avatarUrl: true };
+  author: Pick<User, "firstName" | "lastName" | "email"> & {
+    avatarUrl: string | null;
+  };
   views: number;
   likes: number;
   dislikes: number;

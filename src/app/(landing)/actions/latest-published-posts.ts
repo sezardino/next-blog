@@ -17,6 +17,7 @@ export const getLatestPublishedPosts = async () => {
         _count,
         tags,
         reactions,
+        thumbnail,
         author: { avatar, ...restAuthor },
         ...rest
       }) => ({
@@ -25,6 +26,7 @@ export const getLatestPublishedPosts = async () => {
         comments: _count.comments,
         likes: reactions.filter((r) => r.isLike).length,
         dislikes: reactions.filter((r) => !r.isLike).length,
+        thumbnailUrl: thumbnail?.publicPath || null,
         tags: tags.map((t) => t.name),
         author: { ...restAuthor, avatarUrl: avatar?.publicPath || null },
       })

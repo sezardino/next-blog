@@ -4,13 +4,17 @@ import { PropsWithChildren } from "react";
 import { getCurrentUserData } from "../actions/current-user";
 
 const LandingLayout = async ({ children }: PropsWithChildren) => {
-  const user = await getCurrentUserData();
+  const userResponse = await getCurrentUserData();
 
   return (
     <>
-      <LandingHeader user={user} />
+      <LandingHeader
+        user={userResponse && "avatarUrl" in userResponse ? userResponse : null}
+      />
       {children}
-      <LandingFooter isUserAuthenticated={!!user} />
+      <LandingFooter
+        isUserAuthenticated={!!userResponse && "avatarUrl" in userResponse}
+      />
     </>
   );
 };

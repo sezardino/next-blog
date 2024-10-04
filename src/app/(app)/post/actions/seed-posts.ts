@@ -1,6 +1,7 @@
 "use server";
 
 import { ProjectUrls } from "@/const";
+import { defaultPostsForSeed } from "@/const/seeds";
 import prismaClient from "@/lib/prisma";
 import { normalizeTags } from "@/utils/post";
 
@@ -45,25 +46,26 @@ export const seedPostsForCurrentUser = async () => {
 
   if (!userId) throw new Error("Unauthorized");
 
-  try {
-    const posts = generateFakePosts(faker.number.int({ min: 100, max: 2000 }));
+  const posts = defaultPostsForSeed;
+  const allTags = Array.from(
+    new Set(normalizeTags(posts.map((p) => p.tags).flat()))
+  );
 
-    await Promise.all(
-      posts.map(({ tags, ...post }) =>
+  try {
+    await Promise.all([
+      ...allTags.map((name) => prismaClient.tag.create({ data: { name } })),
+      ...posts.map(({ tags, ...post }) =>
         prismaClient.post.create({
           data: {
             ...post,
             author: { connect: { clerkId: userId } },
             tags: {
-              connectOrCreate: normalizeTags(tags).map((name) => ({
-                where: { name },
-                create: { name },
-              })),
+              connect: normalizeTags(tags).map((name) => ({ name })),
             },
           },
         })
-      )
-    );
+      ),
+    ]);
 
     revalidatePath(ProjectUrls.myPosts);
   } catch (error) {
