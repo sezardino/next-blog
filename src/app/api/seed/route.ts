@@ -67,7 +67,7 @@ const handleTags = async (allTags: string[]) => {
   }
 };
 
-export const generateNewPublicationDates = <T>(
+const generateNewPublicationDates = <T>(
   posts: T[],
   lastPublicationDate: Date | null
 ) => {
