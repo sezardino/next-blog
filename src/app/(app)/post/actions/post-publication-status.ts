@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 
 export const checkMyPostPublicationStatus = async (postId: string) => {
   const { userId } = auth();
-  console.log({ postId });
+
   if (!userId) throw new Error("Unauthorized");
 
   try {
