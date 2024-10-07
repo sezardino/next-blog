@@ -3,14 +3,16 @@ import dayjs from "dayjs";
 import type { NextRequest } from "next/server";
 
 export const GET = async (request: NextRequest) => {
+  const today = dayjs().startOf("day").toDate();
+
+  console.log(`Next-blog cron job handle: ${today}`);
+
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response("Unauthorized", {
       status: 401,
     });
   }
-
-  const today = dayjs().startOf("day").toDate();
 
   try {
     const postsToPublish = await prismaClient.post.findMany({
@@ -35,5 +37,6 @@ export const GET = async (request: NextRequest) => {
   }
 
   console.log({ success: true });
+  console.log(`Next-blog cron finished`);
   return Response.json({ success: true });
 };
