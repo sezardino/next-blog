@@ -1,4 +1,4 @@
-import { LoginFormValues } from "@/components/form/login";
+import { LoginFormValues } from "@/schemas/auth";
 import { useSignIn } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { ClerkAPIError } from "@clerk/types";
@@ -10,6 +10,7 @@ export const useLogin = () => {
   const router = useRouter();
   const { isLoaded, signIn, setActive } = useSignIn();
   const [errors, setErrors] = useState<ClerkAPIError[]>();
+  const [isLoading, setIsLoading] = useState(false);
 
   // // Handle the submission of the sign-in form
   const login = useCallback(
@@ -23,6 +24,7 @@ export const useLogin = () => {
 
       // Start the sign-in process using the email and password provided
       try {
+        setIsLoading(true);
         const signInAttempt = await signIn.create({
           identifier: email,
           password,
@@ -44,10 +46,12 @@ export const useLogin = () => {
         // for more info on error handling
         if (isClerkAPIResponseError(err)) setErrors(err.errors);
         console.error(JSON.stringify(err, null, 2));
+      } finally {
+        setIsLoading(false);
       }
     },
     [isLoaded, router, setActive, signIn]
   );
 
-  return { errors, login };
+  return { errors, login, isLoading };
 };

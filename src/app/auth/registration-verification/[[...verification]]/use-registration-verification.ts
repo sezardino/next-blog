@@ -1,11 +1,15 @@
-import { VerificationFormValues } from "@/components/form/verification";
+import { VerificationFormValues } from "@/schemas/auth";
 import { useSignUp } from "@clerk/nextjs";
+import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
+import { ClerkAPIError } from "@clerk/types";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 export const useRegistrationVerification = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const [errors, setErrors] = useState<ClerkAPIError[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const verify = useCallback(
@@ -15,6 +19,7 @@ export const useRegistrationVerification = () => {
       const { code } = values;
 
       try {
+        setIsLoading(true);
         // Use the code the user provided to attempt verification
         const completeSignUp = await signUp.attemptEmailAddressVerification({
           code,
@@ -33,11 +38,14 @@ export const useRegistrationVerification = () => {
       } catch (err: any) {
         // See https://clerk.com/docs/custom-flows/error-handling
         // for more info on error handling
-        console.error("Error:", JSON.stringify(err, null, 2));
+        if (isClerkAPIResponseError(err)) setErrors(err.errors);
+        console.error(JSON.stringify(err, null, 2));
+      } finally {
+        setIsLoading(false);
       }
     },
     [isLoaded, router, setActive, signUp]
   );
 
-  return { verify };
+  return { errors, verify, isLoading };
 };

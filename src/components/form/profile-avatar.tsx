@@ -1,59 +1,125 @@
 "use client";
 
+import {
+  ACCEPTED_IMAGE_TYPES_FOR_AVATAR,
+  UserAvatarFormValues,
+  UserAvatarSchema,
+} from "@/schemas/user-avatar";
+import { CurrentUserData } from "@/types/user";
 import { cn } from "@/utils/styles";
-import { ComponentPropsWithoutRef, FormEvent } from "react";
+import { getUserAvatarFallback } from "@/utils/user";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
+import { Trash } from "lucide-react";
+import { ComponentPropsWithoutRef, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-
-export type ProfileAvatarFormValues = {};
+import { Form } from "../ui/form";
+import { Tooltip, TooltipContent } from "../ui/tooltip";
 
 type ProfileAvatarFormProps = ComponentPropsWithoutRef<"form"> & {
-  onFormSubmit: (values: ProfileAvatarFormValues) => void;
-  initialValues: Partial<ProfileAvatarFormValues>;
+  currentUser: CurrentUserData;
+  onFormSubmit: (values: UserAvatarFormValues) => void;
+  onTryToDeleteImage: () => void;
 };
 
 export const ProfileAvatarForm = (props: ProfileAvatarFormProps) => {
-  const { initialValues, onFormSubmit, className, ...rest } = props;
+  const { currentUser, onFormSubmit, className, onTryToDeleteImage, ...rest } =
+    props;
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      firstName: { value: string };
-      lastName: { value: string };
-      bio: { value: string };
-    };
-    const firstName = target.firstName.value;
-    const lastName = target.lastName.value;
-    const bio = target.bio.value;
-    onFormSubmit({ firstName, lastName, bio });
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    currentUser.avatarUrl
+  );
+
+  const form = useForm<UserAvatarFormValues>({
+    resolver: zodResolver(UserAvatarSchema),
+  });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImagePreview(URL.createObjectURL(file));
+      form.setValue("avatar", file, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  };
+
+  const handleDeleteImage = () => {
+    if (currentUser.avatarUrl) return onTryToDeleteImage();
+
+    setImagePreview(null);
+    form.reset();
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
-    <form
-      {...rest}
-      className={cn(
-        "flex flex-col items-center space-y-5 sm:flex-row sm:space-y-0",
-        className
-      )}
-      onSubmit={submitHandler}
-    >
-      <img
-        className="object-cover w-40 h-40 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500"
-        src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhY2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-        alt="Bordered avatar"
-      />
-      <div className="flex flex-col space-y-5 sm:ml-8">
-        <div>
-          <Button asChild size={"lg"}>
-            <label className="cursor-pointer">
-              Select Image
-              <input type="file" className="sr-only" />
-            </label>
-          </Button>
-          <Button size={"lg"} color="destructive">
-            Delete image
-          </Button>
+    <Form {...form}>
+      <form
+        {...rest}
+        className={cn("flex flex-col gap-3", className)}
+        onSubmit={form.handleSubmit(onFormSubmit)}
+      >
+        <div className="flex flex-col items-center gap-8 sm:flex-row">
+          <div className="relative">
+            <Avatar className="w-28 h-28 p-1 rounded-full ring-2 ring-indigo-300 dark:ring-indigo-500">
+              <AvatarImage
+                src={imagePreview || undefined}
+                alt={`${currentUser.email} Avatar`}
+                className="object-cover"
+              />
+              <AvatarFallback className="text-5xl">
+                {getUserAvatarFallback(currentUser)}
+              </AvatarFallback>
+            </Avatar>
+            {imagePreview && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size={"icon"}
+                    color="destructive"
+                    className="absolute top-0 right-0 translate-x-1/2"
+                    onClick={handleDeleteImage}
+                  >
+                    <Trash />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Delete image</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
+
+          <div className="flex gap-3 items-center flex-wrap">
+            <Button asChild color={"secondary"} size={"sm"}>
+              <label className="cursor-pointer">
+                Select Image
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept={ACCEPTED_IMAGE_TYPES_FOR_AVATAR.join(",")}
+                  onChange={handleImageChange}
+                  className="sr-only"
+                />
+              </label>
+            </Button>
+            {form.formState.isDirty && (
+              <Button type="submit" color={"success"} size={"sm"}>
+                Submit
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </form>
+        {typeof form.formState.errors.avatar?.message === "string" && (
+          <p className="text-red-500">{form.formState.errors.avatar.message}</p>
+        )}
+      </form>
+    </Form>
   );
 };

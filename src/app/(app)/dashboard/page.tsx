@@ -1,90 +1,27 @@
-import { Button } from "@/components/ui/button";
+import { Metadata } from "next";
+import { PostsStatistics } from "./components/posts-statistic";
+import { ReactionsStatistic } from "./components/reactions-statistic";
+import { MyTopPosts } from "./components/top-posts";
+import { MyUpcomingPosts } from "./components/upcoming-posts";
+import { ViewsStatistic } from "./components/views-statistic";
+
+export const metadata: Metadata = { title: "Home" };
 
 const AppDashboardPage = () => {
   return (
     <>
-      <h1>Dashboard</h1>
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <PostsStatistics className="sm:col-span-2" />
+          <ReactionsStatistic />
+          <ViewsStatistic />
+        </section>
 
-      <div>
-        <h2>default</h2>
-        <div>
-          <Button color={"primary"}>primary</Button>
-          <Button color={"secondary"}>secondary</Button>
-          <Button color={"destructive"}>destructive</Button>
-          <Button color={"info"}>info</Button>
-          <Button color={"success"}>success</Button>
-          <Button color={"warning"}>warning</Button>
+        <div className="grid gap-4 xl:grid-cols-2">
+          <MyTopPosts />
+          <MyUpcomingPosts />
         </div>
-      </div>
-      <div>
-        <h2>ghost</h2>
-        <div>
-          <Button variant={"ghost"} color={"primary"}>
-            primary
-          </Button>
-          <Button variant={"ghost"} color={"secondary"}>
-            secondary
-          </Button>
-          <Button variant={"ghost"} color={"destructive"}>
-            destructive
-          </Button>
-          <Button variant={"ghost"} color={"info"}>
-            info
-          </Button>
-          <Button variant={"ghost"} color={"success"}>
-            success
-          </Button>
-          <Button variant={"ghost"} color={"warning"}>
-            warning
-          </Button>
-        </div>
-      </div>
-      <div>
-        <h2>outline</h2>
-        <div>
-          <Button variant={"outline"} color={"primary"}>
-            primary
-          </Button>
-          <Button variant={"outline"} color={"secondary"}>
-            secondary
-          </Button>
-          <Button variant={"outline"} color={"destructive"}>
-            destructive
-          </Button>
-          <Button variant={"outline"} color={"info"}>
-            info
-          </Button>
-          <Button variant={"outline"} color={"success"}>
-            success
-          </Button>
-          <Button variant={"outline"} color={"warning"}>
-            warning
-          </Button>
-        </div>
-      </div>
-      <div>
-        <h2>link</h2>
-        <div>
-          <Button variant={"link"} color={"primary"}>
-            primary
-          </Button>
-          <Button variant={"link"} color={"secondary"}>
-            secondary
-          </Button>
-          <Button variant={"link"} color={"destructive"}>
-            destructive
-          </Button>
-          <Button variant={"link"} color={"info"}>
-            info
-          </Button>
-          <Button variant={"link"} color={"success"}>
-            success
-          </Button>
-          <Button variant={"link"} color={"warning"}>
-            warning
-          </Button>
-        </div>
-      </div>
+      </main>
     </>
   );
 };

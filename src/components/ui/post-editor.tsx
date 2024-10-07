@@ -38,3 +38,5 @@ const PostEditorComponent: ForwardRefRenderFunction<ReactQuill, Props> = (
 };
 
 export const PostEditor = forwardRef(PostEditorComponent);
+
+export default PostEditor;

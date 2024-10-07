@@ -18,6 +18,7 @@ type PaginationWidgetProps = ComponentPropsWithoutRef<"div"> & {
   currentPage: number;
   currentLimit: number;
   paginationPathName?: string;
+  hideLimit?: boolean;
   limitPathName?: string;
   onPageChange?: (page: number) => void;
   onLimitChange?: (limit: number) => void;
@@ -29,6 +30,7 @@ export const PaginationWidget = (props: PaginationWidgetProps) => {
   const {
     totalPages,
     currentLimit,
+    hideLimit = false,
     currentPage,
     paginationPathName,
     limitPathName,
@@ -46,6 +48,8 @@ export const PaginationWidget = (props: PaginationWidgetProps) => {
     if (onLimitChange) onLimitChange(value);
   };
 
+  if (totalPages === 0) return null;
+
   return (
     <div
       {...rest}
@@ -57,23 +61,25 @@ export const PaginationWidget = (props: PaginationWidgetProps) => {
         paramName={paginationPathName}
         onPageChange={onPageChange}
       />
-      <Select
-        value={`${currentLimit}`}
-        onValueChange={(value) => {
-          changeLimitHandler(Number(value));
-        }}
-      >
-        <SelectTrigger className="h-8 w-[70px]">
-          <SelectValue placeholder={currentLimit} />
-        </SelectTrigger>
-        <SelectContent side="top">
-          {BASE_LIMIT_VALUES.map((limit) => (
-            <SelectItem key={limit} value={`${limit}`}>
-              {limit}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      {!hideLimit && (
+        <Select
+          value={`${currentLimit}`}
+          onValueChange={(value) => {
+            changeLimitHandler(Number(value));
+          }}
+        >
+          <SelectTrigger className="h-8 w-[70px]">
+            <SelectValue placeholder={currentLimit} />
+          </SelectTrigger>
+          <SelectContent side="top">
+            {BASE_LIMIT_VALUES.map((limit) => (
+              <SelectItem key={limit} value={`${limit}`}>
+                {limit}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      )}
     </div>
   );
 };

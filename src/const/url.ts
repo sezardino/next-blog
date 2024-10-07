@@ -1,6 +1,7 @@
 export const ProjectUrls = {
   // landing
   home: "/",
+  about: "/about",
   roadMap: "/road-map",
 
   // auth
@@ -16,6 +17,10 @@ export const ProjectUrls = {
   profile: "/profile",
 
   // posts
+  posts: "/posts",
+  post: (id: string) => `/posts/${id}`,
+
+  // my posts
   myPosts: "/post",
   myPost: (id: string) => `/post/${id}`,
   editMyPost: (id: string) => `/post/${id}/edit`,
@@ -25,8 +30,3 @@ export const ProjectUrls = {
   settings: "/settings",
   accountSettings: "/settings/account",
 };
-
-export const landingNavigationLinks = [
-  { label: "Home", href: ProjectUrls.home },
-  { label: "Road Map", href: ProjectUrls.roadMap },
-];

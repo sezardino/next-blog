@@ -1,16 +1,20 @@
-import { LandingFooter } from "@/components/layout/landing-footer";
-import { LandingHeader } from "@/components/layout/landing-header";
+import { LandingFooter } from "@/components/modules/layout/landing-footer";
+import { LandingHeader } from "@/components/modules/layout/landing-header";
 import { PropsWithChildren } from "react";
+import { getCurrentUserData } from "../actions/current-user";
 
 const LandingLayout = async ({ children }: PropsWithChildren) => {
-  // TODO: hide in first mvp
-  // const user = await getCurrentUserData();
+  const userResponse = await getCurrentUserData();
 
   return (
     <>
-      <LandingHeader />
+      <LandingHeader
+        user={userResponse && "avatarUrl" in userResponse ? userResponse : null}
+      />
       {children}
-      <LandingFooter />
+      <LandingFooter
+        isUserAuthenticated={!!userResponse && "avatarUrl" in userResponse}
+      />
     </>
   );
 };

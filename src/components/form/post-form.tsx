@@ -2,9 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ComponentPropsWithoutRef, useState } from "react";
+import { ComponentPropsWithoutRef, useRef, useState } from "react";
 
-import { PostFormSchema, PostFormValues } from "@/schemas/post-form";
 import { useForm } from "react-hook-form";
 import { Button } from "../ui/button";
 import {
@@ -18,35 +17,60 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { InputTag } from "../ui/input-tag";
-import { Label } from "../ui/label";
-import { PostEditor } from "../ui/post-editor";
-import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
-type PostFormProps = ComponentPropsWithoutRef<"form"> & {
+import {
+  ACCEPTED_IMAGE_TYPES_POST_THUMBNAIL,
+  PostFormSchema,
+  PostFormValues,
+} from "@/schemas/post";
+import { getHTMLStringLength } from "@/utils/html-length";
+import { normalizeTags } from "@/utils/post";
+import { cn } from "@/utils/styles";
+import { CloudUpload, Trash } from "lucide-react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { Card } from "../ui/card";
+import { Skeleton } from "../ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { Typography } from "../ui/typography";
+
+const PostEditor = dynamic(() => import("../ui/post-editor"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-96 w-full" />,
+});
+
+export type PostFormProps = ComponentPropsWithoutRef<"form"> & {
   withPublicationDate?: boolean;
-  initialValues?: Partial<PostFormValues>;
+  initialValues?: Omit<Partial<PostFormValues>, "thumbnail"> & {
+    thumbnailUrl: string | null;
+  };
   onFormSubmit: (values: PostFormValues) => void;
+  onCancelClick?: () => void;
+  isDateEditable?: boolean;
 };
 
 export const PostForm = (props: PostFormProps) => {
   const {
     withPublicationDate = false,
+    isDateEditable = false,
     initialValues,
     onFormSubmit,
+    onCancelClick,
     className,
     ...rest
   } = props;
-
-  const [isSelectPublicationVisible, setIsSelectPublicationVisible] =
-    useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
+    initialValues?.thumbnailUrl || null
+  );
 
   const form = useForm<PostFormValues>({
     resolver: zodResolver(PostFormSchema),
     defaultValues: {
       body: initialValues?.body || "",
       description: initialValues?.description || "",
-      tags: initialValues?.tags || [],
+      tags: initialValues?.tags ? initialValues.tags : [],
       title: initialValues?.title || "",
     },
   });
@@ -55,11 +79,33 @@ export const PostForm = (props: PostFormProps) => {
     onFormSubmit(data);
   };
 
-  const changePublicationVisibility = (value: boolean) => {
-    if (value) form.setValue("publishedAt", new Date());
-    else form.setValue("publishedAt", new Date());
+  const handleThumbnailChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setThumbnailPreview(URL.createObjectURL(file));
+      form.setValue("thumbnail", file, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    }
+  };
 
-    setIsSelectPublicationVisible(value);
+  const handleDeleteThumbnail = () => {
+    // if (initialValues?.thumbnail) return onTryToDeleteImage();
+
+    setThumbnailPreview(null);
+    form.setValue("thumbnail", undefined, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
   };
 
   return (
@@ -102,6 +148,65 @@ export const PostForm = (props: PostFormProps) => {
           )}
         />
 
+        <FormItem>
+          <FormLabel>Thumbnail</FormLabel>
+          {!thumbnailPreview && (
+            <Card
+              asChild
+              className="flex items-center justify-center w-full hover:bg-muted cursor-pointer"
+            >
+              <label className="flex flex-col items-center justify-center pt-5 pb-6 gap-1">
+                <CloudUpload className="text-muted-foreground w-8 h-8" />
+                <Typography
+                  styling="small"
+                  weight="medium"
+                  className="text-muted-foreground"
+                >
+                  Click to upload
+                </Typography>
+                <Typography styling="xs" className="text-muted-foreground">
+                  JPEG, PNG or WEBP (We recommend use images with aspect-ratio
+                  16:9)
+                </Typography>
+                <FormControl>
+                  <input
+                    ref={inputRef}
+                    type="file"
+                    accept={ACCEPTED_IMAGE_TYPES_POST_THUMBNAIL.join(",")}
+                    className="sr-only"
+                    onChange={handleThumbnailChange}
+                  />
+                </FormControl>
+              </label>
+            </Card>
+          )}
+
+          {thumbnailPreview && (
+            <div className="relative">
+              <Image
+                src={thumbnailPreview}
+                alt="selected post image"
+                width={800}
+                height={400}
+                className="w-full aspect-video rounded-lg"
+              />
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size={"icon"}
+                    color="destructive"
+                    className="absolute bottom-0 right-1/2 translate-x-1/2 -translate-y-1/2"
+                    onClick={handleDeleteThumbnail}
+                  >
+                    <Trash />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Delete thumbnail</TooltipContent>
+              </Tooltip>
+            </div>
+          )}
+        </FormItem>
+
         <FormField
           control={form.control}
           name="tags"
@@ -112,8 +217,8 @@ export const PostForm = (props: PostFormProps) => {
                 <InputTag
                   {...field}
                   placeholder="programming, people"
-                  value={field.value}
-                  onChange={(value) => form.setValue("tags", value)}
+                  value={field.value || []}
+                  onChange={(value) => field.onChange(normalizeTags(value))}
                 />
               </FormControl>
               <FormDescription>Press Enter to save tag</FormDescription>
@@ -129,70 +234,40 @@ export const PostForm = (props: PostFormProps) => {
             <FormItem>
               <FormLabel>Body</FormLabel>
               <FormControl>
-                <PostEditor {...field} placeholder="Type something nice ..." />
+                <PostEditor
+                  {...field}
+                  onChange={(html) => {
+                    console.log(getHTMLStringLength(html) === 0);
+                    if (getHTMLStringLength(html) === 0)
+                      return field.onChange("");
+
+                    field.onChange(html);
+                  }}
+                  placeholder="Type something nice ..."
+                />
               </FormControl>
-              <FormDescription>This is body of the post</FormDescription>
+              <FormDescription>
+                This is body of the post, select text to modify styles
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Label className="flex items-center gap-2 cursor-pointer">
-          Publish?
-          <Switch
-            checked={isSelectPublicationVisible}
-            onCheckedChange={changePublicationVisibility}
-          />
-        </Label>
-
-        {/* {isSelectPublicationVisible && <FormField
-          control={form.control}
-          name="dob"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        dayjs(field.value)
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+        <footer className="flex items-center justify-between">
+          {onCancelClick && (
+            <Button type="button" variant={"outline"} onClick={onCancelClick}>
+              Cancel
+            </Button>
           )}
-        />} */}
-
-        <Button type="submit" className="justify-self-end">
-          Save
-        </Button>
+          <Button
+            type="submit"
+            disabled={!form.formState.isDirty}
+            className={cn(!onCancelClick && "ml-auto")}
+          >
+            Save
+          </Button>
+        </footer>
       </form>
     </Form>
   );

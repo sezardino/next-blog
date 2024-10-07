@@ -1,56 +1,76 @@
 "use client";
 
+import {
+  PasswordResetRequestFormSchema,
+  PasswordResetRequestFormValues,
+} from "@/schemas/auth";
 import { cn } from "@/utils/styles";
-import { ComponentPropsWithoutRef, FormEvent } from "react";
+import { ClerkAPIError } from "@clerk/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ComponentPropsWithoutRef } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { Typography } from "../ui/typography";
-
-export type PasswordResetRequestFormValues = {
-  email: string;
-};
 
 type PasswordResetRequestFormProps = ComponentPropsWithoutRef<"form"> & {
   onFormSubmit: (values: PasswordResetRequestFormValues) => void;
-  error: string;
+  errors: ClerkAPIError[];
 };
 
 export const PasswordResetRequestForm = (
   props: PasswordResetRequestFormProps
 ) => {
-  const { onFormSubmit, error, className, ...rest } = props;
+  const { onFormSubmit, errors, className, ...rest } = props;
 
-  const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-    };
+  const form = useForm<PasswordResetRequestFormValues>({
+    resolver: zodResolver(PasswordResetRequestFormSchema),
+  });
 
-    const email = target.email.value;
-
-    onFormSubmit({ email });
+  const onSubmit = (data: PasswordResetRequestFormValues) => {
+    onFormSubmit(data);
   };
 
   return (
-    <form
-      {...rest}
-      className={cn("flex flex-col gap-3", className)}
-      onSubmit={submitHandler}
-    >
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="email">Please provide your email address</Label>
-        <Input type="email" id="email" placeholder="Email" />
-      </div>
+    <Form {...form}>
+      <form
+        {...rest}
+        className={cn("flex flex-col gap-3", className)}
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Please provide your email address</FormLabel>
+              <FormControl>
+                <Input {...field} type="email" placeholder="Email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      {error && (
-        <Typography
-          level="span"
-          styling="small"
-          className="mt-2 text-center text-red-400"
-        >
-          {error}
-        </Typography>
-      )}
-    </form>
+        {errors && (
+          <ul>
+            {errors.map((el, index) => (
+              <li key={index}>
+                <Typography level="span" className="text-red-400">
+                  {el.longMessage}
+                </Typography>
+              </li>
+            ))}
+          </ul>
+        )}
+      </form>
+    </Form>
   );
 };

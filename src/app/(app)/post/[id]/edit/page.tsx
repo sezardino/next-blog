@@ -1,12 +1,13 @@
-// "use client";
-
-import { PostForm } from "@/components/form/post-form";
+import { EditMyPost } from "@/components/modules/my-posts/edit-post";
 import { Typography } from "@/components/ui/typography";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { editPostAction } from "./actions/edit-post";
 import { getMyPostForEdition } from "./actions/get-post";
 
 type Props = { params: { id: string } };
+
+export const metadata: Metadata = { title: "Edit post" };
 
 const EditPostPage = async (props: Props) => {
   const post = await getMyPostForEdition(props.params.id);
@@ -29,7 +30,12 @@ const EditPostPage = async (props: Props) => {
           post.
         </Typography>
       </header>
-      <PostForm initialValues={post} onFormSubmit={editPostWithId} />
+
+      <EditMyPost
+        post={post}
+        onEditPost={editPostWithId}
+        postId={props.params.id}
+      />
     </main>
   );
 };
