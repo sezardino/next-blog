@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const DESCRIPTION_MIN_LENGTH = 8;
 const BODY_MIN_LENGTH = 300;
-const BODY_MAX_LENGTH = 10_000;
+const BODY_MAX_LENGTH = 15_000;
 const TAGS_MIN_LENGTH = 1;
 const TAGS_MAX_LENGTH = 10;
 
