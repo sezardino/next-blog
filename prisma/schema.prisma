@@ -19,6 +19,10 @@ model File {
   @@map("files")
 }
 
+enum UserRoles {
+  CONTENT_CREATOR
+}
+
 model User {
   id        String  @id @default(uuid())
   clerkId   String  @unique @map("clerk_id")
@@ -26,6 +30,8 @@ model User {
   firstName String? @map("first_name")
   lastName  String? @map("last_name")
   bio       String?
+
+  role UserRoles @default(CONTENT_CREATOR)
 
   avatar   File?   @relation(fields: [avatarId], references: [id])
   avatarId String? @map("avatar_id")

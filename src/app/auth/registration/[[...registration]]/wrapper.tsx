@@ -11,7 +11,8 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 
-import { Loader2 } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRegistration } from "./use-registration";
 
@@ -22,12 +23,30 @@ export const RegistrationPageWrapper = () => {
 
   return (
     <Card className="md:w-96">
-      <CardHeader>
+      <CardHeader className="gap-2">
         <Typography level="h1" styling="h3">
-          Sign in to your account
+          Create new account
         </Typography>
+        <Alert variant="default">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Notice:</AlertTitle>
+          <AlertDescription>
+            <Typography styling="xs" className="text-muted-foreground">
+              Now you can only create account as Content creator
+            </Typography>
+          </AlertDescription>
+        </Alert>
+        <Button asChild variant="link">
+          <Link
+            href={ProjectUrls.home}
+            className="-order-1 !justify-start gap-2"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Home
+          </Link>
+        </Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="mt-2">
         <RegistrationForm
           id={REGISTRATION_FORM_ID}
           onFormSubmit={registration}

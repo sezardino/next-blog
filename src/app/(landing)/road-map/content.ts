@@ -32,6 +32,7 @@ export const roadmapPage = {
       description: "Adds more features to the content maker profile.",
       features: [
         "Registration as basic user",
+        "Likes, dislikes",
         "Possibility to change type of account, basic user to content creator",
         "Author profile - view all posts by an author on their profile",
         "Multilingual post support (posts can be written in any language)",

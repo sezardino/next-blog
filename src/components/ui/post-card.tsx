@@ -1,13 +1,7 @@
 import { numberToReadableFormat } from "@/utils/post";
 import { cn } from "@/utils/styles";
 import { getUserAvatarFallback } from "@/utils/user";
-import {
-  ArrowRight,
-  Eye,
-  MessageCircle,
-  ThumbsDown,
-  ThumbsUp,
-} from "lucide-react";
+import { ArrowRight, Eye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { ComponentPropsWithoutRef } from "react";
@@ -63,18 +57,18 @@ export const PostCard = (props: PostCardProps) => {
       icon: Eye,
       value: numberToReadableFormat(views),
     },
-    {
-      icon: MessageCircle,
-      value: numberToReadableFormat(comments),
-    },
-    {
-      icon: ThumbsUp,
-      value: numberToReadableFormat(likes),
-    },
-    {
-      icon: ThumbsDown,
-      value: numberToReadableFormat(dislikes),
-    },
+    // {
+    //   icon: MessageCircle,
+    //   value: numberToReadableFormat(comments),
+    // },
+    // {
+    //   icon: ThumbsUp,
+    //   value: numberToReadableFormat(likes),
+    // },
+    // {
+    //   icon: ThumbsDown,
+    //   value: numberToReadableFormat(dislikes),
+    // },
   ];
 
   return (

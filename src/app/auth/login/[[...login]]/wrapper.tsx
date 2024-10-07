@@ -11,7 +11,7 @@ import {
 import { Typography } from "@/components/ui/typography";
 import { ProjectUrls } from "@/const";
 import { useAuth } from "@clerk/nextjs";
-import { Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLogin } from "./use-login";
@@ -32,10 +32,20 @@ export const LoginPageWrapper = () => {
 
   return (
     <Card className="md:w-96">
-      <CardHeader>
+      <CardHeader className="gap-4">
         <Typography level="h1" styling="h3">
           Sign in to your account
         </Typography>
+
+        <Button asChild variant="link">
+          <Link
+            href={ProjectUrls.home}
+            className="-order-1 !justify-start gap-2"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Home
+          </Link>
+        </Button>
       </CardHeader>
       <CardContent>
         <LoginForm id={LOGIN_FORM_ID} onFormSubmit={login} errors={errors} />

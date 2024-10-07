@@ -74,7 +74,9 @@ export const UserDropdown = (props: UserDropdownProps) => {
       <DropdownMenuContent>
         <DropdownMenuLabel>
           <Typography level="span" styling="small">
-            {user.email} Account
+            {user.firstName && user.lastName
+              ? `${user.firstName} ${user.lastName} Account`
+              : `${user.email} Account`}
           </Typography>
         </DropdownMenuLabel>
 
