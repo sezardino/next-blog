@@ -13,14 +13,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Typography } from "@/components/ui/typography";
+import { ServerActionResponse } from "@/types/base";
+import { createActionHandler } from "@/utils/server-actions";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export type PostPublicationModalProps = {
   isOpen: boolean;
   isPostPublished: boolean;
   errorMessage: string;
   onClose: () => void;
-  onSetPublication: (isPublished: boolean) => void;
+  onSetPublication: (isPublished: boolean) => ServerActionResponse<{}>;
 };
 
 export const PostPublicationModal = (props: PostPublicationModalProps) => {
@@ -30,12 +33,20 @@ export const PostPublicationModal = (props: PostPublicationModalProps) => {
 
   const hasProblems = !!errorMessage;
 
-  const confirmHandler = () => {
-    if (hasProblems) return onClose();
-    if (value === isPostPublished) return onClose();
+  const confirmHandler = createActionHandler({
+    action: async () => {
+      if (hasProblems) return onClose();
 
-    console.log(onSetPublication(value));
-  };
+      return onSetPublication(value);
+    },
+    onSuccess: () => {
+      onClose();
+      toast.success("Successfully change publication status");
+    },
+    onError: (error) => {
+      toast.error(error);
+    },
+  });
 
   return (
     <AlertDialog open={isOpen} onOpenChange={() => onClose()}>
@@ -76,7 +87,7 @@ export const PostPublicationModal = (props: PostPublicationModalProps) => {
           <AlertDialogCancel onClick={() => onClose()}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction onClick={confirmHandler}>
+          <AlertDialogAction onClick={() => confirmHandler(undefined)}>
             Change publication status
           </AlertDialogAction>
         </AlertDialogFooter>

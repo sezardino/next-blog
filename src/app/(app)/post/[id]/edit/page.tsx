@@ -17,7 +17,7 @@ const EditPostPage = async (props: Props) => {
   const editPostWithId = editPostAction.bind(null, props.params.id);
 
   return (
-    <main className="grid grid-cols-1 gap-8">
+    <main className="grid grid-cols-1 gap-8 pb-20">
       <header className="grid grid-cols-1 gap-2">
         <Typography level="h1" styling="h2">
           Edit Your Blog Post

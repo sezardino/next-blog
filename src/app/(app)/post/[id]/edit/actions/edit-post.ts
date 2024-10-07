@@ -4,15 +4,11 @@ import { setThumbnailForPost } from "@/actions/post";
 import { ProjectUrls } from "@/const";
 import prismaClient from "@/lib/prisma";
 import { EditPostSchema } from "@/schemas/post";
-import { checkIfPostCanBeModified, normalizeTags } from "@/utils/post";
+import { normalizeTags } from "@/utils/post";
 import { zodValidateAndFormatErrors } from "@/utils/zod";
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect, RedirectType } from "next/navigation";
-
-const errors = {
-  "already-published": "Already published post can't edit publication date",
-};
 
 export const editPostAction = async (postId: string, formData: FormData) => {
   const { userId } = auth();
@@ -43,14 +39,6 @@ export const editPostAction = async (postId: string, formData: FormData) => {
     });
 
     if (!neededPost) return { message: "Post not found" };
-    const canChangePublicationDate = checkIfPostCanBeModified(
-      neededPost.isPublished,
-      neededPost.publicationDate
-    );
-    if (canChangePublicationDate)
-      return {
-        message: errors[canChangePublicationDate],
-      };
 
     const { tagsToRemovePermanent, tagsToRemove, tagsToAdd } =
       getTagsToDoAction(neededPost.tags, tags);
