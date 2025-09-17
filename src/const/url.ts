@@ -30,3 +30,7 @@ export const ProjectUrls = {
   settings: "/settings",
   accountSettings: "/settings/account",
 };
+
+export const ProjectRoutesUrls = {
+  newUser: "/api/auth",
+};

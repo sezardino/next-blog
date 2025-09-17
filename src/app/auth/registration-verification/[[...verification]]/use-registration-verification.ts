@@ -1,3 +1,4 @@
+import { ProjectRoutesUrls } from "@/const";
 import { VerificationFormValues } from "@/schemas/auth";
 import { useSignUp } from "@clerk/nextjs";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
@@ -29,7 +30,7 @@ export const useRegistrationVerification = () => {
         if (completeSignUp.status === "complete") {
           await setActive({ session: completeSignUp.createdSessionId });
           toast.success("You are successfully registered in app");
-          router.push("/api/auth/new-user");
+          router.push(ProjectRoutesUrls.newUser);
         } else {
           // If the status is not complete, check why. User may need to
           // complete further steps.
